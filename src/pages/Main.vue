@@ -7,8 +7,7 @@
         <main class="c-main">
           <CContainer fluid>
             <transition name="fade">
-              <!-- <router-view></router-view> -->
-              <hehe></hehe>
+              <router-view></router-view>
             </transition>
           </CContainer>
         </main>
@@ -22,14 +21,12 @@
 import TheSidebar from "./components/Sidebar";
 import TheHeader from "./components/Header";
 import TheFooter from "./components/Footer";
-import hehe from "./components/Usuarios/Administrador/Usuarios/Usuarios";
 export default {
   name: "TheContainer",
   components: {
     TheSidebar,
     TheHeader,
-    TheFooter,
-    hehe
+    TheFooter
   }
 };
 </script>
