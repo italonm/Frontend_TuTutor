@@ -101,7 +101,7 @@ export default {
                 this.$router.push('/Bienvenido')                               
             }
             else if (EsCoordinador){
-                this.$router.addRoutes([{path: '/TuTutor', name: 'Principal', redirect: '/Bienvenido', component: Contenedor, children: rutitas['coordi']}], true)                                                  
+                this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['coordi']}])                                                  
                 this.$router.push('/Bienvenido')
             }
             /* else if (EsTutor){                

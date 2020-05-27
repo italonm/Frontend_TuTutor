@@ -15,50 +15,33 @@
     </CHeaderBrand>
     <CHeaderNav class="d-md-down-none mr-auto">
       <CHeaderNavItem class="px-3">
-        <div id="nombrecito">          
-        </div>    
+        <div id="nombrecito" style="font-size:17px; font-weight:500">              
+        </div>            
+        <span class="text-muted" style="font-size:13.5px;" id="sesión"></span>
       </CHeaderNavItem>
     </CHeaderNav>
-    <CHeaderNav class="mr-4">
-      <CHeaderNavItem class="d-md-down-none mx-2">
-        <CHeaderNavLink>
-          <CIcon name="cil-bell" />
-        </CHeaderNavLink>
-      </CHeaderNavItem>
-      <CHeaderNavItem class="d-md-down-none mx-2">
-        <CHeaderNavLink>
-          <CIcon name="cil-list" />
-        </CHeaderNavLink>
-      </CHeaderNavItem>
-      <CHeaderNavItem class="d-md-down-none mx-2">
-        <CHeaderNavLink>
-          <CIcon name="cil-envelope-open" />
-        </CHeaderNavLink>
-      </CHeaderNavItem>
+    <CHeaderNav class="mr-4">  
+      <Desplegable/>    
     </CHeaderNav>    
   </CHeader>
 </template>
 
 <script>
+import Desplegable from './Desplegable'
 export default {
-  data(){
-  },  
-  mounted(){
-    console.log(JSON.parse(window.localStorage.getItem('Nombre')));         
-    var Encabezado = document.getElementById('nombrecito');
-    console.log(Encabezado);
-    Encabezado.innerHTML = JSON.parse(window.localStorage.getItem('Nombre')) + ' ' + JSON.parse(window.localStorage.getItem('Apellidos'))  ;
-  },
-  methods:{
-    setearNombre(){
-      console.log(JSON.parse(window.localStorage.getItem('Nombre')));
-      var User = localStorage.getItem('Nombre');      
-      var Encabezado = document.getElementById('nombrecito');
-      console.log(Encabezado);
-      Encabezado.value = User;
-    }
-  },
   name: "TheHeader",
+  components: {
+    Desplegable
+  },    
+  mounted(){        
+    document.getElementById('nombrecito').innerHTML = JSON.parse(window.localStorage.getItem('Nombre')) + ' ' + JSON.parse(window.localStorage.getItem('Apellidos'));
+    if(JSON.parse(window.localStorage.getItem('EsCoordinador'))){
+      document.getElementById('sesión').innerHTML ="Sesión de Coordinador";
+    }   
+    else if(JSON.parse(window.localStorage.getItem('EsAdministrador'))){  
+      document.getElementById('sesión').innerHTML ="Sesión de Administrador";
+    }     
+  },    
 };
 </script>
 
