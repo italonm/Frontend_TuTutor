@@ -1,5 +1,5 @@
 <template>
-  <CHeader fixed with-subheader light>
+  <CHeader fixed with-subheader light style="background: #0BB783">
     <CToggler
       in-header
       class="ml-3 d-lg-none"
@@ -15,9 +15,9 @@
     </CHeaderBrand>
     <CHeaderNav class="d-md-down-none mr-auto">
       <CHeaderNavItem class="px-3">
-        <div id="nombrecito" style="font-size:17px; font-weight:500">              
+        <div id="nombrecito" style="font-size:17px; font-weight:500; color:#ffffff">              
         </div>            
-        <span class="text-muted" style="font-size:13.5px;" id="sesión"></span>
+        <span style="font-size:13.5px; color:#FFFFFF" id="sesión"></span>
       </CHeaderNavItem>
     </CHeaderNav>
     <CHeaderNav class="mr-4">  

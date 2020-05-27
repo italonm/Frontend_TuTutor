@@ -4,6 +4,7 @@
     :minimize="minimize"
     :show="show"
     @update:show="(value) => $store.commit('set', ['sidebarShow', value])"
+    style="background: #1D2736"
   >
     <CSidebarBrand class="d-md-down-none" to="/">
       <CIcon
@@ -26,6 +27,7 @@
     <CSidebarMinimizer
       class="d-md-down-none"
       @click.native="$store.commit('set', ['sidebarMinimize', !minimize])"
+      style="background: #1D2736"
     />
   </CSidebar>
 </template>
