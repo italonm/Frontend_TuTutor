@@ -33,14 +33,15 @@
 <script>
 //AQUÍ DE ALGUNA FORMA ES EL LOGIN PERSONALIZADO :C
 
-import navAdministrador from "./nav/_administrador";
-import navCoordinador from "./nav/_coordinador";
-
-const rol = 0;
-var navAuxiliar;
-if (rol) {
-  navAuxiliar = navCoordinador;
-} else navAuxiliar = navAdministrador;
+import navAdministrador from "./nav/_administrador"
+import navCoordinador from "./nav/_coordinador"
+var navAuxiliar
+if (JSON.parse(window.localStorage.getItem('EsCoordinador'))){ 
+  navAuxiliar = navCoordinador
+}
+else if (JSON.parse(window.localStorage.getItem('EsAdministrador'))){
+  navAuxiliar = navAdministrador  
+}  
 
 /* const nav = () => import ("./_nav") */
 
