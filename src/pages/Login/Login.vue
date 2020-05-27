@@ -70,6 +70,7 @@ export default {
     },     
     mounted(){      
       const container = document.getElementById('container');
+      console.log(container)
       document.getElementById('signUp').addEventListener('click', () => {
         container.classList.add("right-panel-active");
       });
@@ -78,31 +79,29 @@ export default {
       });
     },      
 		methods:{
-			logItIn(){
-        console.log(this.login)
+			logItIn(){        
         axios.post('http://184.73.231.88:5000/api/user/log_in/',this.login)
         .then(response =>{ 
-            let Nombre = response.data;
+            let Nombre = response.data.name;
+            let Apellidos = response.data.last_name;
             let EsAdministrador = response.data.is_admin;
             let EsCoordinador = response.data.is_coordinator;
             let EsAlumno = response.data.is_student;
             let EsSoporte = response.data.is_support;
             let EsTutor = response.data.is_tutor;
             localStorage.setItem('Nombre',JSON.stringify(Nombre));                    
+            localStorage.setItem('Apellidos',JSON.stringify(Apellidos));  
             localStorage.setItem('EsAdministrador',JSON.stringify(EsAdministrador));                    
             localStorage.setItem('EsCoordinador',JSON.stringify(EsCoordinador));                   
             localStorage.setItem('EsTutor',JSON.stringify(EsTutor));
             localStorage.setItem('EsAlumno',JSON.stringify(EsAlumno));
-            localStorage.setItem('EsSoporte',JSON.stringify(EsSoporte));
-            console.log(this.login)
+            localStorage.setItem('EsSoporte',JSON.stringify(EsSoporte));   
             if (EsAdministrador){
-                this.$router.addRoutes([{path: '/', name: 'Principal', redirect: '/Bienvenido', component: Contenedor, children: rutitas['admin']}], true)                                  
-                console.log(this.$router)
-                this.$router.push('/Bienvenido')               
+                this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['admin']}])                                                  
+                this.$router.push('/Bienvenido')                               
             }
             else if (EsCoordinador){
-                this.$router.addRoutes([{path: '/', name: 'Principal', redirect: '/Bienvenido', component: Contenedor, children: rutitas['coordi']}], true)                                  
-                console.log(this.$router)
+                this.$router.addRoutes([{path: '/TuTutor', name: 'Principal', redirect: '/Bienvenido', component: Contenedor, children: rutitas['coordi']}], true)                                                  
                 this.$router.push('/Bienvenido')
             }
             /* else if (EsTutor){                

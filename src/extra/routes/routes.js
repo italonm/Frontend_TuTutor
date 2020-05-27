@@ -120,11 +120,11 @@ export const RutaLogin =[
   {
     name:'Inicio',
     path: '',
-    redirect:'/TuTutor',
+    redirect:'/TuTutor?#',
   },
   {
     name:'Login',
-    path: '/TuTutor',
+    path: '/TuTutor?#',
     component: Login
   }
 ]

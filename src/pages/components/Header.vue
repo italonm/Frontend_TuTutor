@@ -15,19 +15,8 @@
     </CHeaderBrand>
     <CHeaderNav class="d-md-down-none mr-auto">
       <CHeaderNavItem class="px-3">
-        <CHeaderNavLink to="/dashboard">
-          Dashboard
-        </CHeaderNavLink>
-      </CHeaderNavItem>
-      <CHeaderNavItem class="px-3">
-        <CHeaderNavLink to="/users" exact>
-          Users
-        </CHeaderNavLink>
-      </CHeaderNavItem>
-      <CHeaderNavItem class="px-3">
-        <CHeaderNavLink>
-          Settings
-        </CHeaderNavLink>
+        <div id="nombrecito">          
+        </div>    
       </CHeaderNavItem>
     </CHeaderNav>
     <CHeaderNav class="mr-4">
@@ -46,15 +35,29 @@
           <CIcon name="cil-envelope-open" />
         </CHeaderNavLink>
       </CHeaderNavItem>
-    </CHeaderNav>
-    <CSubheader class="px-3">
-      <CBreadcrumbRouter class="border-0 mb-0" />
-    </CSubheader>
+    </CHeaderNav>    
   </CHeader>
 </template>
 
 <script>
 export default {
+  data(){
+  },  
+  mounted(){
+    console.log(JSON.parse(window.localStorage.getItem('Nombre')));         
+    var Encabezado = document.getElementById('nombrecito');
+    console.log(Encabezado);
+    Encabezado.innerHTML = JSON.parse(window.localStorage.getItem('Nombre')) + ' ' + JSON.parse(window.localStorage.getItem('Apellidos'))  ;
+  },
+  methods:{
+    setearNombre(){
+      console.log(JSON.parse(window.localStorage.getItem('Nombre')));
+      var User = localStorage.getItem('Nombre');      
+      var Encabezado = document.getElementById('nombrecito');
+      console.log(Encabezado);
+      Encabezado.value = User;
+    }
+  },
   name: "TheHeader",
 };
 </script>
