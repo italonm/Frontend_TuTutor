@@ -53,10 +53,10 @@
 <script>
 //COMPONENTE DE REGISTRO DE NUEVO USUARIO
 import Registro from './Registro'
-//COMPONENTE CONTENEDOR
+/* //COMPONENTE CONTENEDOR
 import Contenedor from '../../pages/Main'
 //RUTAS
-import {rutitas} from '../../extra/routes/routes'
+import {rutitas} from '../../extra/routes/routes' */
 import axios from "axios";
 
 export default {    
@@ -97,12 +97,14 @@ export default {
             localStorage.setItem('EsAlumno',JSON.stringify(EsAlumno));
             localStorage.setItem('EsSoporte',JSON.stringify(EsSoporte));   
             if (EsAdministrador){
-                this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['admin']}])                                                  
-                this.$router.push('/Bienvenido')                               
+                /* this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['admin']}])                                                   */
+                this.$router.push('/TuTutor/Configuración')                               
+                this.$router.push('/TuTutor/Configuración') 
             }
             else if (EsCoordinador){
-                this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['coordi']}])                                                  
-                this.$router.push('/Bienvenido')
+                /* this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['coordi']}])                                                   */
+                this.$router.push('/TuTutor/Miembros/Alumnos')
+                this.$router.push('/TuTutor/Miembros/Alumnos')
             }
             /* else if (EsTutor){                
             }
