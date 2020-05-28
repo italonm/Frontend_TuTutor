@@ -9,12 +9,17 @@
           <v-form ref="form" v-model="valid" :lazy-validation="lazy">
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field v-model="form.name" :rules="nameValidation" label="Nombres" required></v-text-field>
+                <v-text-field
+                  v-model="form.person_name"
+                  :rules="nameValidation"
+                  label="Nombres"
+                  required
+                ></v-text-field>
               </v-col>
 
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="form.last_name"
+                  v-model="form.person_last_name"
                   :rules="nameValidation"
                   label="Apellidos"
                   required
@@ -23,12 +28,17 @@
             </v-row>
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field v-model="form.email" :rules="emailValidation" label="E-mail" required></v-text-field>
+                <v-text-field
+                  v-model="form.person_email"
+                  :rules="emailValidation"
+                  label="E-mail"
+                  required
+                ></v-text-field>
               </v-col>
 
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="form.phone_number"
+                  v-model="form.person_phone_number"
                   :rules="phoneValidation"
                   label="Teléfono"
                   :counter="9"
@@ -39,7 +49,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="form.code"
+                  v-model="form.person_code"
                   :rules="codeValidation"
                   label="Código"
                   :counter="8"
@@ -68,8 +78,6 @@ export default {
 
   data() {
     return {
-      localDialog: this.dialog,
-      localForm: this.form,
       valid: true,
       lazy: false,
       nameValidation: nameRules,
@@ -81,9 +89,9 @@ export default {
 
   methods: {
     guardar() {
-      if (this.action == "Registrar usuario") {
+      if (this.action == "Registrar coordinador") {
         this.insertar();
-      } else if (this.action == "Editar usuario") {
+      } else if (this.action == "Editar coordinador") {
         this.editar();
       }
     },
@@ -93,25 +101,46 @@ export default {
       if (this.valid) {
         axios
           .post("/admin/add_coordinator/", this.form)
-          .then(res => console.log(res))
-          .catch(error => console.log(error));
-        this.$message({ message: "Registro exitoso.", type: "success" });
-        this.newDialog = false;
-        this.$emit("resetDialog", this.newDialog);
-        this.$emit("resetList");
+          .then(res => {
+            console.log(res);
+            this.$emit("resetList");
+            this.$message({ message: "Registro exitoso.", type: "success" });
+            this.$emit("resetDialog");
+            this.$refs.form.reset();
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message.error("Datos duplicados");
+          });
       } else this.$message.error("Datos incorrectos");
     },
 
-    editar(item) {
-      //servicio
-      this.form = Object.assign({}, item);
-      this.newDialog = true;
+    editar() {
+      this.$refs.form.validate();
+      console.log(this.form);
+      if (this.valid) {
+        axios
+          .post("/user/update_person/", this.form)
+          .then(res => {
+            console.log(res);
+            this.$emit("resetList");
+            this.$message({
+              message: "Modificación exitosa.",
+              type: "success"
+            });
+            this.$emit("resetDialog");
+            this.$refs.form.reset();
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message.error("Datos duplicados");
+          });
+      } else this.$message.error("Datos incorrectos");
     },
 
     cancelar() {
       this.$refs.form.reset();
-      this.newDialog = false;
-      this.$emit("resetDialog", this.newDialog);
+      this.$emit("resetDialog");
     }
   }
 };

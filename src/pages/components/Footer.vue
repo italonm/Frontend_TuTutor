@@ -1,5 +1,5 @@
 <template>
-  <CFooter :fixed="false">
+  <CFooter :fixed="false" >
     <div>
       <a href="https://www.pucp.edu.pe/" target="_blank">PUCP</a>
       <span class="ml-1">&copy; {{ new Date().getFullYear() }} TuTutor.</span>
