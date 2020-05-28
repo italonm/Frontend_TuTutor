@@ -6,6 +6,7 @@ import Welcome from "../../Usuarios/Welcome.vue";
 
 import Configuración from "../../Usuarios/Administrador/Configuración/Configuración.vue";
 import Unidades from "../../Usuarios/Administrador/Unidades académicas/Unidades académicas.vue";
+import Coordinadores from "../../Usuarios/Administrador/Coordinadores/Coordinadores.vue";
 import Usuarios from "../../Usuarios/Administrador/Usuarios/Usuarios.vue";
 
 import Tutores from "../../Usuarios/Coordinador/Tutores/Tutores.vue";
@@ -27,6 +28,7 @@ export const routes = [
             //Administrador
             { path: "Configuración", component: Configuración }, //Luiggi
             { path: "Unidades académicas", component: Unidades }, //italo
+            { path: "Coordinadores", component: Coordinadores }, //italo
             { path: "Usuarios", component: Usuarios }, //italo
             { path: "Auditoría", component: Login },
             { path: "Errores", component: Login },

@@ -5,13 +5,13 @@
       <el-col :span="9">
         <div class="grid-content">
           <h1 style="text-align: center;">
-            <i class="fas fa-university"></i>&nbsp;Unidades Académicas
+            <i class="fas fa-users"></i>&nbsp;Coordinadores
           </h1>
         </div>
       </el-col>
       <el-col :span="8">
         <div class="grid-content">
-          <el-input placeholder="Buscar unidad académica" v-model="search" clearable>
+          <el-input placeholder="Buscar coordinador" v-model="search" clearable>
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
         </div>
@@ -20,7 +20,7 @@
         <div class="grid-content">
           <el-button
             type="success"
-            icon="fas fa-plus-circle"
+            icon="fas fa-user-plus"
             @click="insertar()"
             class="buttonAdd"
           >&nbsp;Agregar</el-button>
@@ -36,16 +36,23 @@
         'items-per-page-all-text': 'Listar todos',
       }"
       :headers="headers"
-      :items="unidades"
+      :items="coordinadores"
       :search="search"
       :items-per-page="5"
-      :sort-by="['faculty_required_tutorship']"
+      :sort-by="['person_code']"
       multi-sort
       class="elevation-3"
       loading-text="Cargando.."
-      height="200px"
+      height="288px"
       fixed-header
-    ></v-data-table>
+    >
+      <template v-slot:item.editar="{ item }">
+        <el-button type="info" icon="el-icon-edit" circle @click="editar(item)"></el-button>
+      </template>
+      <template v-slot:item.eliminar="{ item }">
+        <el-button type="danger" icon="el-icon-delete" circle @click="eliminar(item)"></el-button>
+      </template>
+    </v-data-table>
 
     <!--Formulario-->
     <coordinadorForm
@@ -60,16 +67,19 @@
 
 <script>
 import axios from "axios";
-import CoordinadorForm from "./UnidadAcadémicaForm";
+import CoordinadorForm from "./CoordinadorForm";
 
 export default {
   data() {
     return {
-      unidades: [],
+      coordinadores: [],
       headers: [
-        { text: "Nombre", value: "faculty_name" },
-        { text: "Tutoría fija", value: "faculty_required_tutorship" },
-        { text: "Unidad única", value: "faculty_unique_faculty" }
+        { text: "Código", value: "person_code" },
+        { text: "Nombre", value: "person_full_name" },
+        { text: "Teléfono", value: "person_phone_number" },
+        { text: "Correo", value: "person_email" },
+        { text: "Editar", value: "editar", sortable: false },
+        { text: "Eliminar", value: "eliminar", sortable: false }
       ],
       form: {
         person_name: "",
@@ -91,15 +101,15 @@ export default {
   methods: {
     listar() {
       axios
-        .get("/admin/show_faculties/")
+        .get("/admin/show_coordinators/")
         .then(res => {
-          this.unidades = res.data.faculties;
+          this.coordinadores = res.data.users;
         })
         .catch(error => console.log(error));
     },
 
     insertar() {
-      this.action = "Registrar unidad académica";
+      this.action = "Registrar coordinador";
       this.dialog = true;
     },
 
