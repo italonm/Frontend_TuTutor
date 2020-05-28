@@ -80,30 +80,28 @@
 import axios from "axios";
 export default {
   data() {
-    return {
-      signup: {
-        admin_name: "",
-        admin_last_name: "",
-        admin_email: "",
-        admin_phone_number: "",
-        admin_code: "",
-        admin_password: ""
-      }
-    };
-  },
-  methods: {
-    registrar() {
-      console.log(this.signup);
-      axios
-        .post("http://184.73.231.88:5000/api/admin/sign_up/", this.signup)
-        .then(response => {
-          console.log(response);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-      this.$router.push("/");
-    }
+			return {
+				signup:{
+          admin_name:"",
+          admin_last_name:"",
+          admin_email:"",
+          admin_phone_number:"",
+          admin_code:"",
+					admin_password:""
+				}
+			}
+    },
+  methods:{
+    registrar(){
+                /* console.log(this.signup);
+                axios.post('http://184.73.231.88:5000/api/admin/sign_up/',this.signup)
+                .then(response =>{ console.log(response)})
+                .catch(e =>{
+                    console.log(e);
+                })
+                this.$router.push('/') */ 
+              }
+            },
   }
 };
 </script>

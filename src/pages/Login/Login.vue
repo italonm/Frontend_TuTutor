@@ -102,76 +102,61 @@
 
 <script>
 //COMPONENTE DE REGISTRO DE NUEVO USUARIO
-import Registro from "./Registro";
-//COMPONENTE CONTENEDOR
-import Contenedor from "../../pages/Main";
+import Registro from './Registro'
+/* //COMPONENTE CONTENEDOR
+import Contenedor from '../../pages/Main'
 //RUTAS
-import { rutitas } from "../../extra/routes/routes";
+import {rutitas} from '../../extra/routes/routes' */
 import axios from "axios";
 
-export default {
-  data() {
-    return {
-      login: {
-        user_name: "",
-        password: ""
-      }
-    };
-  },
-  mounted() {
-    const container = document.getElementById("container");
-    console.log(container);
-    document.getElementById("signUp").addEventListener("click", () => {
-      container.classList.add("right-panel-active");
-    });
-    document.getElementById("signIn").addEventListener("click", () => {
-      container.classList.remove("right-panel-active");
-    });
-  },
-  methods: {
-    logItIn() {
-      axios
-        .post("http://184.73.231.88:5000/api/user/log_in/", this.login)
-        .then(response => {
-          let Nombre = response.data.name;
-          let Apellidos = response.data.last_name;
-          let EsAdministrador = response.data.is_admin;
-          let EsCoordinador = response.data.is_coordinator;
-          let EsAlumno = response.data.is_student;
-          let EsSoporte = response.data.is_support;
-          let EsTutor = response.data.is_tutor;
-          localStorage.setItem("Nombre", JSON.stringify(Nombre));
-          localStorage.setItem("Apellidos", JSON.stringify(Apellidos));
-          localStorage.setItem(
-            "EsAdministrador",
-            JSON.stringify(EsAdministrador)
-          );
-          localStorage.setItem("EsCoordinador", JSON.stringify(EsCoordinador));
-          localStorage.setItem("EsTutor", JSON.stringify(EsTutor));
-          localStorage.setItem("EsAlumno", JSON.stringify(EsAlumno));
-          localStorage.setItem("EsSoporte", JSON.stringify(EsSoporte));
-          if (EsAdministrador) {
-            this.$router.addRoutes([
-              {
-                path: "/",
-                name: "Principal",
-                component: Contenedor,
-                children: rutitas["admin"]
-              }
-            ]);
-            this.$router.push("/Bienvenido");
-          } else if (EsCoordinador) {
-            this.$router.addRoutes([
-              {
-                path: "/",
-                name: "Principal",
-                component: Contenedor,
-                children: rutitas["coordi"]
-              }
-            ]);
-            this.$router.push("/Bienvenido");
-          }
-          /* else if (EsTutor){                
+export default {    
+    data() {
+			return {
+				login:{
+					user_name:"",
+					password:""
+				}
+			}
+    },     
+    mounted(){      
+      const container = document.getElementById('container');
+      console.log(container)
+      document.getElementById('signUp').addEventListener('click', () => {
+        container.classList.add("right-panel-active");
+      });
+      document.getElementById('signIn').addEventListener('click', () => {
+        container.classList.remove("right-panel-active");
+      });
+    },      
+		methods:{
+			logItIn(){        
+        axios.post('http://184.73.231.88:5000/api/user/log_in/',this.login)
+        .then(response =>{ 
+            let Nombre = response.data.name;
+            let Apellidos = response.data.last_name;
+            let EsAdministrador = response.data.is_admin;
+            let EsCoordinador = response.data.is_coordinator;
+            let EsAlumno = response.data.is_student;
+            let EsSoporte = response.data.is_support;
+            let EsTutor = response.data.is_tutor;
+            localStorage.setItem('Nombre',JSON.stringify(Nombre));                    
+            localStorage.setItem('Apellidos',JSON.stringify(Apellidos));  
+            localStorage.setItem('EsAdministrador',JSON.stringify(EsAdministrador));                    
+            localStorage.setItem('EsCoordinador',JSON.stringify(EsCoordinador));                   
+            localStorage.setItem('EsTutor',JSON.stringify(EsTutor));
+            localStorage.setItem('EsAlumno',JSON.stringify(EsAlumno));
+            localStorage.setItem('EsSoporte',JSON.stringify(EsSoporte));   
+            if (EsAdministrador){
+                /* this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['admin']}])                                                   */
+                this.$router.push('/TuTutor/Configuración')                               
+                this.$router.push('/TuTutor/Configuración') 
+            }
+            else if (EsCoordinador){
+                /* this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['coordi']}])                                                   */
+                this.$router.push('/TuTutor/Miembros/Alumnos')
+                this.$router.push('/TuTutor/Miembros/Alumnos')
+            }
+            /* else if (EsTutor){                
             }
             else if (EsSoporte){                
             }        */

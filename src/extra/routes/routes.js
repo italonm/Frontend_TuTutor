@@ -8,8 +8,8 @@ import Coordinadores from '../../Usuarios/Administrador/Coordinadores/Coordinado
 //COMPONENTES DE COORDINADOR
 import Alumnos from '../../Usuarios/Coordinador/Alumnos/Alumnos'
 import Tutores from '../../Usuarios/Coordinador/Tutores/Tutores'
-import TipoTutoria from '../../Usuarios/Coordinador/Tipos de tutoría/TipoTutoria'
-import Tutorías from '../../Usuarios/Coordinador/Tutorías/Tutorías'
+import TipoTutoria from '../../Usuarios/Coordinador/Tipos de tutoría/Tipos de tutoría'
+/* import Tutorías from '../../Usuarios/Coordinador/Tutorías/Tutorías' */
 import Solicitudes from '../../Usuarios/Coordinador/Solicitudes/Solicitudes'
 import Soporte from '../../Usuarios/Coordinador/Soporte/Soporte'
 import Apoyo from '../../Usuarios/Coordinador/Unidades de apoyo/Unidades de apoyo'
@@ -17,122 +17,62 @@ import Apoyo from '../../Usuarios/Coordinador/Unidades de apoyo/Unidades de apoy
 /* import Reportes from '../Coordinador/Reportes' */
 /* import Programas from '../../Usuarios/Coordinador/Alumnos/Alumnos' */
 //COMPONENTE BIENVENIDOS
-import Bienvenido from '../../Usuarios/Welcome'
-
-export const rutitas = {
-    admin: [{
-            path: 'Bienvenido',
-            name: 'Bienvenido',
-            component: Bienvenido
-        },
-        {
-            path: 'Configuración',
-            name: 'Configuración',
-            component: Configuración
-        },
-        {
-            path: 'Unidades Académicas',
-            name: 'Unidades Académicas',
-            component: Académicas
-        },
-        {
-            path: 'Usuarios',
-            name: 'Usuarios',
-            component: Usuarios
-        },
-        {
-            path: 'Coordinadores',
-            name: 'Coordinadores',
-            component: Coordinadores
-        },
-        /* ,
-        {
-          path: 'Auditoría',
-          name: 'Auditoría',
-          component: Auditoría
-        },
-        {
-          path: 'Errores',
-          name: 'Errores',
-          component: Errores
-        } */
-    ],
-    coordi: [{
-            path: 'Bienvenido',
-            name: 'Bienvenido',
-            component: Bienvenido
-        },
-        {
-            path: 'Miembros',
-            name: 'Miembros',
-            component: {
-                render(c) { return c('router-view') }
-            },
-            children: [{
-                    path: 'Alumnos',
-                    name: 'Alumnos',
-                    component: Alumnos
-                },
-                {
-                    path: 'Tutores',
-                    name: 'Tutores',
-                    component: Tutores
-                },
-                {
-                    path: 'Soporte',
-                    name: 'Soporte',
-                    component: Soporte
-                },
-                {
-                    path: 'Unidades de apoyo',
-                    name: 'Unidades de apoyo',
-                    component: Apoyo
-                }
-            ]
-        },
-        {
-            path: 'Tipo de tutoría',
-            name: 'Tipo de tutoría',
-            component: TipoTutoria
-        },
-        {
-            path: 'Tutorías Activas',
-            name: 'Tutorías Activas',
-            component: Tutorías
-        },
-        /*{
-          path: 'Reportes',
-          name: 'Reportes',
-          component: Reportes
-        }, */
-        {
-            path: 'Solicitudes',
-            name: 'Solicitudes',
-            component: Solicitudes
-        }
-    ]
-}
-
+import Welcome from '../../Usuarios/Welcome'
 import Vue from 'vue'
 import Router from 'vue-router'
-
+// COMPONENTE CONTENEDOR
+import Main from '../../pages/Main'
 // LOGIN
 import Login from '../../pages/Login/Login.vue'
 
-Vue.use(Router)
-export const RutaLogin = [{
-        name: 'Inicio',
-        path: '',
-        redirect: '/TuTutor?#',
-    },
+export const routes = [
+    { path: "", redirect: "/Login" },
+    { path: "/Login", component: Login },   
     {
-        name: 'Login',
-        path: '/TuTutor?#',
-        component: Login
-    }
-]
+        path: "/TuTutor",
+        component: Main,
+        children: [
+            //Bienvenida
+            { path: "", component: Welcome },
+            //Administrador
+            { path: "Bienvenido", component: Welcome }, //Luiggi
+            { path: "Configuración", component: Configuración }, //Luiggi
+            { path: "Unidades académicas", component: Académicas }, //italo
+            { path: "Usuarios", component: Usuarios }, //italo
+            { path: "Auditoría", component: Welcome },
+            { path: "Errores", component: Welcome },
+            //Coordinador            
+            { path: "/TuTutor/Miembros/Tutores", component: Tutores }, //herbert
+            { path: "/TuTutor/Miembros/Alumnos", component: Alumnos }, //herbert
+            { path: "Tutorías activas", component: Welcome },
+            { path: "Tipos de tutoría", component: TipoTutoria }, //luiggi
+            { path: "Reportes", component: Welcome },
+            { path: "Solicitudes", component: Solicitudes }, //valeria
+            { path: "/TuTutor/Miembros/Unidades de apoyo", component: Apoyo }, //valeria
+            { path: "/TuTutor/Miembros/Soporte", component: Soporte }, //herbert
+            //Tutor
+            { path: "Asignaciones", component: Welcome },
+            { path: "Citas", component: Welcome },
+            { path: "Sesiones", component: Welcome },
+            { path: "Solicitudes", component: Welcome },
+            { path: "Alumnos", component: Welcome },
+            //Alumno FACI
+            { path: "Agenda", component: Welcome },
+            { path: "Tutor asignado", component: Welcome },
+            //Alumno Generales
+            { path: "Agenda", component: Welcome },
+            { path: "Solicitar sesión", component: Welcome },
+            //Soporte
+            { path: "Agregar alumnos", component: Welcome },
+            { path: "Generar citas", component: Welcome },
+        ],
+    },
+];
 
+Vue.use(Router)
 export default new Router({
-    mode: 'history', // https://router.vuejs.org/api/#mode
-    routes: RutaLogin,
+  mode: 'history', // https://router.vuejs.org/api/#mode
+  routes: routes,
 })
+
+
