@@ -19,7 +19,7 @@
         name="logo"
         size="custom-size"
         :height="35"
-        viewBox="0 0 110 134"
+        viewBox="10 0 110 134"
       />
     </CSidebarBrand>
 
@@ -35,15 +35,14 @@
 <script>
 //AQUÍ DE ALGUNA FORMA ES EL LOGIN PERSONALIZADO :C
 
-import navAdministrador from "./nav/_administrador"
-import navCoordinador from "./nav/_coordinador"
-var navAuxiliar
-if (JSON.parse(window.localStorage.getItem('EsCoordinador'))){ 
-  navAuxiliar = navCoordinador
+import navAdministrador from "./nav/_administrador";
+import navCoordinador from "./nav/_coordinador";
+var navAuxiliar;
+if (JSON.parse(localStorage.getItem("EsCoordinador"))) {
+  navAuxiliar = navCoordinador;
+} else if (JSON.parse(localStorage.getItem("EsAdministrador"))) {
+  navAuxiliar = navAdministrador;
 }
-else if (JSON.parse(window.localStorage.getItem('EsAdministrador'))){
-  navAuxiliar = navAdministrador  
-}  
 
 /* const nav = () => import ("./_nav") */
 
@@ -56,7 +55,7 @@ export default {
     },
     minimize() {
       return this.$store.state.sidebarMinimize;
-    },
-  },
+    }
+  }
 };
 </script>

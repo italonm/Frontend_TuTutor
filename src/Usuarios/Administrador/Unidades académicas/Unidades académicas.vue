@@ -43,7 +43,7 @@
       multi-sort
       class="elevation-3"
       loading-text="Cargando.."
-      height="200px"
+      height="288px"
       fixed-header
     ></v-data-table>
 

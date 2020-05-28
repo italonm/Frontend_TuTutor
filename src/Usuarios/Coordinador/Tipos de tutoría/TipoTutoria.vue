@@ -5,13 +5,13 @@
       <el-col :span="8">
         <div class="grid-content">
           <h1 style="text-align: center;">
-            <i class="fas fa-users"></i>&nbsp;Tutores
+            <i class="fas fa-users"></i>&nbsp;Tipos de tutorías
           </h1>
         </div>
       </el-col>
       <el-col :span="8">
         <div class="grid-content">
-          <el-input placeholder="Buscar usuario" v-model="search" clearable>
+          <el-input placeholder="Buscar tipo de tutorías" v-model="search" clearable>
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
         </div>
@@ -36,7 +36,7 @@
         'items-per-page-all-text': 'Listar todos',
       }"
       :headers="headers"
-      :items="tutores"
+      :items="tipotutorias"
       :search="search"
       :items-per-page="5"
       :sort-by="['code']"
@@ -55,39 +55,43 @@
     </v-data-table>
 
     <!--Formulario-->
-    <tutorForm
-      :form="form"
+    <tipotutoriaForm
+      :signtipo="signtipo"
       :dialog="dialog"
       :action="action"
       v-on:resetDialog="dialog=$event"
       v-on:resetList="listar()"
-    ></tutorForm>
+    ></tipotutoriaForm>
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
-import TutorForm from "./TutorForm";
+import TipoTutoriaForm from "./TipoTutoriaForm";
 
 export default {
   data() {
     return {
-      tutores: [],
       headers: [
-        { text: "Código", value: "code" },
-        { text: "Nombre", value: "full_name" },
-        { text: "Teléfono", value: "phone_number" },
-        { text: "Correo", value: "email" },
+        { text: "Nombre", value: "tt_name" },
+        { text: "Descripción", value: "tt_description" },
+        { text: "Cantidad de alumnos", value: "tt_quantity" },
+        { text: "Periodicidad", value: "tt_periodicity" },
+        { text: "¿Es obligatorio?", value: "tt_isrequired" },
+        { text: "¿El tutor es asignado?", value: "tt_assigned" },
+        { text: "¿El tutor es fijo?", value: "tt_permanent" },        
         { text: "Editar", value: "editar", sortable: false },
         { text: "Eliminar", value: "eliminar", sortable: false }
       ],
-      form: {
-        person_name: "",
-        person_last_name: "",
-        person_email: "",
-        person_phone_number: "",
-        person_code: "",
-        person_id: ""
+      tipotutorias: [],
+      signtipo:{
+        tt_name:"",
+        tt_description:"",
+        tt_isrequired:"",
+        tt_quantity:"",
+        tt_periodicity:"Semanal",
+        tt_assigned:"",
+        tt_permanent:"",
       },
       search: "",
       dialog: false,
@@ -102,35 +106,28 @@ export default {
   methods: {
     listar() {
       axios
-        .get("/coordinator/show_tutors/")
+        .get("/coordinator/show_tutoring_types/")
         .then(res => {
-          this.tutores = res.data.users;
+          this.tipotutorias = res.data.tutoriaData;
         })
         .catch(error => console.log(error));
     },
 
     insertar() {
-      this.action = "Registrar tutor";
+      this.action = "Registrar tipo de tutoría";
       this.dialog = true;
     },
 
     editar(item) {
-      this.action = "Editar tutor";
-      this.rellenar(item);
-      //this.form = Object.assign({}, item);
+      this.action = "Editar tipo de tutoría";
+      this.signtipo = Object.assign({}, item);
+      console.log(this.signtipo);
       this.dialog = true;
     },
-    rellenar(item) {
-      this.form.person_name = item.name;
-      this.form.person_last_name = item.last_name;
-      this.form.person_email = item.email;
-      this.form.person_phone_number = item.phone_number;
-      this.form.person_code = item.code;
-      this.form.person_id = item.id;
-    },
+
     eliminar(item) {
       this.$confirm(
-        "Esta seguro de eliminar: " + item.name + "?",
+        "¿Esta seguro de eliminar el tipo de tutoría " + item.tt_name + "?",
         "Advertencia",
         {
           confirmButtonText: "Confirmar",
@@ -139,13 +136,12 @@ export default {
         }
       )
         .then(() => {
-          //servicio
+          console.log(item.tt_id);
           axios
-            .post("/user/delete_person/", { person_id: item.id })
-            .then(res => console.log(res))
-            .catch(error => console.log(error));
-
-          this.$message({ type: "success", message: "Registro eliminado" });
+          .post("/coordinator/delete_tutoring_types/", item)
+          .then(res => console.log(res))
+          .catch(error => console.log(error));
+          this.$message({ type: "success", message: "Tipo de tutoría eliminado" });
         })
         .catch(() => {
           this.$message({ type: "info", message: "Eliminación cancelada" });
@@ -154,7 +150,7 @@ export default {
   },
 
   components: {
-    tutorForm: TutorForm
+    tipotutoriaForm: TipoTutoriaForm
   }
 };
 </script>
