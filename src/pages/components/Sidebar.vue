@@ -4,6 +4,7 @@
     :minimize="minimize"
     :show="show"
     @update:show="(value) => $store.commit('set', ['sidebarShow', value])"
+    style="background: #1D2736"
   >
     <CSidebarBrand class="d-md-down-none" to="/">
       <CIcon

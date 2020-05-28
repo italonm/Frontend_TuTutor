@@ -21,16 +21,16 @@ export default [
       {
         _name: 'CSidebarNavDropdown',
         name: 'Miembros',/*Modificacion */
-        route: '/Coordinador/Miembros',
+        route: '/TuTutor/Alumnos',
         icon: 'cil-people',
         items: [
           {
             name: 'Alumnos',
-            to: '/Coordinador/Miembros/Alumnos'
+            to: '/Tututor/Alumnos'
           },
           {
             name: 'Profesores',
-            to: '/Coordinador/Miembros/Profesores'
+            to: '/Tututor/Tutores'
           },          
           {
             name: 'Soporte',

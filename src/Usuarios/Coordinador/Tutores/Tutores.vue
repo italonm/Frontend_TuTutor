@@ -143,9 +143,12 @@ export default {
           //servicio
            axios
            .post("/user/delete_person/", {person_id:item.id})
-           .then(res => console.log(res))
+           .then(res => {
+            console.log(res);
+            this.listar();
+          })
            .catch(error => console.log(error));
-          
+          this.$emit("resetList");
           this.$message({ type: "success", message: "Registro eliminado" });
           
         })

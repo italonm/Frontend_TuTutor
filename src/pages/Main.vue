@@ -41,7 +41,8 @@ export default {
   opacity: 0;
 }
 .c-body {
-  background-image: url("https://www.solidbackgrounds.com/images/1920x1080/1920x1080-light-steel-blue-solid-color-background.jpg") !important;
+  
   background-size: cover;
+  background-color: rgb(245,240,240);
 }
 </style>
