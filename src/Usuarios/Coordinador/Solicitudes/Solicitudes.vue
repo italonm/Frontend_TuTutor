@@ -1,5 +1,5 @@
 <template>
-      <el-col :span="8">
+  
   <el-container direction="vertical">
     <!-- Titulo-->
     <el-row>
