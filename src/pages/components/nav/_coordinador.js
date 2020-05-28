@@ -5,7 +5,7 @@ export default [
       {
         _name: 'CSidebarNavItem',
         name: 'Principal',
-        to: '/Bienvenido',
+        to: 'Bienvenido',
         icon: 'cil-speedometer'
       },
       {
@@ -20,19 +20,19 @@ export default [
         items: [
           {
             name: 'Alumnos',
-            to: '/Miembros/Alumnos'
+            to: 'Alumnos'
           },
           {
             name: 'Profesores',
-            to: '/Miembros/Tutores'
+            to: 'Tutores'
           },          
           {
             name: 'Soporte',
-            to: '/Miembros/Soporte'
+            to: 'Soporte'
           },
           {
             name: 'Unidades de Apoyo',
-            to: '/Miembros/Unidades de Apoyo'
+            to: 'Unidades de Apoyo'
           }
         ]
       },

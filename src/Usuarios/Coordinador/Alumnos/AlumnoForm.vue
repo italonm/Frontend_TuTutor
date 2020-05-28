@@ -9,12 +9,12 @@
           <v-form ref="form" v-model="valid" :lazy-validation="lazy">
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field v-model="form.name" :rules="nameValidation" label="Nombres" required></v-text-field>
+                <v-text-field v-model="form.person_name" :rules="nameValidation" label="Nombres" required></v-text-field>
               </v-col>
 
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="form.last_name"
+                  v-model="form.person_last_name"
                   :rules="nameValidation"
                   label="Apellidos"
                   required
@@ -23,12 +23,12 @@
             </v-row>
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field v-model="form.email" :rules="emailValidation" label="E-mail" required></v-text-field>
+                <v-text-field v-model="form.person_email" :rules="emailValidation" label="E-mail" required></v-text-field>
               </v-col>
 
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="form.phone_number"
+                  v-model="form.person_phone_number"
                   :rules="phoneValidation"
                   label="Teléfono"
                   :counter="9"
@@ -39,7 +39,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="form.code"
+                  v-model="form.person_code"
                   :rules="codeValidation"
                   label="Código"
                   :counter="8"
@@ -53,7 +53,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="error" @click="cancelar">Cerrar</v-btn>
-        <v-btn color="green" @click="guardar">Guardar</v-btn>
+        <v-btn color="green" @click="funcion">Guardar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -80,35 +80,58 @@ export default {
   },
 
   methods: {
-    guardar() {
-      if (this.action == "Registrar usuario") {
+    funcion(){
+      if (this.action == 'Registrar alumno'){
+        console.log('registrar Alumnos')
         this.insertar();
-      } else if (this.action == "Editar usuario") {
+      }
+      else{
+        console.log('Editar alumno')
         this.editar();
       }
     },
-
     insertar() {
-      this.$refs.form.validate();
-      if (this.valid) {
-        axios
-          .post("/admin/add_coordinator/", this.form)
-          .then(res => console.log(res))
-          .catch(error => console.log(error));
-        this.$message({ message: "Registro exitoso.", type: "success" });
-        this.newDialog = false;
-        this.$emit("resetDialog", this.newDialog);
-        this.$emit("resetList");
-      } else this.$message.error("Datos incorrectos");
+      console.log("funcion insertar")
+       this.$refs.form.validate();
+       if (this.valid) {
+         axios
+           .post("/coordinator/add_student/", this.form)
+           .then(res => console.log(res))
+           .catch(error => console.log(error));
+         this.$message({ message: "Registro exitoso.", type: "success" });
+         this.newDialog = false;
+         this.$emit("resetDialog", this.newDialog);
+         this.$emit("resetList");
+       } else this.$message.error("Datos incorrectos");
     },
 
-    editar(item) {
+    editar() {
+      console.log("funcion editar")
       //servicio
-      this.form = Object.assign({}, item);
+      
+      this.$refs.form.validate();
+       if (this.valid) {
+         console.log(this.form)
+         axios
+           .post("/user/update_person/", this.form)
+           .then(res => console.log(res))
+           .catch(error => console.log(error));
+         this.$message({ message: "Modificación exitosa.", type: "success" });
+         this.newDialog = false;
+         this.$emit("resetDialog", this.newDialog);
+         this.$emit("resetList");
+       } else this.$message.error("Datos incorrectos");
+
+
+
+      //this.form = Object.assign({}, item);
+      
       this.newDialog = true;
+      
     },
 
     cancelar() {
+        console.log(this.form);
       this.$refs.form.reset();
       this.newDialog = false;
       this.$emit("resetDialog", this.newDialog);

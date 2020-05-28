@@ -2,21 +2,21 @@
   <el-container direction="vertical">
     <!-- Titulo-->
     <el-row>
-      <el-col :span="8">
+      <el-col :span="9">
         <div class="grid-content">
           <h1 style="text-align: center;">
-            <i class="fas fa-users"></i>&nbsp;Tutores
+            <i class="fas fa-users"></i>&nbsp;Coordinadores
           </h1>
         </div>
       </el-col>
       <el-col :span="8">
         <div class="grid-content">
-          <el-input placeholder="Buscar usuario" v-model="search" clearable>
+          <el-input placeholder="Buscar coordinador" v-model="search" clearable>
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="7">
         <div class="grid-content">
           <el-button
             type="success"
@@ -36,10 +36,10 @@
         'items-per-page-all-text': 'Listar todos',
       }"
       :headers="headers"
-      :items="tutores"
+      :items="coordinadores"
       :search="search"
       :items-per-page="5"
-      :sort-by="['code']"
+      :sort-by="['person_code']"
       multi-sort
       class="elevation-3"
       loading-text="Cargando.."
@@ -55,29 +55,29 @@
     </v-data-table>
 
     <!--Formulario-->
-    <tutorForm
+    <coordinadorForm
       :form="form"
       :dialog="dialog"
       :action="action"
-      v-on:resetDialog="dialog=$event"
+      v-on:resetDialog="dialog=false"
       v-on:resetList="listar()"
-    ></tutorForm>
+    ></coordinadorForm>
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
-import TutorForm from "./TutorForm";
+import CoordinadorForm from "./CoordinadorForm";
 
 export default {
   data() {
     return {
-      tutores: [],
+      coordinadores: [],
       headers: [
-        { text: "Código", value: "code" },
-        { text: "Nombre", value: "full_name" },
-        { text: "Teléfono", value: "phone_number" },
-        { text: "Correo", value: "email" },
+        { text: "Código", value: "person_code" },
+        { text: "Nombre", value: "person_full_name" },
+        { text: "Teléfono", value: "person_phone_number" },
+        { text: "Correo", value: "person_email" },
         { text: "Editar", value: "editar", sortable: false },
         { text: "Eliminar", value: "eliminar", sortable: false }
       ],
@@ -86,8 +86,7 @@ export default {
         person_last_name: "",
         person_email: "",
         person_phone_number: "",
-        person_code: "",
-        person_id: ""
+        person_code: ""
       },
       search: "",
       dialog: false,
@@ -102,35 +101,27 @@ export default {
   methods: {
     listar() {
       axios
-        .get("/coordinator/show_tutors/")
+        .get("/admin/show_coordinators/")
         .then(res => {
-          this.tutores = res.data.users;
+          this.coordinadores = res.data.users;
         })
         .catch(error => console.log(error));
     },
 
     insertar() {
-      this.action = "Registrar tutor";
+      this.action = "Registrar coordinador";
       this.dialog = true;
     },
 
     editar(item) {
-      this.action = "Editar tutor";
-      this.rellenar(item);
-      //this.form = Object.assign({}, item);
+      this.action = "Editar coordinador";
+      this.form = Object.assign({}, item);
       this.dialog = true;
     },
-    rellenar(item) {
-      this.form.person_name = item.name;
-      this.form.person_last_name = item.last_name;
-      this.form.person_email = item.email;
-      this.form.person_phone_number = item.phone_number;
-      this.form.person_code = item.code;
-      this.form.person_id = item.id;
-    },
+
     eliminar(item) {
       this.$confirm(
-        "Esta seguro de eliminar: " + item.name + "?",
+        "¿Está seguro de eliminar: " + item.person_name + "?",
         "Advertencia",
         {
           confirmButtonText: "Confirmar",
@@ -139,10 +130,12 @@ export default {
         }
       )
         .then(() => {
-          //servicio
           axios
-            .post("/user/delete_person/", { person_id: item.id })
-            .then(res => console.log(res))
+            .post("/user/delete_person/", { person_id: item.person_id })
+            .then(res => {
+              console.log(res);
+              this.listar();
+            })
             .catch(error => console.log(error));
 
           this.$message({ type: "success", message: "Registro eliminado" });
@@ -154,7 +147,7 @@ export default {
   },
 
   components: {
-    tutorForm: TutorForm
+    coordinadorForm: CoordinadorForm
   }
 };
 </script>
