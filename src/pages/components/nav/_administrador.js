@@ -28,12 +28,6 @@ export default [{
             to: '/Usuarios',
             icon: 'cil-task'
         },
-        {
-            _name: 'CSidebarNavItem',
-            name: 'Coordinadores',
-            to: '/Coordinadores',
-            icon: 'cil-task'
-        },
         /* {
           _name: 'CSidebarNavItem',
           name: 'Auditoría',
