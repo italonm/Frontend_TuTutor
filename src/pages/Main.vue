@@ -23,6 +23,9 @@ import TheHeader from "./components/Header";
 import TheFooter from "./components/Footer";
 export default {
   name: "TheContainer",
+  mounted(){
+    Location.reload()
+  },
   components: {
     TheSidebar,
     TheHeader,

@@ -69,8 +69,7 @@ export default {
 			}
     },     
     mounted(){      
-      const container = document.getElementById('container');
-      console.log(container)
+      const container = document.getElementById('container');      
       document.getElementById('signUp').addEventListener('click', () => {
         container.classList.add("right-panel-active");
       });
@@ -78,9 +77,11 @@ export default {
         container.classList.remove("right-panel-active");
       });
     },      
-		methods:{
+		methods:{      
 			logItIn(){        
-        axios.post('http://184.73.231.88:5000/api/user/log_in/',this.login)
+        var that = this;
+        console.log(that.login)
+        axios.post('http://184.73.231.88:5000/api/user/log_in/',that.login)
         .then(response =>{ 
             let Nombre = response.data.name;
             let Apellidos = response.data.last_name;
@@ -97,14 +98,13 @@ export default {
             localStorage.setItem('EsAlumno',JSON.stringify(EsAlumno));
             localStorage.setItem('EsSoporte',JSON.stringify(EsSoporte));   
             if (EsAdministrador){
-                /* this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['admin']}])                                                   */
-                this.$router.push('/TuTutor/Configuración')                               
-                this.$router.push('/TuTutor/Configuración') 
+                /* this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['admin']}])                                                   */              
+                this.$router.push('/TuTutor/Configuración')  
+                window.Location.reload()                                              
             }
             else if (EsCoordinador){
-                /* this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['coordi']}])                                                   */
-                this.$router.push('/TuTutor/Miembros/Alumnos')
-                this.$router.push('/TuTutor/Miembros/Alumnos')
+                /* this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['coordi']}])                                                   */                
+                this.$router.push('/TuTutor/Miembros/Alumnos')                                                                              
             }
             /* else if (EsTutor){                
             }

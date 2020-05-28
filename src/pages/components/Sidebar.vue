@@ -37,7 +37,8 @@
 
 import navAdministrador from "./nav/_administrador"
 import navCoordinador from "./nav/_coordinador"
-var navAuxiliar
+
+var navAuxiliar = navAdministrador
 if (JSON.parse(localStorage.getItem('EsCoordinador'))){ 
   navAuxiliar = navCoordinador
 }
