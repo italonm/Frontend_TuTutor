@@ -8,7 +8,7 @@ import Coordinadores from '../../Usuarios/Administrador/Coordinadores/Coordinado
 //COMPONENTES DE COORDINADOR
 import Alumnos from '../../Usuarios/Coordinador/Alumnos/Alumnos'
 import Tutores from '../../Usuarios/Coordinador/Tutores/Tutores'
-import TipoTutoria from '../../Usuarios/Coordinador/Tipos de tutoría/Tipos de tutoría'
+import TipoTutoria from '../../Usuarios/Coordinador/Tipos de tutoría/TipoTutoria'
 import Tutorías from '../../Usuarios/Coordinador/Tutorías/Tutorías'
 import Solicitudes from '../../Usuarios/Coordinador/Solicitudes/Solicitudes'
 import Soporte from '../../Usuarios/Coordinador/Soporte/Soporte'
