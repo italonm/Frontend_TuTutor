@@ -45,7 +45,11 @@
       loading-text="Cargando.."
       height="288px"
       fixed-header
-    ></v-data-table>
+    >
+      <template v-slot:item.add="{ item }">
+        <el-button type="info" icon="el-icon-edit" circle @click="editar(item)"></el-button>
+      </template>
+    </v-data-table>
 
     <!--Formulario-->
     <coordinadorForm
@@ -69,7 +73,8 @@ export default {
       headers: [
         { text: "Nombre", value: "faculty_name" },
         { text: "Tutoría fija", value: "faculty_required_tutorship" },
-        { text: "Unidad única", value: "faculty_unique_faculty" }
+        { text: "Unidad única", value: "faculty_unique_faculty" },
+        { text: "Agregar", value: "add", sortable: false }
       ],
       form: {
         person_name: "",
