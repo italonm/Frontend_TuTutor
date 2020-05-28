@@ -5,62 +5,61 @@ export default [
       {
         _name: 'CSidebarNavItem',
         name: 'Principal',
-        to: '/dashboard',
+        to: '/Bienvenido',
         icon: 'cil-speedometer'
       },
       {
         _name: 'CSidebarNavTitle',
         _children: ['Coordinador']
-      },
-      {
-        _name: 'CSidebarNavItem',
-        name: 'Programas',
-        to: '/Coordinador/Programas',
-        icon: 'cil-task'
-      },
+      },            
       {
         _name: 'CSidebarNavDropdown',
         name: 'Miembros',
-        route: '/Coordinador/Miembros',
+        route: '/Miembros',
         icon: 'cil-people',
         items: [
           {
             name: 'Alumnos',
-            to: '/Coordinador/Miembros/Alumnos'
+            to: '/Miembros/Alumnos'
           },
           {
             name: 'Profesores',
-            to: '/Coordinador/Miembros/Profesores'
+            to: '/Miembros/Tutores'
           },          
           {
             name: 'Soporte',
-            to: '/Coordinador/Miembros/Soporte'
+            to: '/Miembros/Soporte'
           },
           {
             name: 'Unidades de Apoyo',
-            to: '/Coordinador/Miembros/Unidades de Apoyo'
+            to: '/Miembros/Unidades de Apoyo'
           }
         ]
       },
       {
         _name: 'CSidebarNavItem',
-        name: 'Solicitudes',
-        to: '/Coordinador/Solicitudes',
-        icon: 'cil-pencil'
-      },      
+        name: 'Tipo de tutoría',
+        to: '/Tipo de tutoría',
+        icon: 'cil-task'
+      },
       {
         _name: 'CSidebarNavItem',
         name: 'Tutorías Activas',
-        to: '/Coordinador/Tutorías Activas',
+        to: '/Tutorías Activas',
         icon: 'cil-pencil'
-      },    
-        
+      },
       {
         _name: 'CSidebarNavItem',
+        name: 'Solicitudes',
+        to: '/Solicitudes',
+        icon: 'cil-pencil'
+      }                            
+      /* {
+        _name: 'CSidebarNavItem',
         name: 'Reportes',
-        to: '/Coordinador/Reportes',
+        to: '/Reportes',
         icon: 'cil-chartPie'
-      },      
+      }, */      
     ]
   }
 ]
