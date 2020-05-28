@@ -36,7 +36,7 @@
 import navAdministrador from "./nav/_administrador";
 import navCoordinador from "./nav/_coordinador";
 
-const rol = 0;
+const rol = 1;
 var navAuxiliar;
 if (rol) {
   navAuxiliar = navCoordinador;

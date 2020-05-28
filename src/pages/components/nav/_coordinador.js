@@ -20,7 +20,7 @@ export default [
       },
       {
         _name: 'CSidebarNavDropdown',
-        name: 'Miembros',
+        name: 'Miembros',/*Modificacion */
         route: '/Coordinador/Miembros',
         icon: 'cil-people',
         items: [
