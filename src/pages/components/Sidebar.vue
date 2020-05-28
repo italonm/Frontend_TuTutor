@@ -4,6 +4,7 @@
     :minimize="minimize"
     :show="show"
     @update:show="(value) => $store.commit('set', ['sidebarShow', value])"
+    style="background: #1D2736"
   >
     <CSidebarBrand class="d-md-down-none" to="/">
       <CIcon
@@ -26,6 +27,7 @@
     <CSidebarMinimizer
       class="d-md-down-none"
       @click.native="$store.commit('set', ['sidebarMinimize', !minimize])"
+      style="background: #1D2736"
     />
   </CSidebar>
 </template>
@@ -33,14 +35,15 @@
 <script>
 //AQUÍ DE ALGUNA FORMA ES EL LOGIN PERSONALIZADO :C
 
-import navAdministrador from "./nav/_administrador";
-import navCoordinador from "./nav/_coordinador";
-
-const rol = 0;
-var navAuxiliar;
-if (rol) {
-  navAuxiliar = navCoordinador;
-} else navAuxiliar = navAdministrador;
+import navAdministrador from "./nav/_administrador"
+import navCoordinador from "./nav/_coordinador"
+var navAuxiliar
+if (JSON.parse(window.localStorage.getItem('EsCoordinador'))){ 
+  navAuxiliar = navCoordinador
+}
+else if (JSON.parse(window.localStorage.getItem('EsAdministrador'))){
+  navAuxiliar = navAdministrador  
+}  
 
 /* const nav = () => import ("./_nav") */
 
