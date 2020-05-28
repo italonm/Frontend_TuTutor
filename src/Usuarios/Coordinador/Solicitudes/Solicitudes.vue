@@ -22,7 +22,7 @@
             type="success"
             @click="aceptarSol()"
             class="buttonAdd"
-          >&nbsp;Aceptar solicitud(es)</el-button>
+          >&nbsp;Aceptar</el-button>
         </div>
       </el-col>
       <el-col :span="2">
@@ -31,7 +31,7 @@
             type="danger"
             @click="rechazarSol()"
             class="buttonAdd"
-          >&nbsp;Rechazar solicitud(es)</el-button>
+          >&nbsp;Rechazar</el-button>
         </div>
       </el-col>
     </el-row>
@@ -146,7 +146,7 @@ export default {
 
     cancelar() {
       this.dialog = false;
-      this.$emit("resetDialog", this.dialog);
+      this.listar();
     }, 
 
     aceptar() {      
@@ -155,7 +155,8 @@ export default {
         .post("http://184.73.231.88:5000/api/coordinator/accept_list_assignment_requests/", { obj_list : this.selected })
         .then(res => {
           console.log(res);
-          this.$emit("resetList");
+          this.listar();
+          this.dialog = false;
           this.$message({
             message: "Aceptación exitosa",
             type: "success"
@@ -166,10 +167,11 @@ export default {
     rechazar() {   
       console.log(this.selected);   
       axios
-        .post("http://184.73.231.88:5000/api/coordinator/reject_assignment_requests/", { obj_list : this.selected })
+        .post("http://184.73.231.88:5000/api/coordinator/reject_list_assignment_requests/", { obj_list : this.selected })
         .then(res => {
           console.log(res);
-          this.$emit("resetList");
+          this.listar();
+          this.dialog = false;
           this.$message({
             message: "Rechazo exitoso",
             type: "success"
