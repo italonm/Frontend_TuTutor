@@ -1,26 +1,54 @@
-<template> 
-  <div class="nav containerPrincipal">   
+<template>
+  <div class="nav containerPrincipal">
     <div class="containerLogin" id="container">
       <div class="form-container sign-up-container">
-        <form style="background-color: #FFFFFF; display: flex;align-items: center;justify-content: center;flex-direction: column;padding: 0 50px;height: 100%;text-align: center;" action="#">
+        <form
+          style="background-color: #FFFFFF; display: flex;align-items: center;justify-content: center;flex-direction: column;padding: 0 50px;height: 100%;text-align: center;"
+          action="#"
+        >
           <div class="Iniciar">Regístrate</div>
-          <div class="social-container">            
-            <a href="#" class="social icon" style="color:#333;"><i class="fab fa-google-plus-g"></i></a>
-            <a href="#" class="social icon" style="color:#333;"><i class="fab fa-linkedin-in"></i></a>
+          <div class="social-container">
+            <a href="#" class="social icon" style="color:#333;">
+              <i class="fab fa-google-plus-g"></i>
+            </a>
+            <a href="#" class="social icon" style="color:#333;">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
           </div>
           <span style="font-size: 12px;">o usa alguna de tus cuentas</span>
-          <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;" type="text" placeholder="Nombre" />
-          <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;" type="email" placeholder="Correo electrónico" />
-          <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;" type="password" placeholder="Contraseña" />
-          <button style="border-radius: 20px; border: 1.3px solid #3C4B64; background-color: transparent;color: #3C4B64;font-size: 11px;padding: 12px 45px;letter-spacing: 1px;text-transform: uppercase;transition: transform 80ms ease-in;">Registrar</button>
+          <input
+            style="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;"
+            type="text"
+            placeholder="Nombre"
+          />
+          <input
+            style="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;"
+            type="email"
+            placeholder="Correo electrónico"
+          />
+          <input
+            style="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;"
+            type="password"
+            placeholder="Contraseña"
+          />
+          <button
+            style="border-radius: 20px; border: 1.3px solid #3C4B64; background-color: transparent;color: #3C4B64;font-size: 11px;padding: 12px 45px;letter-spacing: 1px;text-transform: uppercase;transition: transform 80ms ease-in;"
+          >Registrar</button>
         </form>
       </div>
       <div class="form-container sign-in-container">
-        <form style="background-color: #FFFFFF; display: flex;align-items: center;justify-content: center;flex-direction: column;padding: 0 50px;height: 100%;text-align: center;" action="#">
+        <form
+          style="background-color: #FFFFFF; display: flex;align-items: center;justify-content: center;flex-direction: column;padding: 0 50px;height: 100%;text-align: center;"
+          action="#"
+        >
           <div class="Iniciar">Inicia Sesión</div>
-          <div class="social-container">            
-            <a href="#" class="social" style="color:#333; font-size: 14px; margin-bottom: 5px;"><i class="fab fa-google-plus-g"></i></a>
-            <a href="#" class="social" style="color:#333; font-size: 14px; margin-bottom: 5px; "><i class="fab fa-linkedin-in"></i></a>
+          <div class="social-container">
+            <a href="#" class="social" style="color:#333; font-size: 14px; margin-bottom: 5px;">
+              <i class="fab fa-google-plus-g"></i>
+            </a>
+            <a href="#" class="social" style="color:#333; font-size: 14px; margin-bottom: 5px; ">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
           </div>
           <span style="font-size: 12px; padding: 0 50">o inicia a través de</span>
           <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;" type="text" placeholder="Usuario" v-model="login.user_name"/>          
@@ -36,16 +64,25 @@
       <div class="overlay-container">
         <div class="overlay">
           <div class="overlay-panel overlay-left">
-            <h1 style="font-weight: 600; margin: 0;font-size: 2.1875rem; color:#FFFFF; margin: 0;">Bienvenido de Regreso!</h1>
+            <h1
+              style="font-weight: 600; margin: 0;font-size: 2.1875rem; color:#FFFFF; margin: 0;"
+            >Bienvenido de Regreso!</h1>
             <p>Para mantenernos conectados, por favor ingresa con tu cuenta</p>
-            <button style="border-radius: 20px; border: 2px; background-color: transparent;color: #FFFFFF;font-size: 14px;padding: 12px 45px;letter-spacing: 1px;transition: transform 80ms ease-in;" 
-            id="signIn">Ingresar</button>
+            <button
+              style="border-radius: 20px; border: 2px; background-color: transparent;color: #FFFFFF;font-size: 14px;padding: 12px 45px;letter-spacing: 1px;transition: transform 80ms ease-in;"
+              id="signIn"
+            >Ingresar</button>
           </div>
           <div class="overlay-panel overlay-right">
-            <h1 style="font-weight: 600; margin: 0;font-size: 2.1875rem; color:#FFFFF; margin: 0;">Hey, Compañero!</h1>
+            <h1
+              style="font-weight: 600; margin: 0;font-size: 2.1875rem; color:#FFFFF; margin: 0;"
+            >Hey, Compañero!</h1>
             <p>Cuéntanos sobre ti y comencemos nuestro viaje juntos</p>
-            <button style="border-radius: 20px; border: 2px; background-color: transparent;color: #FFFFFF;font-size: 14px;padding: 12px 45px;letter-spacing: 1px;transition: transform 80ms ease-in;"
-            class="ghost" id="signUp">Regístrate</button>
+            <button
+              style="border-radius: 20px; border: 2px; background-color: transparent;color: #FFFFFF;font-size: 14px;padding: 12px 45px;letter-spacing: 1px;transition: transform 80ms ease-in;"
+              class="ghost"
+              id="signUp"
+            >Regístrate</button>
           </div>
         </div>
       </div>
@@ -126,7 +163,7 @@ export default {
             /* else if (EsTutor){                
             }
             else if (EsSoporte){                
-            }        */             
+            }        */
         })
         .catch(function(error) {
           if (error.response){
@@ -148,19 +185,20 @@ export default {
 
 					this.$router.push('/');
 				}); */
-      },
-      signUp(){
-        this.$router.addRoutes([
-                            {
-                            path: '/Registro',
-                            name: 'Registro',
-                            component: Registro,
-                            }])
-       this.$router.push('/Registro')                     
-      },
-		}
-}
+    },
+    signUp() {
+      this.$router.addRoutes([
+        {
+          path: "/Registro",
+          name: "Registro",
+          component: Registro
+        }
+      ]);
+      this.$router.push("/Registro");
+    }
+  }
+};
 </script>
 <style scoped>
-  @import './Login.css';
+@import "./Login.css";
 </style>

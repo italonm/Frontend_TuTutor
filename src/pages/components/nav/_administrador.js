@@ -9,8 +9,8 @@ export default [
           icon: 'cil-speedometer'
         },
         {
-          _name: 'CSidebarNavTitle',
-          _children: ['Administrador']
+            _name: 'CSidebarNavTitle',
+            _children: ['Administrador']
         },
         {
           _name: 'CSidebarNavItem',
@@ -35,13 +35,12 @@ export default [
           name: 'Auditoría',
           to: '/Auditoría',
           icon: 'cil-task'
-        },    */      
+        },    */
         /* {
           _name: 'CSidebarNavItem',
           name: 'Errores',
           to: '/Errores',
           icon: 'cil-pencil'
-        }, */                          
-      ]
-    }
-  ]
+        }, */
+    ]
+}]

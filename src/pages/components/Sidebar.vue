@@ -19,7 +19,7 @@
         name="logo"
         size="custom-size"
         :height="35"
-        viewBox="0 0 110 134"
+        viewBox="10 0 110 134"
       />
     </CSidebarBrand>
 
@@ -57,7 +57,7 @@ export default {
     },
     minimize() {
       return this.$store.state.sidebarMinimize;
-    },
-  },
+    }
+  }
 };
 </script>

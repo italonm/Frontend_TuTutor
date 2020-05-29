@@ -1,5 +1,4 @@
-export default [
-  {
+export default [{
     _name: 'CSidebarNav',
     _children: [
       {
@@ -67,5 +66,4 @@ export default [
         icon: 'cil-chartPie'
       }, */      
     ]
-  }
-]
+}]
