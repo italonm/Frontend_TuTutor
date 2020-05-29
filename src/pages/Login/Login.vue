@@ -23,9 +23,12 @@
             <a href="#" class="social" style="color:#333; font-size: 14px; margin-bottom: 5px; "><i class="fab fa-linkedin-in"></i></a>
           </div>
           <span style="font-size: 12px; padding: 0 50">o inicia a través de</span>
-          <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;" type="text" placeholder="Usuario" v-model="login.user_name"/>
-          <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;" type="password" placeholder="Contraseña" v-model="login.password"/>
-          <a style="color:#333; font-size: 12px; margin: 15px 0" href="#">Olvidaste tu contraseña?</a>
+          <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;" type="text" placeholder="Usuario" v-model="login.user_name"/>          
+          <div id="pass-container" style="display: flex; width: 100%; margin-bottom: 15px; width: 100%; background-color: #FFFFFF;">            
+            <input id="pass" style ="padding: 12px 15px; margin: 8px 0;	width: 100%;" type="password" placeholder="Contraseña" v-model="login.password" value>          
+            <i id="pass icon" class="fa fa-eye" style="position: absolute; right:7%; padding: 24px; min-width: 50px; text-align: right;" @click="ShowPass()"></i>
+          </div>
+          <a style="color:#333; font-size: 12px; margin: 15px 0" hre  f="#">Olvidaste tu contraseña?</a>
           <button style="border-radius: 20px; border: 1.3px solid #3C4B64; background-color: transparent;color: #3C4B64;font-size: 11px;padding: 12px 45px;letter-spacing: 1px;text-transform: uppercase;transition: transform 80ms ease-in;"
           success @click='logItIn'>Iniciar</button>
         </form>
@@ -78,6 +81,19 @@ export default {
       });
     },      
 		methods:{      
+      ShowPass(){
+        var x = document.getElementById("pass");
+        var y = document.getElementById("pass icon");
+        if (x.type === "password") {
+          y.className = "fa fa-eye-slash"
+          x.type = "text";
+        } else {
+          y.className = "fa fa-eye"
+          x.type = "password";
+        }
+        
+        
+      },
 			logItIn(){        
         var that = this;
         console.log(that.login)
@@ -99,20 +115,25 @@ export default {
             localStorage.setItem('EsSoporte',JSON.stringify(EsSoporte));   
             if (EsAdministrador){
                 /* this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['admin']}])                                                   */              
-                this.$router.push('/TuTutor/Configuración')  
+                this.$router.push('/TuTutor/Bienvenido')  
                 window.Location.reload()                                              
             }
             else if (EsCoordinador){
                 /* this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['coordi']}])                                                   */                
-                this.$router.push('/TuTutor/Miembros/Alumnos')                                                                              
+                this.$router.push('/TuTutor/Bienvenido')                                                                              
             }
             /* else if (EsTutor){                
             }
             else if (EsSoporte){                
             }        */             
         })
-        .catch(
-          this.$message.error("Datos inválidos, por favor ingrese de nuevo.")
+        .catch(function(error) {
+          if (error.response){
+            console.log(error)
+            that.$message.error("Datos inválidos, por favor ingrese de nuevo.")
+          }          
+        }
+          
         )                               			                
 				/* .then(response => {
 					let newToken=response.data.user.api_token;
