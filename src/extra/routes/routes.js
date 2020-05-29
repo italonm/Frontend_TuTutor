@@ -50,7 +50,7 @@ export const routes = [
             { path: "Reportes", component: Welcome },
             { path: "Solicitudes", component: Solicitudes }, //valeria
             { path: "/TuTutor/Miembros/Unidades de apoyo", component: Apoyo }, //valeria
-            { path: "/TuTutor/Miembros/Soporte", component: Soporte }, //herbert
+            { path: "/TuTutor/Miembros/Soporte", component: Soporte }, //herbert            
             //Tutor
             { path: "Asignaciones", component: Welcome },
             { path: "Citas", component: Welcome },
