@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" persistent max-width="500px">
     <v-card>
       <v-card-title class="cardAdd">
-        <h2 class="headline">Registrar unidad académica</h2>
+        <h2 class="headline">Registrar programa</h2>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -10,7 +10,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="form.faculty_name"
+                  v-model="form.program_name"
                   :rules="nameValidation"
                   label="Nombre"
                   required
@@ -19,21 +19,12 @@
 
               <v-col cols="12" md="6">
                 <v-select
-                  v-model="form.faculty_id_coordinator"
+                  v-model="form.program_id_coordinator"
                   :items="coordinadores"
                   item-text="person_full_name"
                   item-value="person_id"
                   label="Coordinador"
                 ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-checkbox v-model="form.faculty_unique_faculty" :label="`Tutoría única`"></v-checkbox>
-              </v-col>
-
-              <v-col cols="12" md="6">
-                <v-checkbox v-model="form.faculty_required_tutorship" :label="`Tutoría fija`"></v-checkbox>
               </v-col>
             </v-row>
           </v-form>
@@ -53,7 +44,7 @@ import { nameRules } from "../../Validation";
 import axios from "axios";
 
 export default {
-  props: ["dialog"],
+  props: ["faculty_id", "dialog"],
 
   data() {
     return {
@@ -63,10 +54,9 @@ export default {
       checkbox: false,
       coordinadores: [],
       form: {
-        faculty_name: "",
-        faculty_unique_faculty: false,
-        faculty_required_tutorship: false,
-        faculty_id_coordinator: ""
+        program_name: "",
+        program_id_faculty: this.faculty_id,
+        program_id_coordinator: 0
       }
     };
   },
@@ -81,10 +71,11 @@ export default {
   },
   methods: {
     insertar() {
+      this.form.program_id_faculty = this.faculty_id;
       this.$refs.form.validate();
       if (this.valid) {
         axios
-          .post("/admin/add_faculty/", this.form)
+          .post("/admin/add_program/", this.form)
           .then(res => {
             console.log(res);
             this.$emit("resetList");

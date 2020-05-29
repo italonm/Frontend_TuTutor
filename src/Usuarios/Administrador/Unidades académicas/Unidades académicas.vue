@@ -1,100 +1,194 @@
 <template>
   <el-container direction="vertical">
-    <!-- Titulo-->
     <el-row>
-      <el-col :span="9">
-        <div class="grid-content">
-          <h1 style="text-align: center;">
-            <i class="fas fa-university"></i>&nbsp;Unidades Académicas
-          </h1>
-        </div>
+      <!--Unidades académicas-->
+      <el-col :span="11">
+        <el-row>
+          <div class="grid-content">
+            <h1 style="text-align: center;">
+              <i class="fas fa-university"></i>&nbsp;Unidades Académicas
+            </h1>
+          </div>
+        </el-row>
+        <el-row>
+          <el-col :span="4">
+            <div class="grid-content"></div>
+          </el-col>
+          <el-col :span="16">
+            <el-input placeholder="Buscar unidad académica" v-model="searchUnidad" clearable>
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+          </el-col>
+          <el-col :span="1">
+            <div class="grid-content"></div>
+          </el-col>
+          <el-col :span="3">
+            <div class="grid-content">
+              <el-button type="success" icon="el-icon-plus" circle @click="dialogUnidad = true;"></el-button>
+            </div>
+          </el-col>
+        </el-row>
       </el-col>
-      <el-col :span="8">
-        <div class="grid-content">
-          <el-input placeholder="Buscar unidad académica" v-model="search" clearable>
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-          </el-input>
-        </div>
+      <el-col :span="2">
+        <div class="grid-content"></div>
       </el-col>
-      <el-col :span="7">
-        <div class="grid-content">
-          <el-button
-            type="success"
-            icon="fas fa-plus-circle"
-            @click="insertar()"
-            class="buttonAdd"
-          >&nbsp;Agregar</el-button>
-        </div>
+
+      <!--Programas-->
+      <el-col :span="11">
+        <el-row>
+          <div class="grid-content">
+            <h1 style="text-align: center;">
+              <i class="fas fa-school"></i>
+              &nbsp;Programas {{this.faculty_name}}
+            </h1>
+          </div>
+        </el-row>
+        <el-row>
+          <el-col :span="4">
+            <div class="grid-content"></div>
+          </el-col>
+          <el-col :span="16">
+            <el-input placeholder="Buscar programa" v-model="searchPrograma" clearable>
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+          </el-col>
+          <el-col :span="4">
+            <div class="grid-content"></div>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
 
-    <!-- Tabla-->
-    <v-data-table
-      :footer-props="{
-        'items-per-page-options': [5, 10, 15, -1],
-        'items-per-page-text': 'Registros por página:',
-        'items-per-page-all-text': 'Listar todos',
-      }"
-      :headers="headers"
-      :items="unidades"
-      :search="search"
-      :items-per-page="5"
-      :sort-by="['faculty_required_tutorship']"
-      multi-sort
-      class="elevation-3"
-      loading-text="Cargando.."
-      height="288px"
-      fixed-header
-    >
-      <template v-slot:item.add="{ item }">
-        <el-button type="info" icon="el-icon-edit" circle @click="editar(item)"></el-button>
-      </template>
-    </v-data-table>
+    <!--Tablas-->
+    <el-row>
+      <!-- Tabla unidades-->
+      <el-col :span="11">
+        <v-data-table
+          :footer-props="footerProps"
+          :headers="headersUnidades"
+          :items="unidades"
+          :search="searchUnidad"
+          :items-per-page="5"
+          multi-sort
+          class="elevation-3"
+          loading-text="Cargando.."
+          height="288px"
+          fixed-header
+        >
+          <template v-slot:item.watch="{ item }">
+            <el-button type="info" icon="fas fa-school" circle @click="listarProgramaAux(item)"></el-button>
+          </template>
+          <template v-slot:item.faculty_required_tutorship="{ item }">
+            <i v-if="item.faculty_required_tutorship==true" class="el-icon-check"></i>
+            <i v-if="item.faculty_required_tutorship==false" class="el-icon-close"></i>
+          </template>
+          <template v-slot:item.faculty_unique_faculty="{ item }">
+            <i v-if="item.faculty_unique_faculty==true" class="el-icon-check"></i>
+            <i v-if="item.faculty_unique_faculty==false" class="el-icon-close"></i>
+          </template>
+          <template v-slot:item.add="{ item }">
+            <el-button
+              v-if="item.faculty_unique_faculty==false"
+              type="success"
+              icon="el-icon-plus"
+              circle
+              @click="insertarPrograma(item)"
+            ></el-button>
+          </template>
+        </v-data-table>
+      </el-col>
+      <el-col :span="2">
+        <div class="grid-content"></div>
+      </el-col>
 
-    <!--Formulario-->
-    <coordinadorForm
-      :form="form"
-      :dialog="dialog"
-      :action="action"
-      v-on:resetDialog="dialog=false"
-      v-on:resetList="listar()"
-    ></coordinadorForm>
+      <!-- Tabla programas-->
+      <el-col :span="11">
+        <v-data-table
+          :footer-props="footerProps"
+          :headers="headersProgramas"
+          :items="programas"
+          :search="searchPrograma"
+          :items-per-page="5"
+          multi-sort
+          class="elevation-3"
+          height="288px"
+          fixed-header
+        >
+          <template slot="no-data">
+            <label>Seleccione una unidad académica</label>
+          </template>
+        </v-data-table>
+      </el-col>
+    </el-row>
+
+    <!--Formularios-->
+    <unidadForm
+      :dialog="dialogUnidad"
+      v-on:resetDialog="dialogUnidad=false"
+      v-on:resetList="listarUnidades()"
+    ></unidadForm>
+
+    <programaForm
+      :faculty_id="faculty_id"
+      :dialog="dialogPrograma"
+      v-on:resetDialog="dialogPrograma=false"
+      v-on:resetList="listarProgramas()"
+    ></programaForm>
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
-import CoordinadorForm from "./UnidadAcadémicaForm";
+import UnidadForm from "./UnidadAcadémicaForm";
+import ProgramaForm from "./ProgramaForm";
 
 export default {
   data() {
     return {
+      //Unidades
       unidades: [],
-      headers: [
+      headersUnidades: [
         { text: "Nombre", value: "faculty_name" },
-        { text: "Tutoría fija", value: "faculty_required_tutorship" },
-        { text: "Unidad única", value: "faculty_unique_faculty" },
+        {
+          text: "Tutoría fija",
+          value: "faculty_required_tutorship",
+          sortable: false
+        },
+        {
+          text: "Unidad única",
+          value: "faculty_unique_faculty",
+          sortable: false
+        },
+        { text: "Programas", value: "watch", sortable: false },
         { text: "Agregar", value: "add", sortable: false }
       ],
-      form: {
-        person_name: "",
-        person_last_name: "",
-        person_email: "",
-        person_phone_number: "",
-        person_code: ""
-      },
-      search: "",
-      dialog: false,
-      action: ""
+      //Programas
+      programas: [],
+      headersProgramas: [
+        { text: "Nombre", value: "program_name" },
+        { text: "Coordinador", value: "coordinator_full_name" },
+        { text: "Contacto", value: "coordinator_email" }
+      ],
+      searchUnidad: "",
+      searchPrograma: "",
+      dialogUnidad: false,
+      dialogPrograma: false,
+      faculty_id: 1,
+      faculty_name: "",
+      footerProps: {
+        "items-per-page-options": [5, 10, 15, -1],
+        "items-per-page-text": "Registros por página:",
+        "items-per-page-all-text": "Listar todos"
+      }
     };
   },
 
   created() {
-    this.listar();
+    this.listarUnidades();
   },
 
   methods: {
-    listar() {
+    listarUnidades() {
       axios
         .get("/admin/show_faculties/")
         .then(res => {
@@ -103,46 +197,30 @@ export default {
         .catch(error => console.log(error));
     },
 
-    insertar() {
-      this.action = "Registrar unidad académica";
-      this.dialog = true;
+    listarProgramaAux(item) {
+      this.faculty_id = item.faculty_id;
+      this.faculty_name = item.faculty_name;
+      this.listarProgramas();
     },
 
-    editar(item) {
-      this.action = "Editar coordinador";
-      this.form = Object.assign({}, item);
-      this.dialog = true;
-    },
-
-    eliminar(item) {
-      this.$confirm(
-        "¿Está seguro de eliminar: " + item.person_name + "?",
-        "Advertencia",
-        {
-          confirmButtonText: "Confirmar",
-          cancelButtonText: "Cancelar",
-          type: "warning"
-        }
-      )
-        .then(() => {
-          axios
-            .post("/user/delete_person/", { person_id: item.person_id })
-            .then(res => {
-              console.log(res);
-              this.listar();
-            })
-            .catch(error => console.log(error));
-
-          this.$message({ type: "success", message: "Registro eliminado" });
+    listarProgramas() {
+      axios
+        .get("/admin/show_programs/" + this.faculty_id)
+        .then(res => {
+          this.programas = res.data.programs;
         })
-        .catch(() => {
-          this.$message({ type: "info", message: "Eliminación cancelada" });
-        });
+        .catch(error => console.log(error));
+    },
+
+    insertarPrograma(item) {
+      this.faculty_id = item.faculty_id;
+      this.dialogPrograma = true;
     }
   },
 
   components: {
-    coordinadorForm: CoordinadorForm
+    unidadForm: UnidadForm,
+    programaForm: ProgramaForm
   }
 };
 </script>
