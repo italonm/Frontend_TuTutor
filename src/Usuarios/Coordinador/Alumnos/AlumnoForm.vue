@@ -98,10 +98,11 @@ export default {
            .post("/coordinator/add_student/", this.form)
            .then(res => console.log(res))
            .catch(error => console.log(error));
-         this.$message({ message: "Registro exitoso.", type: "success" });
-         this.newDialog = false;
-         this.$emit("resetDialog", this.newDialog);
+
          this.$emit("resetList");
+         this.$message({ message: "Registro exitoso.", type: "success" });
+         this.$emit("resetDialog")
+         this.$refs.form.reset();
        } else this.$message.error("Datos incorrectos");
     },
 
@@ -114,27 +115,23 @@ export default {
          console.log(this.form)
          axios
            .post("/user/update_person/", this.form)
-           .then(res => console.log(res))
-           .catch(error => console.log(error));
-         this.$message({ message: "Modificación exitosa.", type: "success" });
-         this.newDialog = false;
-         this.$emit("resetDialog", this.newDialog);
-         this.$emit("resetList");
+           .then(res => {
+            console.log(res);
+            this.$emit("resetList");
+            this.$message({ message: "Modificación exitosa.", type: "success" });
+            this.$emit("resetDialog");
+            this.$refs.form.reset();
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message.error("Datos duplicados: esta unidad de apoyo ya fue registrada");
+          });
        } else this.$message.error("Datos incorrectos");
-
-
-
-      //this.form = Object.assign({}, item);
-      
-      this.newDialog = true;
-      
     },
 
     cancelar() {
-        console.log(this.form);
       this.$refs.form.reset();
-      this.newDialog = false;
-      this.$emit("resetDialog", this.newDialog);
+      this.$emit("resetDialog");
     }
   }
 };

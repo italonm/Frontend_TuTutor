@@ -87,7 +87,7 @@ export default {
         person_email: "",
         person_phone_number: "",
         person_code: "",
-        person_id: ""
+        person_id:""
       },
       search: "",
       dialog: false,
@@ -120,13 +120,13 @@ export default {
       //this.form = Object.assign({}, item);
       this.dialog = true;
     },
-    rellenar(item) {
-      this.form.person_name = item.name;
-      this.form.person_last_name = item.last_name;
-      this.form.person_email = item.email;
-      this.form.person_phone_number = item.phone_number;
-      this.form.person_code = item.code;
-      this.form.person_id = item.id;
+    rellenar(item){
+      this.form.person_name=item.name;
+      this.form.person_last_name=item.last_name;
+      this.form.person_email=item.email;
+      this.form.person_phone_number=item.phone_number;
+      this.form.person_code=item.code;
+      this.form.person_id=item.id;
     },
     eliminar(item) {
       this.$confirm(
@@ -139,13 +139,18 @@ export default {
         }
       )
         .then(() => {
-          //servicio
-          axios
-            .post("/user/delete_person/", { person_id: item.id })
-            .then(res => console.log(res))
-            .catch(error => console.log(error));
 
+          //servicio
+           axios
+           .post("/user/delete_person/", {person_id:item.id})
+           .then(res => {
+            console.log(res);
+            this.listar();
+          })
+           .catch(error => console.log(error));
+          this.$emit("resetList");
           this.$message({ type: "success", message: "Registro eliminado" });
+          
         })
         .catch(() => {
           this.$message({ type: "info", message: "Eliminación cancelada" });
