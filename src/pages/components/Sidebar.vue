@@ -19,7 +19,7 @@
         name="logo"
         size="custom-size"
         :height="35"
-        viewBox="0 0 110 134"
+        viewBox="10 0 110 134"
       />
     </CSidebarBrand>
 
@@ -38,10 +38,10 @@
 import navAdministrador from "./nav/_administrador"
 import navCoordinador from "./nav/_coordinador"
 var navAuxiliar
-if (JSON.parse(window.localStorage.getItem('EsCoordinador'))){ 
+if (JSON.parse(localStorage.getItem('EsCoordinador'))){ 
   navAuxiliar = navCoordinador
 }
-else if (JSON.parse(window.localStorage.getItem('EsAdministrador'))){
+else if (JSON.parse(localStorage.getItem('EsAdministrador'))){
   navAuxiliar = navAdministrador  
 }  
 
@@ -56,7 +56,7 @@ export default {
     },
     minimize() {
       return this.$store.state.sidebarMinimize;
-    },
-  },
+    }
+  }
 };
 </script>
