@@ -136,6 +136,7 @@ export default {
         console.log(that.login)
         axios.post('http://184.73.231.88:5000/api/user/log_in/',that.login)
         .then(response =>{ 
+            console.log(response)
             let Nombre = response.data.name;
             let Apellidos = response.data.last_name;
             let EsAdministrador = response.data.is_admin;

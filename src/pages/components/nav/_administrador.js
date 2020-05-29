@@ -6,7 +6,7 @@ export default [
           _name: 'CSidebarNavItem',
           name: 'Principal',
           to: '/TuTutor/Bienvenido',
-          icon: 'cil-speedometer'
+          icon: 'cil-GlobeAlt'
         },
         {
             _name: 'CSidebarNavTitle',
@@ -16,20 +16,26 @@ export default [
           _name: 'CSidebarNavItem',
           name: 'Datos de la institución',
           to: '/TuTutor/Configuración',
-          icon: 'cil-speedometer'
+          icon: 'cil-settings'
         },
         {
           _name: 'CSidebarNavItem',
           name: 'Unidades Académicas',
           to: '/TuTutor/Unidades Académicas',
-          icon: 'cil-task'
+          icon: 'cil-list'
         },
         {
           _name: 'CSidebarNavItem',
           name: 'Usuarios',
           to: '/TuTutor/Usuarios',
-          icon: 'cil-task'
-        },   
+          icon: 'cil-people'
+        },  
+        {
+          _name: 'CSidebarNavItem',
+          name: 'Coordinadores',
+          to: '/TuTutor/Coordinadores',
+          icon: 'cil-user'
+        }, 
         /* {
           _name: 'CSidebarNavItem',
           name: 'Auditoría',

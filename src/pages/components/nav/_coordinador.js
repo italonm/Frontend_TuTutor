@@ -5,7 +5,7 @@ export default [{
         _name: 'CSidebarNavItem',
         name: 'Principal',
         to: '/TuTutor/Bienvenido',
-        icon: 'cil-speedometer'
+        icon: 'cil-GlobeAlt'
       },
       {
         _name: 'CSidebarNavTitle',
@@ -34,24 +34,24 @@ export default [{
             to: '/TuTutor/Miembros/Unidades de Apoyo'
           }
         ]
-      },
+      },        
       {
         _name: 'CSidebarNavItem',
         name: 'Tipo de tutoría',
         to: '/TuTutor/Tipos de tutoría',
-        icon: 'cil-task'
+        icon: 'cil-list'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Tutorías Activas',
         to: '/TuTutor/Tutorías Activas',
-        icon: 'cil-pencil'
+        icon: 'cil-CheckCircle'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Solicitudes',
         to: '/TuTutor/Solicitudes',
-        icon: 'cil-pencil'
+        icon: 'cil-EnvelopeClosed'
       }                            
       /* {
         _name: 'CSidebarNavItem',
