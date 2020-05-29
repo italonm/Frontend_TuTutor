@@ -145,6 +145,7 @@ export default {
             let EsAlumno = response.data.is_student;
             let EsSoporte = response.data.is_support;
             let EsTutor = response.data.is_tutor;
+            localStorage.setItem('Id_usuario',JSON.stringify(Id_usuario));
             localStorage.setItem('Nombre',JSON.stringify(Nombre));                    
             localStorage.setItem('Apellidos',JSON.stringify(Apellidos));  
             localStorage.setItem('EsAdministrador',JSON.stringify(EsAdministrador));                    
