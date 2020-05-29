@@ -35,6 +35,12 @@ export default [
             to: '/TuTutor/Miembros/Unidades de Apoyo'
           }
         ]
+      },      
+      {
+        _name: 'CSidebarNavItem',
+        name: 'Coordinadores',
+        to: '/TuTutor/Coordinadores',
+        icon: 'cil-task'
       },
       {
         _name: 'CSidebarNavItem',
