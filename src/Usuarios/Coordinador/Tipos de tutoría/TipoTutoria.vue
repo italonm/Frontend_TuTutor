@@ -79,19 +79,19 @@ export default {
         { text: "Periodicidad", value: "tt_periodicity" },
         { text: "¿Es obligatorio?", value: "tt_isrequired" },
         { text: "¿El tutor es asignado?", value: "tt_assigned" },
-        { text: "¿El tutor es fijo?", value: "tt_permanent" },        
+        { text: "¿El tutor es fijo?", value: "tt_permanent" },
         { text: "Editar", value: "editar", sortable: false },
         { text: "Eliminar", value: "eliminar", sortable: false }
       ],
       tipotutorias: [],
-      signtipo:{
-        tt_name:"",
-        tt_description:"",
-        tt_isrequired:"",
-        tt_quantity:"",
-        tt_periodicity:"Semanal",
-        tt_assigned:"",
-        tt_permanent:"",
+      signtipo: {
+        tt_name: "",
+        tt_description: "",
+        tt_isrequired: "",
+        tt_quantity: "",
+        tt_periodicity: "Semanal",
+        tt_assigned: "",
+        tt_permanent: ""
       },
       search: "",
       dialog: false,
@@ -138,10 +138,18 @@ export default {
         .then(() => {
           console.log(item.tt_id);
           axios
-          .post("/coordinator/delete_tutoring_types/", item)
-          .then(res => console.log(res))
-          .catch(error => console.log(error));
-          this.$message({ type: "success", message: "Tipo de tutoría eliminado" });
+            .post("/coordinator/delete_tutoring_types/", item)
+            .then(res => {
+              console.log(res);
+              this.$message({
+                type: "success",
+                message: "Tipo de tutoría eliminado"
+              });
+              this.newDialog = false;
+              this.$emit("resetDialog", this.newDialog);
+              this.listar();
+            })
+            .catch(error => console.log(error));
         })
         .catch(() => {
           this.$message({ type: "info", message: "Eliminación cancelada" });

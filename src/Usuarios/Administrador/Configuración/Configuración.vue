@@ -73,9 +73,9 @@
           </CCardHeader>
           <CCardBody>
             <div>
-              <img :src="previewImage" class="uploading-image img-thumbnail" />
+              <img id="img" :src="previewImage" class="uploading-image img-thumbnail" />
               <CCol>
-                <input type="file" accept="image/png" @change="uploadImage" />
+                <input ref="file" type="file" accept="image/png" @change="uploadImage" />
               </CCol>
             </div>
           </CCardBody>
@@ -84,7 +84,7 @@
     </CRow>
 
     <CCol sm xs="20" class="text-center mt-3">
-      <CButton size="lg" id="done-button" color="success" @click="registrar">
+      <CButton size="lg" id="done-button" color="success" @click="verificar">
         <CIcon name="cil-lightbulb" />&nbsp;Actualizar datos
       </CButton>
     </CCol>
@@ -101,78 +101,159 @@ import {
   phoneRules,
   webRules
 } from "../../Validation";
+var formData = new FormData();
 export default {
   data() {
     return {
       previewImage: null,
       valid: true,
       lazy: false,
+      logoActualizado: false,
       nameValidation: nameRules,
       emailValidation: emailRules,
       codeValidation: codeRules,
       phoneValidation: phoneRules,
       webValidation: webRules,
       logo: {
+        institution_id: "",
         institution_name: "",
         institution_address: "",
         institution_email: "",
         institution_email_help: "",
         institution_phone_number: "",
         institution_web_page: "",
-        institution_logo: new Blob(),
-        admin_id: ""
+        institution_logo: "",
+        admin_id: JSON.parse(window.localStorage.getItem("ID"))
+      },
+      editarlogo: {
+        institution_id: "",
+        institution_name: "",
+        institution_address: "",
+        institution_email: "",
+        institution_email_help: "",
+        institution_phone_number: "",
+        institution_web_page: ""
       }
     };
   },
+  created() {
+    this.listar();
+  },
   name: "Configuración",
   methods: {
-    dataURLtoBlob(dataURI) {
-      // convert base64/URLEncoded data component to raw binary data held in a string
-      var byteString;
-      if (dataURI.split(",")[0].indexOf("base64") >= 0)
-        byteString = atob(dataURI.split(",")[1]);
-      else byteString = unescape(dataURI.split(",")[1]);
-
-      // separate out the mime component
-      var mimeString = dataURI
-        .split(",")[0]
-        .split(":")[1]
-        .split(";")[0];
-
-      // write the bytes of the string to a typed array
-      var ia = new Uint8Array(byteString.length);
-      for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-      }
-
-      return new Blob([ia], { type: mimeString });
+    verificar() {
+      if (this.editarlogo.institution_id) this.editar();
+      else this.registrar();
+    },
+    listar() {
+      var idAdmin = JSON.parse(window.localStorage.getItem("ID"));
+      axios
+        .get("http://184.73.231.88:5000/api/admin/show_institution/" + idAdmin)
+        .then(res => {
+          this.logo.institution_name = res.data.institution_name;
+          this.logo.institution_address = res.data.institution_address;
+          this.logo.institution_email = res.data.institution_email;
+          this.logo.institution_email_help = res.data.institution_email_help;
+          this.logo.institution_phone_number =
+            res.data.institution_phone_number;
+          this.logo.institution_web_page = res.data.institution_web_page;
+          this.editarlogo.institution_id = res.data.institution_id;
+          axios
+            .get("http://184.73.231.88:5000/api/admin/show_logo/" + idAdmin, {
+              responseType: "arraybuffer"
+            })
+            .then(response => {
+              let image = btoa(
+                new Uint8Array(response.data).reduce(
+                  (data, byte) => data + String.fromCharCode(byte),
+                  ""
+                )
+              );
+              this.previewImage = `data:${response.headers[
+                "content-type"
+              ].toLowerCase()};base64,${image}`;
+            });
+        })
+        .catch(error => console.log(error));
     },
     uploadImage(e) {
       const image = e.target.files[0];
+      formData.append("file", image, image.name);
       const reader = new FileReader();
       reader.readAsDataURL(image);
-
       reader.onload = e => {
         this.previewImage = e.target.result;
-        console.log(this.previewImage);
-        this.logo.institution_logo = this.dataURLtoBlob(this.previewImage);
-        console.log(this.logo.institution_logo);
       };
+      this.logoActualizado = true;
     },
     registrar() {
       this.$refs.form.validate();
       if (this.valid) {
-        this.logo.admin_id = JSON.parse(localStorage.getItem("ID"));
-        console.log(this.logo.institution_logo);
+        if (this.logoActualizado) {
+          this.logo.admin_id = JSON.parse(window.localStorage.getItem("ID"));
+          axios
+            .post(
+              "http://184.73.231.88:5000/api/admin/add_logo/" +
+                this.logo.admin_id,
+              formData
+            )
+            .then(this.$message({ message: "Subiendo logo", type: "success" }))
+            .catch(e => {
+              console.log(e);
+            });
+          this.logoActualizado = false;
+        }
         axios
           .post(
             "http://184.73.231.88:5000/api/admin/add_institution/",
             this.logo
           )
-          .then(response => {
-            console.log(response);
-            this.$message({ message: "Registro exitoso.", type: "success" });
-          })
+          .then(
+            this.$message({ message: "Modificación exitoso.", type: "success" })
+          )
+          .catch(e => {
+            console.log(e);
+          });
+      } else this.$message.error("Datos incorrectos");
+    },
+    editar() {
+      this.$refs.form.validate();
+      if (this.valid) {
+        if (this.logoActualizado) {
+          console.log(formData);
+          this.logo.admin_id = JSON.parse(window.localStorage.getItem("ID"));
+          axios
+            .post(
+              "http://184.73.231.88:5000/api/admin/add_logo/" +
+                this.logo.admin_id,
+              formData
+            )
+            .then(this.$message({ message: "Subiendo datos", type: "success" }))
+            //.then(this.reloadImage())
+            .then(setTimeout(this.listar(), 1000))
+            .then(console.log("Imagen Subida"))
+            .catch(e => {
+              console.log(e);
+            });
+          this.logoActualizado = false;
+        }
+        this.editarlogo.institution_name = this.logo.institution_name;
+        this.editarlogo.institution_address = this.logo.institution_address;
+        this.editarlogo.institution_email = this.logo.institution_email;
+        this.editarlogo.institution_email_help = this.logo.institution_email_help;
+        this.editarlogo.institution_phone_number = this.logo.institution_phone_number;
+        this.editarlogo.institution_web_page = this.logo.institution_web_page;
+
+        axios
+          .post(
+            "http://184.73.231.88:5000/api/admin/update_institution/",
+            this.editarlogo
+          )
+          .then(
+            this.$message({ message: "Registro exitoso.", type: "success" })
+          )
+          .then(this.$refs.form.reset())
+          .then(console.log("Listado"))
           .catch(e => {
             console.log(e);
           });

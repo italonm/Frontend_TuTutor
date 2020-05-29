@@ -11,6 +11,9 @@
         <span style="font-size:13.5px; color:#FFFFFF" id="sesión"></span>
       </CHeaderNavItem>
     </CHeaderNav>
+    <CCol class="col-6 col-sm-3">
+      <img :src="previewImage" class="uploading-image img-fluid" alt="Responsive Image" />
+    </CCol>
     <CHeaderNav class="mr-4">
       <Desplegable />
     </CHeaderNav>
@@ -19,8 +22,14 @@
 
 <script>
 import Desplegable from "./Desplegable";
+var idAdmin = JSON.parse(window.localStorage.getItem("ID"));
 export default {
   name: "TheHeader",
+  data() {
+    return {
+      previewImage: "http://184.73.231.88:5000/api/admin/show_logo/" + idAdmin
+    };
+  },
   components: {
     Desplegable
   },
