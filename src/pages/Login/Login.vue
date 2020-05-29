@@ -136,7 +136,8 @@ export default {
         console.log(that.login)
         axios.post('http://184.73.231.88:5000/api/user/log_in/',that.login)
         .then(response =>{ 
-            console.log(response)
+            console.log(response);
+            let Id_usuario = response.data.id;
             let Nombre = response.data.name;
             let Apellidos = response.data.last_name;
             let EsAdministrador = response.data.is_admin;
@@ -144,6 +145,7 @@ export default {
             let EsAlumno = response.data.is_student;
             let EsSoporte = response.data.is_support;
             let EsTutor = response.data.is_tutor;
+            localStorage.setItem('Id_usuario',JSON.stringify(Id_usuario));
             localStorage.setItem('Nombre',JSON.stringify(Nombre));                    
             localStorage.setItem('Apellidos',JSON.stringify(Apellidos));  
             localStorage.setItem('EsAdministrador',JSON.stringify(EsAdministrador));                    
