@@ -7,30 +7,37 @@
       <v-card-text>
         <v-container>
           <v-form ref="form" v-model="valid" :lazy-validation="lazy">
-            <v-text-field v-model="form.name" :rules="nameValidation" label="Nombre" required></v-text-field>
-
-            <v-text-field
-              v-model="form.responsible"
-              :rules="nameValidation"
-              label="Responsable"
+                         
+              <v-text-field 
+              v-model="form.name" 
+              :rules="nameValidation" 
+              label="Nombre" 
               required
-            ></v-text-field>
-
-            <v-text-field
-              v-model="form.email"
-              :rules="emailValidation"
-              label="Correo electrónico"
-              required
-            ></v-text-field>
-
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="form.phone_number"
-                :rules="phoneValidation"
-                label="Teléfono"
-                :counter="9"
               ></v-text-field>
-            </v-col>
+            
+              <v-text-field
+                v-model="form.responsible"
+                :rules="nameValidation"
+                label="Responsable"
+                required
+              ></v-text-field>              
+            
+              <v-text-field 
+              v-model="form.email" 
+              :rules="emailValidation" 
+              label="Correo electrónico" 
+              required
+              ></v-text-field>              
+
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="form.phone_number"
+                  :rules="phoneValidation"
+                  label="Teléfono"
+                  :counter="9"
+                ></v-text-field>
+              </v-col>            
+            
           </v-form>
         </v-container>
       </v-card-text>
@@ -75,23 +82,18 @@ export default {
       this.$refs.form.validate();
       if (this.valid) {
         axios
-          .post(
-            "http://184.73.231.88:5000/api/coordinator/add_support_unit/",
-            this.form
-          )
+          .post("http://184.73.231.88:5000/api/coordinator/add_support_unit/", this.form)
           .then(res => {
-            console.log(res);
-            this.$emit("resetList");
-            this.$message({ message: "Registro exitoso.", type: "success" });
-            this.$emit("resetDialog");
-            this.$refs.form.reset();
+          console.log(res);
+          this.$emit("resetList");
+          this.$message({ message: "Registro exitoso.", type: "success" });
+          this.$emit("resetDialog");
+          this.$refs.form.reset();
           })
           .catch(error => {
-            console.log(error);
-            this.$message.error(
-              "Datos duplicados: esta unidad de apoyo ya fue registrada"
-            );
-          });
+            console.log(error)
+            this.$message.error("Datos duplicados: esta unidad de apoyo ya fue registrada");
+            });
       } else this.$message.error("Datos incorrectos");
     },
 
@@ -101,25 +103,20 @@ export default {
       console.log(this.form);
       if (this.valid) {
         axios
-          .post(
-            "http://184.73.231.88:5000/api/coordinator/update_support_unit/",
-            this.form
-          )
+          .post("http://184.73.231.88:5000/api/coordinator/update_support_unit/", this.form)
           .then(res => {
             console.log(res);
             this.$emit("resetList");
             this.$message({
-              message: "Modificación exitosa.",
-              type: "success"
+            message: "Modificación exitosa.",
+            type: "success"
             });
             this.$emit("resetDialog");
             this.$refs.form.reset();
           })
           .catch(error => {
             console.log(error);
-            this.$message.error(
-              "Datos duplicados: esta unidad de apoyo ya fue registrada"
-            );
+            this.$message.error("Datos duplicados: esta unidad de apoyo ya fue registrada");
           });
       } else this.$message.error("Datos incorrectos");
     },
