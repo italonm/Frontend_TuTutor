@@ -111,9 +111,9 @@ export default {
             else if (EsSoporte){                
             }        */             
         })
-        .catch(e =>{
-            console.log(e);
-        })                               			                
+        .catch(
+          this.$message.error("Datos inválidos, por favor ingrese de nuevo.")
+        )                               			                
 				/* .then(response => {
 					let newToken=response.data.user.api_token;
 					window.token=newToken;
