@@ -22,12 +22,12 @@
 
 <script>
 import Desplegable from "./Desplegable";
-var idAdmin = JSON.parse(window.localStorage.getItem("ID"));
+// var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
 export default {
   name: "TheHeader",
   data() {
     return {
-      previewImage: "http://184.73.231.88:5000/api/admin/show_logo/" + idAdmin
+      previewImage: "http://184.73.231.88:5000/api/admin/show_logo/" + 37
     };
   },
   components: {

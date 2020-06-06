@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" persistent max-width="500px">
     <v-card>
       <v-card-title class="cardAdd">
-        <h2 class="headline">{{action}}</h2>
+        <h2 class="headline">{{ action }}</h2>
       </v-card-title>
       <v-card-text>
         <v-container>

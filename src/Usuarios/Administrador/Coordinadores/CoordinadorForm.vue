@@ -89,11 +89,8 @@ export default {
 
   methods: {
     guardar() {
-      if (this.action == "Registrar coordinador") {
-        this.insertar();
-      } else if (this.action == "Editar coordinador") {
-        this.editar();
-      }
+      if (this.action == "Registrar coordinador") this.insertar();
+      else if (this.action == "Editar coordinador") this.editar();
     },
 
     insertar() {
@@ -117,7 +114,6 @@ export default {
 
     editar() {
       this.$refs.form.validate();
-      console.log(this.form);
       if (this.valid) {
         axios
           .post("/user/update_person/", this.form)

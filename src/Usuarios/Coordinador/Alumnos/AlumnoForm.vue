@@ -9,7 +9,12 @@
           <v-form ref="form" v-model="valid" :lazy-validation="lazy">
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field v-model="form.person_name" :rules="nameValidation" label="Nombres" required></v-text-field>
+                <v-text-field
+                  v-model="form.person_name"
+                  :rules="nameValidation"
+                  label="Nombres"
+                  required
+                ></v-text-field>
               </v-col>
 
               <v-col cols="12" md="6">
@@ -23,7 +28,12 @@
             </v-row>
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field v-model="form.person_email" :rules="emailValidation" label="E-mail" required></v-text-field>
+                <v-text-field
+                  v-model="form.person_email"
+                  :rules="emailValidation"
+                  label="E-mail"
+                  required
+                ></v-text-field>
               </v-col>
 
               <v-col cols="12" md="6">
@@ -80,53 +90,53 @@ export default {
   },
 
   methods: {
-    funcion(){
-      if (this.action == 'Registrar alumno'){
-        console.log('registrar Alumnos')
-        this.insertar();
-      }
-      else{
-        console.log('Editar alumno')
-        this.editar();
-      }
+    funcion() {
+      if (this.action == "Registrar alumno") this.insertar();
+      else this.editar();
     },
-    insertar() {
-      console.log("funcion insertar")
-       this.$refs.form.validate();
-       if (this.valid) {
-         axios
-           .post("/coordinator/add_student/", this.form)
-           .then(res => console.log(res))
-           .catch(error => console.log(error));
 
-         this.$emit("resetList");
-         this.$message({ message: "Registro exitoso.", type: "success" });
-         this.$emit("resetDialog")
-         this.$refs.form.reset();
-       } else this.$message.error("Datos incorrectos");
+    insertar() {
+      console.log("funcion insertar");
+      this.$refs.form.validate();
+      if (this.valid) {
+        axios
+          .post("/coordinator/add_student/", this.form)
+          .then(res => console.log(res))
+          .catch(error => console.log(error));
+
+        this.$emit("resetList");
+        this.$message({ message: "Registro exitoso.", type: "success" });
+        this.$emit("resetDialog");
+        this.$refs.form.reset();
+      } else this.$message.error("Datos incorrectos");
     },
 
     editar() {
-      console.log("funcion editar")
+      console.log("funcion editar");
       //servicio
-      
+
       this.$refs.form.validate();
-       if (this.valid) {
-         console.log(this.form)
-         axios
-           .post("/user/update_person/", this.form)
-           .then(res => {
+      if (this.valid) {
+        console.log(this.form);
+        axios
+          .post("/user/update_person/", this.form)
+          .then(res => {
             console.log(res);
             this.$emit("resetList");
-            this.$message({ message: "Modificación exitosa.", type: "success" });
+            this.$message({
+              message: "Modificación exitosa.",
+              type: "success"
+            });
             this.$emit("resetDialog");
             this.$refs.form.reset();
           })
           .catch(error => {
             console.log(error);
-            this.$message.error("Datos duplicados: esta unidad de apoyo ya fue registrada");
+            this.$message.error(
+              "Datos duplicados: esta unidad de apoyo ya fue registrada"
+            );
           });
-       } else this.$message.error("Datos incorrectos");
+      } else this.$message.error("Datos incorrectos");
     },
 
     cancelar() {

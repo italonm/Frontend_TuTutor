@@ -24,7 +24,7 @@
           </el-col>
           <el-col :span="3">
             <div class="grid-content">
-              <el-button type="success" icon="el-icon-plus" circle @click="dialogUnidad = true;"></el-button>
+              <el-button type="success" icon="el-icon-plus" circle @click="dialogUnidad = true"></el-button>
             </div>
           </el-col>
         </el-row>
@@ -39,7 +39,7 @@
           <div class="grid-content">
             <h1 style="text-align: center;">
               <i class="fas fa-school"></i>
-              &nbsp;Programas {{this.faculty_name}}
+              &nbsp;Programas {{ this.faculty_name }}
             </h1>
           </div>
         </el-row>
@@ -79,16 +79,16 @@
             <el-button type="info" icon="fas fa-school" circle @click="listarProgramaAux(item)"></el-button>
           </template>
           <template v-slot:item.faculty_required_tutorship="{ item }">
-            <i v-if="item.faculty_required_tutorship==true" class="el-icon-check"></i>
-            <i v-if="item.faculty_required_tutorship==false" class="el-icon-close"></i>
+            <i v-if="item.faculty_required_tutorship == true" class="el-icon-check"></i>
+            <i v-if="item.faculty_required_tutorship == false" class="el-icon-close"></i>
           </template>
           <template v-slot:item.faculty_unique_faculty="{ item }">
-            <i v-if="item.faculty_unique_faculty==true" class="el-icon-check"></i>
-            <i v-if="item.faculty_unique_faculty==false" class="el-icon-close"></i>
+            <i v-if="item.faculty_unique_faculty == true" class="el-icon-check"></i>
+            <i v-if="item.faculty_unique_faculty == false" class="el-icon-close"></i>
           </template>
           <template v-slot:item.add="{ item }">
             <el-button
-              v-if="item.faculty_unique_faculty==false"
+              v-if="item.faculty_unique_faculty == false"
               type="success"
               icon="el-icon-plus"
               circle
@@ -124,14 +124,14 @@
     <!--Formularios-->
     <unidadForm
       :dialog="dialogUnidad"
-      v-on:resetDialog="dialogUnidad=false"
+      v-on:resetDialog="dialogUnidad = false"
       v-on:resetList="listarUnidades()"
     ></unidadForm>
 
     <programaForm
       :faculty_id="faculty_id"
       :dialog="dialogPrograma"
-      v-on:resetDialog="dialogPrograma=false"
+      v-on:resetDialog="dialogPrograma = false"
       v-on:resetList="listarProgramas()"
     ></programaForm>
   </el-container>

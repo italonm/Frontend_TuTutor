@@ -1,5 +1,4 @@
 <template>
-  
   <el-container direction="vertical">
     <!-- Titulo-->
     <el-row>
@@ -19,20 +18,12 @@
       </el-col>
       <el-col :span="4">
         <div class="grid-content">
-          <el-button
-            type="success"
-            @click="aceptarSol()"
-            class="buttonAdd"
-          >&nbsp;Aceptar</el-button>
+          <el-button type="success" @click="aceptarSol()" class="buttonAdd">&nbsp;Aceptar</el-button>
         </div>
       </el-col>
       <el-col :span="2">
         <div class="grid-content">
-          <el-button
-            type="danger"
-            @click="rechazarSol()"
-            class="buttonAdd"
-          >&nbsp;Rechazar</el-button>
+          <el-button type="danger" @click="rechazarSol()" class="buttonAdd">&nbsp;Rechazar</el-button>
         </div>
       </el-col>
     </el-row>
@@ -55,26 +46,25 @@
       loading-text="Cargando.."
       height="288px"
       fixed-header
-    >
-    </v-data-table>
+    ></v-data-table>
 
     <!-- Confirmación o rechazo-->
     <v-row justify="center">
-        <v-dialog v-model="dialog" persistent max-width="650">
+      <v-dialog v-model="dialog" persistent max-width="650">
         <v-card>
-            <v-card-title class="headline"> {{
-              "¿Está seguro que desea " + action + " la(s) solicitud(es)?" }}
-            </v-card-title>
-            <v-card-text>Esta acción no se podrá revertir</v-card-text>
-            <v-card-actions>
+          <v-card-title class="headline">
+            {{
+            "¿Está seguro que desea " + action + " la(s) solicitud(es)?" }}
+          </v-card-title>
+          <v-card-text>Esta acción no se podrá revertir</v-card-text>
+          <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="cancelar">cancelar</v-btn>
-            <v-btn color="green darken-1" text @click="guardar"> {{ action }}</v-btn>
-            </v-card-actions>
+            <v-btn color="green darken-1" text @click="guardar">{{ action }}</v-btn>
+          </v-card-actions>
         </v-card>
-        </v-dialog>
+      </v-dialog>
     </v-row>
-
   </el-container>
 </template>
 
@@ -95,46 +85,48 @@ export default {
       ],
       search: "",
       dialog: false,
-      action: "",
+      action: ""
     };
   },
 
   created() {
-    axios
-      this.listar();      
+    axios;
+    this.listar();
   },
 
-  methods: {    
-    listar(){
+  methods: {
+    listar() {
       axios
-        .get('http://184.73.231.88:5000/api/coordinator/show_assignment_requests/')
+        .get(
+          "http://184.73.231.88:5000/api/coordinator/show_assignment_requests/"
+        )
         .then(res => {
           this.solicitudes = res.data.tableData;
         })
         .catch(error => console.log(error));
     },
     aceptarSol() {
-      if(this.selected.length > 0){
+      if (this.selected.length > 0) {
         this.action = "aceptar";
         this.dialog = true;
-      }else{
+      } else {
         this.$message({
-            message: "Seleccione una solicitud",
-            type: "info"
-          })  
-      }      
+          message: "Seleccione una solicitud",
+          type: "info"
+        });
+      }
     },
 
     rechazarSol() {
-      if(this.selected.length > 0){
+      if (this.selected.length > 0) {
         this.action = "rechazar";
-      this.dialog = true;
-      }else{
+        this.dialog = true;
+      } else {
         this.$message({
-            message: "Seleccione una solicitud",
-            type: "info"
-          })  
-      }        
+          message: "Seleccione una solicitud",
+          type: "info"
+        });
+      }
     },
 
     guardar() {
@@ -148,12 +140,15 @@ export default {
     cancelar() {
       this.dialog = false;
       this.listar();
-    }, 
+    },
 
-    aceptar() {      
+    aceptar() {
       console.log(this.selected);
       axios
-        .post("http://184.73.231.88:5000/api/coordinator/accept_list_assignment_requests/", { obj_list : this.selected })
+        .post(
+          "http://184.73.231.88:5000/api/coordinator/accept_list_assignment_requests/",
+          { obj_list: this.selected }
+        )
         .then(res => {
           console.log(res);
           this.listar();
@@ -161,14 +156,17 @@ export default {
           this.$message({
             message: "Aceptación exitosa",
             type: "success"
-          })  
-        }) 
+          });
+        });
     },
-    
-    rechazar() {   
-      console.log(this.selected);   
+
+    rechazar() {
+      console.log(this.selected);
       axios
-        .post("http://184.73.231.88:5000/api/coordinator/reject_list_assignment_requests/", { obj_list : this.selected })
+        .post(
+          "http://184.73.231.88:5000/api/coordinator/reject_list_assignment_requests/",
+          { obj_list: this.selected }
+        )
         .then(res => {
           console.log(res);
           this.listar();
@@ -176,9 +174,9 @@ export default {
           this.$message({
             message: "Rechazo exitoso",
             type: "success"
-          })         
-      })
+          });
+        });
     }
-  },
-}
+  }
+};
 </script>
