@@ -33,23 +33,12 @@
 </template>
 
 <script>
-//AQUÍ DE ALGUNA FORMA ES EL LOGIN PERSONALIZADO :C
-
-import navAdministrador from "./nav/_administrador";
-import navCoordinador from "./nav/_coordinador";
-
-var navAuxiliar = navAdministrador;
-if (JSON.parse(localStorage.getItem("EsCoordinador"))) {
-  navAuxiliar = navCoordinador;
-} else if (JSON.parse(localStorage.getItem("EsAdministrador"))) {
-  navAuxiliar = navAdministrador;
-}
-
-/* const nav = () => import ("./_nav") */
+//AQUÍ DE ALGUNA FORMA ES EL LOGIN PERSONALIZADO :Cs
+import navCoordinador from "./nav/_coordinador"
 
 export default {
   name: "TheSidebar",
-  nav: navAuxiliar,
+  nav: navCoordinador,
   computed: {
     show() {
       return this.$store.state.sidebarShow;

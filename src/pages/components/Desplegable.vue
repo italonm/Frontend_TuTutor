@@ -35,7 +35,7 @@ export default {
   methods: {
     CerrarSesión() {
       localStorage.clear();
-      this.$router.push("/");
+      this.$router.push("/Login");
     }
   }
 };

@@ -20,20 +20,20 @@ import Apoyo from "../../Usuarios/Coordinador/Unidades de apoyo/Unidades de apoy
 import Welcome from "../../Usuarios/Welcome";
 import Vue from "vue";
 import Router from "vue-router";
-// COMPONENTE CONTENEDOR
-import Main from "../../pages/Main";
+// COMPONENTE CONTENEDOR DE ACUERDO AL ROL
+import MainAdmin from "../../pages/MainAdmin";
+import MainCoordi from "../../pages/MainCoordi";
 // LOGIN
 import Login from "../../pages/Login/Login.vue";
 
+
 export const routes = [
-    { path: "", redirect: "/Login" },
+    { path: "", redirect: "Login" },
     { path: "/Login", component: Login },
     {
-        path: "/TuTutor",
-        component: Main,
+        path: "/Administrador",
+        component: MainAdmin,
         children: [
-            //Bienvenida
-            { path: "", component: Welcome },
             //Administrador
             { path: "Bienvenido", component: Welcome }, //Luiggi
             { path: "Configuración", component: Configuración }, //Luiggi
@@ -42,21 +42,40 @@ export const routes = [
             { path: "Usuarios", component: Usuarios }, //italo
             { path: "Auditoría", component: Welcome },
             { path: "Errores", component: Welcome },
+        ],
+    },
+    {
+        path: "/Coordinador",
+        component: MainCoordi,
+        children: [
             //Coordinador
-            { path: "/TuTutor/Miembros/Tutores", component: Tutores }, //herbert
-            { path: "/TuTutor/Miembros/Alumnos", component: Alumnos }, //herbert
+            { path: "Bienvenido", component: Welcome }, //Luiggi
+            { path: "/Coordinador/Miembros/Tutores", component: Tutores }, //herbert
+            { path: "/Coordinador/Miembros/Alumnos", component: Alumnos }, //herbert
             { path: "Tutorías activas", component: Welcome },
             { path: "Tipos de tutoría", component: TipoTutoria }, //luiggi
             { path: "Reportes", component: Welcome },
             { path: "Solicitudes", component: Solicitudes }, //valeria
-            { path: "/TuTutor/Miembros/Unidades de apoyo", component: Apoyo }, //valeria
-            { path: "/TuTutor/Miembros/Soporte", component: Soporte }, //herbert            
+            { path: "/Coordinador/Miembros/Unidades de apoyo", component: Apoyo }, //valeria
+            { path: "/Coordinador/Miembros/Soporte", component: Soporte }, //herbert            
+        ],
+    },
+    /* {
+        path: "/Tutor",
+        component: Main,
+        children: [
             //Tutor
             { path: "Asignaciones", component: Welcome },
             { path: "Citas", component: Welcome },
             { path: "Sesiones", component: Welcome },
             { path: "Solicitudes", component: Welcome },
             { path: "Alumnos", component: Welcome },
+        ],
+    },
+    {
+        path: "/Alumno",
+        component: Main,
+        children: [
             //Alumno FACI
             { path: "Agenda", component: Welcome },
             { path: "Tutor asignado", component: Welcome },
@@ -67,7 +86,7 @@ export const routes = [
             { path: "Agregar alumnos", component: Welcome },
             { path: "Generar citas", component: Welcome },
         ],
-    },
+    }, */
 ];
 
 Vue.use(Router);

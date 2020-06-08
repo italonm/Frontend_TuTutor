@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import TheSidebar from "./components/Sidebar";
+import TheSidebar from "./components/SidebarCoordi";
 import TheHeader from "./components/Header";
 import TheFooter from "./components/Footer";
 export default {
