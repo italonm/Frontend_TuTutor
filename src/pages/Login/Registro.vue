@@ -77,7 +77,7 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 export default {
   data() {
     return {
@@ -93,13 +93,13 @@ export default {
   },
   methods: {
     registrar() {
-      /* console.log(this.signup);
+      console.log(this.signup);
                 axios.post('http://184.73.231.88:5000/api/admin/sign_up/',this.signup)
                 .then(response =>{ console.log(response)})
                 .catch(e =>{
                     console.log(e);
                 })
-                this.$router.push('/') */
+                this.$router.push('/')
     }
   }
 };
