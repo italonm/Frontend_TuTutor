@@ -17,6 +17,7 @@ import Apoyo from "../../Usuarios/Coordinador/Unidades de apoyo/Unidades de apoy
 import Agenda from "../../Usuarios/Alumno/Agenda/Agenda";
 import Tutor from "../../Usuarios/Alumno/Tutor/Tutor";
 import SolicitudesAlumno from "../../Usuarios/Alumno/Mis Solicitudes/Mis Solicitudes";
+import Historial from "../../Usuarios/Alumno/Historial de Citas/Historial de Citas"
 //COMPONENTES DE TUTOR
 import WelcomeTutor from "../../Usuarios/Tutor/Bienvenido/Bienvenido"
 import Asignaciones from "../../Usuarios/Tutor/Asignaciones/Asignaciones"
@@ -78,6 +79,7 @@ export const routes = [
             { path: "Agenda", component: Agenda }, //italo / Herbert
             { path: "Tutor", component: Tutor }, //italo / Herbert
             { path: "Mis Solicitudes", component: SolicitudesAlumno }, //italo / Herbert           
+            { path: "Historial de Sesiones", component: Historial }, //Valeria           
         ],
     },
     {
