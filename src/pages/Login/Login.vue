@@ -58,7 +58,7 @@
           </div>
           <a style="color:#333; font-size: 12px; margin: 15px 0" hre  f="#">Olvidaste tu contraseña?</a>
           <button style="border-radius: 20px; border: 1.3px solid #3C4B64; background-color: transparent;color: #3C4B64;font-size: 11px;padding: 12px 45px;letter-spacing: 1px;text-transform: uppercase;transition: transform 80ms ease-in;"
-          success @click='logItIn'>Iniciar</button>
+          @click='logItIn'>Iniciar</button>
         </form>
       </div>
       <div class="overlay-container">
@@ -91,12 +91,6 @@
 </template>
 
 <script>
-//COMPONENTE DE REGISTRO DE NUEVO USUARIO
-import Registro from './Registro'
-/* //COMPONENTE CONTENEDOR
-import Contenedor from '../../pages/Main'
-//RUTAS
-import {rutitas} from '../../extra/routes/routes' */
 import axios from "axios";
 
 export default {    
@@ -131,13 +125,15 @@ export default {
         
         
       },
-			logItIn(){        
-        var that = this;
-        console.log(that.login)
+			logItIn(){              
+        var that = this;        
         axios.post('http://184.73.231.88:5000/api/user/log_in/',that.login)
-        .then(response =>{ 
-            console.log(response);
+        .then(response =>{                         
+            console.log(response)
             let Id_usuario = response.data.id;
+            let Id_programa = response.data.program_id;
+            let Id_institución = response.data.id_institution;
+            let Nombre_programa = response.data.program_name;
             let Nombre = response.data.name;
             let Apellidos = response.data.last_name;
             let EsAdministrador = response.data.is_admin;
@@ -146,6 +142,9 @@ export default {
             let EsSoporte = response.data.is_support;
             let EsTutor = response.data.is_tutor;
             localStorage.setItem('Id_usuario',JSON.stringify(Id_usuario));
+            localStorage.setItem('Id_facultad',JSON.stringify(Id_programa));
+            localStorage.setItem('Id_institución',JSON.stringify(Id_institución));
+            localStorage.setItem('Nombre_programa',JSON.stringify(Nombre_programa));
             localStorage.setItem('Nombre',JSON.stringify(Nombre));                    
             localStorage.setItem('Apellidos',JSON.stringify(Apellidos));  
             localStorage.setItem('EsAdministrador',JSON.stringify(EsAdministrador));                    
@@ -154,18 +153,17 @@ export default {
             localStorage.setItem('EsAlumno',JSON.stringify(EsAlumno));
             localStorage.setItem('EsSoporte',JSON.stringify(EsSoporte));   
             if (EsAdministrador){
-                /* this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['admin']}])                                                   */              
-                this.$router.push('/TuTutor/Bienvenido')  
-                window.Location.reload()                                              
+                that.$router.push('/Administrador/Bienvenido')  
             }
-            else if (EsCoordinador){
-                /* this.$router.addRoutes([{path: '/', name: 'Principal', component: Contenedor, children: rutitas['coordi']}])                                                   */                
-                this.$router.push('/TuTutor/Bienvenido')                                                                              
+            else if (EsCoordinador){                
+                that.$router.push('/Coordinador/Bienvenido')                                                                              
             }
-            /* else if (EsTutor){                
+            else if (EsTutor){    
+                that.$router.push('/Tutor/Bienvenido')            
             }
-            else if (EsSoporte){                
-            }        */
+            else if (EsAlumno){                
+                that.$router.push('/Alumno/Bienvenido')
+            }       
         })
         .catch(function(error) {
           if (error.response){
@@ -187,17 +185,7 @@ export default {
 
 					this.$router.push('/');
 				}); */
-    },
-    signUp() {
-      this.$router.addRoutes([
-        {
-          path: "/Registro",
-          name: "Registro",
-          component: Registro
-        }
-      ]);
-      this.$router.push("/Registro");
-    }
+    }, 
   }
 };
 </script>

@@ -33,9 +33,9 @@ export default {
       });
   }, */
   methods: {
-    CerrarSesión() {
-      localStorage.clear();
-      this.$router.push("/Login");
+    CerrarSesión() {      
+      localStorage.clear();      
+      this.$router.push("/Login");      
     }
   }
 };
