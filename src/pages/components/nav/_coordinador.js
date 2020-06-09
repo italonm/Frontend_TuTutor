@@ -4,7 +4,7 @@ export default [{
       {
         _name: 'CSidebarNavItem',
         name: 'Principal',
-        to: '/TuTutor/Bienvenido',
+        to: '/Coordinador/Bienvenido',
         icon: 'cil-GlobeAlt'
       },
       {
@@ -14,43 +14,43 @@ export default [{
       {
         _name: 'CSidebarNavDropdown',
         name: 'Miembros',
-        route: '/TuTutor/Miembros',
+        route: '/Coordinador/Miembros',
         icon: 'cil-people',
         items: [
           {
             name: 'Alumnos',
-            to: '/TuTutor/Miembros/Alumnos'
+            to: '/Coordinador/Miembros/Alumnos'
           },
           {
             name: 'Profesores',
-            to: '/TuTutor/Miembros/Tutores'
+            to: '/Coordinador/Miembros/Tutores'
           },          
           {
             name: 'Soporte',
-            to: '/TuTutor/Miembros/Soporte'
+            to: '/Coordinador/Miembros/Soporte'
           },
           {
             name: 'Unidades de Apoyo',
-            to: '/TuTutor/Miembros/Unidades de Apoyo'
+            to: '/Coordinador/Miembros/Unidades de Apoyo'
           }
         ]
       },        
       {
         _name: 'CSidebarNavItem',
         name: 'Tipo de tutoría',
-        to: '/TuTutor/Tipos de tutoría',
+        to: '/Coordinador/Tipos de tutoría',
         icon: 'cil-list'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Tutorías Activas',
-        to: '/TuTutor/Tutorías Activas',
+        to: '/Coordinador/Tutorías Activas',
         icon: 'cil-CheckCircle'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Solicitudes',
-        to: '/TuTutor/Solicitudes',
+        to: '/Coordinador/Solicitudes',
         icon: 'cil-EnvelopeClosed'
       }                            
       /* {
