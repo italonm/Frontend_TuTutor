@@ -72,6 +72,7 @@
                     v-model="start"
                     no-title
                     scrollable
+                    :min= "actualidad"
                     >
                     <v-spacer></v-spacer>
                     <v-btn
@@ -110,6 +111,7 @@
                     <v-time-picker
                     v-model="startTime"
                     scrollable
+                    min="6:00"
                     >
                     <v-spacer></v-spacer>
                     <v-btn
@@ -148,6 +150,8 @@
                     <v-time-picker
                     v-model="endTime"
                     scrollable
+                    :min="startTime"
+                    max="24:00"
                     >
                     <v-spacer></v-spacer>
                     <v-btn
@@ -212,7 +216,7 @@
                             <v-spacer></v-spacer>
                             <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                             <v-spacer></v-spacer>
-                            <v-btn icon @click="deleteEvent(selectedEvent.index)">
+                            <v-btn icon @click="deleteEvent(selectedEvent.id)">
                                 <v-icon>mdi-delete</v-icon>
                             </v-btn>
                             <v-btn icon @click="selectedOpen = false">
@@ -238,13 +242,13 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="error" @click="cancelar">Cerrar</v-btn>
-                <v-btn color="green" >Guardar</v-btn>
             </v-card-actions>
       </v-card>
   </v-dialog>
 </template>
 
 <script>
+import axios from 'axios';
   const weekdaysDefault = [1, 2, 3, 4, 5, 6, 0]
   const intervalsDefault = {
     first: 0,
@@ -252,7 +256,7 @@
     count: 24,
     height: 40
   }
-var now     = new Date(); 
+var now = new Date(); 
 var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
   export default {
     props: ["dialog"],
@@ -262,8 +266,9 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       startMenuTime:false,
       endMenuTime:false,
       start: diaActual,
-      startTime: "12:00",
-      endTime: "12:00",
+      actualidad: diaActual,
+      startTime: "07:00",
+      endTime: "18:00",
       endMenu: false,
       nowMenu: false,
       minWeeks: 1,
@@ -272,6 +277,7 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
+      availableDates: [],
       weekdays: weekdaysDefault,
       weekdaysOptions: [
         { text: 'Lunes - Domingo', value: weekdaysDefault},
@@ -286,7 +292,15 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       ],
       maxDays: 7,
       color: 'blue',
-      events:[]
+      events:[],
+      schedule:{
+        tutor_id:97,
+        events: []
+      },
+      eventosAgregados:[],
+      borrarEvento:{
+        schedule_id:""
+      }
     }),
     computed: {
       hasIntervals () {
@@ -300,23 +314,45 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
         }
       }
     },
+    created() {
+    this.listar();
+    },
     methods: {
+      listar() {
+      axios
+        .get("/tutor/show_schedule/97")
+        .then(res => {
+          this.events = res.data.schedules;
+        })
+        .catch(error => console.log(error));
+     },
       getEventColor (event) {
         return event.color
       },
       cancelar() {
       this.newDialog = false;
       this.$emit("resetDialog", this.newDialog);
+      this.listar();
       },
       agregarEvento(){
-        if(this.events.length==0) this.events.push({index:0, name: "Disponible",
-                              start: this.start +" "+ this.startTime,
-                              end: this.start +" "+ this.endTime, color:"blue"});
-        else{
-        this.events.push({index: this.events[this.events.length-1].index + 1 ,name: "Disponible",
-                              start: this.start +" "+ this.startTime,
-                              end: this.start +" "+ this.endTime, color:"blue"})
-        }
+        this.eventosAgregados.push({id:null , name: "Disponible",
+                          start: this.start +" "+ this.startTime,
+                          end: this.start +" "+ this.endTime, color:"blue"})
+        this.schedule.events = this.eventosAgregados;
+        console.log(this.schedule);
+        axios
+          .post("/tutor/add_schedule/", this.schedule)
+          .then(res => {
+            console.log(res);
+            this.listar();
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message.error("Error al registrar datos");
+          });
+        this.events.push({id:null , name: "Disponible",
+                          start: this.start +" "+ this.startTime,
+                          end: this.start +" "+ this.endTime, color:"blue"})                  
         console.log(this.events); 
       },
       showEvent ({ nativeEvent, event }) {
@@ -335,13 +371,23 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
 
         nativeEvent.stopPropagation()
       },
-      deleteEvent(selectedEventIndex){
-        console.log(selectedEventIndex);
-        var removeIndex = this.events.map(function(item) { return item.index; }).indexOf(selectedEventIndex);
-        this.events.splice(removeIndex, 1);
-        this.selectedOpen = false
-        console.log(this.events);   
-      }
+      deleteEvent(selectedEventID){
+        this.borrarEvento.schedule_id = selectedEventID;
+        console.log(this.borrarEvento.schedule_id);
+        axios
+          .post("/tutor/delete_schedule/", this.borrarEvento)
+          .then(res => {
+            this.selectedOpen = false
+            console.log(res);
+            this.$message({ message: "Eliminación exitosa.", type: "success" });
+            console.log(this.events);
+            this.listar();
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message.error("No se pudo eliminar");
+          });
+      },
     }
   }
 </script>
