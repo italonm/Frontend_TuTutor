@@ -209,9 +209,10 @@ export default {
       axios
         .get("/coordinator/show_students/" + this.form.id_facultades[this.form.facultades.indexOf(item)])      
         .then(res =>{
+          
           for(alumno in res.data.users){
-            aux1.push(res.data.users[alumno].full_name)
-            aux2.push(res.data.users[alumno].id)
+            aux1.push(res.data.users[alumno].person_full_name)
+            aux2.push(res.data.users[alumno].person_id)
           }          
           this.alumnos = aux1;
           this.id_alumnos = aux2;
