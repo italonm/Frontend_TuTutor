@@ -270,6 +270,6 @@ export default {
           });
       } else this.$message.error("Datos incorrectos");
     }
-  }
+  },
 };
 </script>
