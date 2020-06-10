@@ -81,14 +81,15 @@ export default {
     return {
       sesiones: [],
       headers: [
-        { text: "Fecha", value: "person_code" },
-        { text: "Alumno", value: "person_full_name" },
-        { text: "Hora", value: "person_rol" },
-        { text: "Solicitud", value: "person_phone_number" },                
+        { text: "Fecha", value: "date" },
+        { text: "Alumno",  value:"students" },
+        { text: "Motivo", value: "reason1"},
+        { text: "Solicitud", value: "is_formal" },                
         { text: "Detalles", value: "detalles", sortable: false },
       ],
       form:{
-
+        facultades:[],
+        id_facultades:[],
       },
       search: "",
       dialog: false,
@@ -102,10 +103,33 @@ export default {
 
   methods: {
     listar() {
+      var sesion
+      var alumno      
+      var aux = 0
       axios
-        .get("/admin/show_users/")
-        .then(res => {
-          this.sesiones = res.data.users;
+        .get("/tutor/show_student_history_for_tutor/" + localStorage.getItem("Id_usuario"))        
+        .then(res => {  
+          console.log(res)
+          this.sesiones = res.data.sessions        
+          for (sesion in res.data.sessions){                      
+            aux = 0
+            for (alumno in res.data.sessions[sesion].students){              
+              if (alumno != -1)
+                aux = aux + 1                         
+            }
+            if (aux === 1){              
+              this.sesiones[sesion].students = res.data.sessions[sesion].students[0].last_name + " " + res.data.sessions[sesion].students[0].name
+            }
+            if (this.sesiones[sesion].is_formal)
+              this.sesiones[sesion].is_formal = "Formal"
+            else
+              this.sesiones[sesion].is_formal = "Informal"
+            
+          }
+          console.log(this.sesiones)
+         /*  console.log(res)                            
+          this.sesiones= res.data.sessions; 
+          console.log(this.sesiones)    */                         
         })
         .catch(error => console.log(error));
     },
@@ -115,7 +139,24 @@ export default {
         this.dialog = true;
     },
     insertar() {
-      this.action = "Registrar nueva sesión";
+      var program;
+      var aux1 = [];
+      var aux2 = [];
+      this.action = "Registrar nueva sesión";      
+      axios
+        .get("tutor/show_programs_from_tutor/" + localStorage.getItem("Id_usuario"))
+        .then(res =>{
+          for(program in res.data.programs){            
+            aux1.push(res.data.programs[program].program_name)
+            aux2.push(res.data.programs[program].program_id)
+          }
+          this.form.facultades = aux1;
+          this.form.id_facultades = aux2;               
+        })
+        .catch(error => {
+          console.log(error);
+          this.$message.error("No tiene programas registrados");
+        });      
       this.dialog = true;
     },
   },
