@@ -84,7 +84,6 @@ export default {
         isFormal: "",
         reason1: "",
         reason2: "",
-        result: "",
       },
       search: "",
       dialog: false,   
