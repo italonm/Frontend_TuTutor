@@ -216,7 +216,7 @@
                             <v-spacer></v-spacer>
                             <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                             <v-spacer></v-spacer>
-                            <v-btn icon @click="deleteEvent(selectedEvent.id)">
+                            <v-btn icon @click="deleteEvent(selectedEvent)">
                                 <v-icon>mdi-delete</v-icon>
                             </v-btn>
                             <v-btn icon @click="selectedOpen = false">
@@ -256,6 +256,7 @@ import axios from 'axios';
     count: 24,
     height: 40
   }
+var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
 var now = new Date(); 
 var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
   export default {
@@ -294,7 +295,7 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       color: 'blue',
       events:[],
       schedule:{
-        tutor_id:97,
+        tutor_id:Id_usuario,
         events: []
       },
       eventosAgregados:[],
@@ -320,7 +321,7 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
     methods: {
       listar() {
       axios
-        .get("/tutor/show_schedule/97")
+        .get("/tutor/show_schedule/"+Id_usuario)
         .then(res => {
           this.events = res.data.schedules;
         })
@@ -371,22 +372,27 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
 
         nativeEvent.stopPropagation()
       },
-      deleteEvent(selectedEventID){
-        this.borrarEvento.schedule_id = selectedEventID;
+      deleteEvent(selectedEvent){
+        this.borrarEvento.schedule_id = selectedEvent.id;
         console.log(this.borrarEvento.schedule_id);
-        axios
-          .post("/tutor/delete_schedule/", this.borrarEvento)
-          .then(res => {
-            this.selectedOpen = false
-            console.log(res);
-            this.$message({ message: "Eliminación exitosa.", type: "success" });
-            console.log(this.events);
-            this.listar();
-          })
-          .catch(error => {
-            console.log(error);
-            this.$message.error("No se pudo eliminar");
-          });
+        if(selectedEvent.name == "Reservado"){
+          this.$message.error("Evento reservado. No se puede eliminar");
+        }
+        else if (selectedEvent.name == "Disponible"){
+          axios
+            .post("/tutor/delete_schedule/", this.borrarEvento)
+            .then(res => {
+              this.selectedOpen = false
+              console.log(res);
+              this.$message({ message: "Eliminación exitosa.", type: "success" });
+              console.log(this.events);
+              this.listar();
+            })
+            .catch(error => {
+              console.log(error);
+              this.$message.error("No se pudo eliminar");
+            });
+        }
       },
     }
   }
