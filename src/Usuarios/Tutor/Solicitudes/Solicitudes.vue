@@ -95,12 +95,13 @@ export default {
   },
 
   methods: {
-    listar() {
+    
+    listar() {      
+      console.log(localStorage.getItem("Id_usuario"));
       axios
-        .get(
-          "http://184.73.231.88:5000/api/coordinator/show_assignment_requests/"
-        )
+        .get( "http://184.73.231.88:5000/api/tutor/show_assignment_requests/" + "97" )
         .then(res => {
+          console.log(res.data);
           this.solicitudes = res.data.tableData;
         })
         .catch(error => console.log(error));
@@ -147,10 +148,8 @@ export default {
     aceptar() {
       console.log(this.selected);
       axios
-        .post(
-          "http://184.73.231.88:5000/api/coordinator/accept_list_assignment_requests/",
-          { obj_list: this.selected }
-        )
+        .post( "http://184.73.231.88:5000/api/tutor/accept_list_assignment_requests/",
+            { obj_list: this.selected } )
         .then(res => {
           console.log(res);
           this.listar();
@@ -165,10 +164,8 @@ export default {
     rechazar() {
       console.log(this.selected);
       axios
-        .post(
-          "http://184.73.231.88:5000/api/coordinator/reject_list_assignment_requests/",
-          { obj_list: this.selected }
-        )
+        .post("http://184.73.231.88:5000/api/tutor/reject_list_assignment_requests/",
+            { obj_list: this.selected } )
         .then(res => {
           console.log(res);
           this.listar();

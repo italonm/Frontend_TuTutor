@@ -18,9 +18,9 @@
 </template>
 
 <script>
-import TheSidebar from "./components/Sidebar";
-import TheHeader from "./components/Header";
-import TheFooter from "./components/Footer";
+import TheSidebar from "../components/SidebarCoordi";
+import TheHeader from "../components/Header";
+import TheFooter from "../components/Footer";
 export default {
   name: "TheContainer",
   components: {

@@ -74,10 +74,10 @@ export default {
     return {
       alumnos: [],
       headers: [
-        { text: "Código", value: "code" },
-        { text: "Nombre", value: "full_name" },
-        { text: "Teléfono", value: "phone_number" },
-        { text: "Correo", value: "email" },
+        { text: "Código", value: "person_code" },
+        { text: "Nombre", value: "person_full_name" },
+        { text: "Teléfono", value: "person_phone_number" },
+        { text: "Correo", value: "person_email" },
         { text: "Editar", value: "editar", sortable: false },
         { text: "Eliminar", value: "eliminar", sortable: false }
       ],
@@ -87,7 +87,8 @@ export default {
         person_email: "",
         person_phone_number: "",
         person_code: "",
-        person_id: ""
+        person_id: "",
+        program_id: localStorage.getItem("Id_facultad"),
       },
 
       search: "",
@@ -102,8 +103,9 @@ export default {
 
   methods: {
     listar() {
+      console.log(localStorage.getItem("Id_facultad"))
       axios
-        .get("/coordinator/show_students/")
+        .get("/coordinator/show_students/"+localStorage.getItem("Id_facultad"))
         .then(res => {
           this.alumnos = res.data.users;
         })
@@ -112,25 +114,13 @@ export default {
 
     insertar() {
       this.action = "Registrar alumno";
-      this.funcion = "insertar";
       this.dialog = true;
     },
 
     editar(item) {
       this.action = "Editar alumno";
-      this.funcion = "editar";
-      console.log(item);
-      this.rellenarForm(item);
-      //this.form = Object.assign({}, item);
+      this.form = Object.assign({}, item);
       this.dialog = true;
-    },
-    rellenarForm(item) {
-      this.form.person_name = item.name;
-      this.form.person_last_name = item.last_name;
-      this.form.person_phone_number = item.phone_number;
-      this.form.person_code = item.code;
-      this.form.person_email = item.email;
-      this.form.person_id = item.id;
     },
 
     eliminar(item) {
@@ -146,7 +136,7 @@ export default {
         .then(() => {
           //servicio
           axios
-            .post("/user/delete_person/", { person_id: item.id })
+            .post("/user/delete_person/", { person_id: item.person_id })
             .then(res => {
               console.log(res);
               this.listar();

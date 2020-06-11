@@ -5,7 +5,7 @@ export default [
         {
           _name: 'CSidebarNavItem',
           name: 'Principal',
-          to: '/TuTutor/Bienvenido',
+          to: '/Administrador/Bienvenido',
           icon: 'cil-GlobeAlt'
         },
         {
@@ -15,25 +15,19 @@ export default [
         {
           _name: 'CSidebarNavItem',
           name: 'Datos de la institución',
-          to: '/TuTutor/Configuración',
+          to: '/Administrador/Configuración',
           icon: 'cil-settings'
         },
         {
           _name: 'CSidebarNavItem',
           name: 'Unidades Académicas',
-          to: '/TuTutor/Unidades Académicas',
+          to: '/Administrador/Unidades Académicas',
           icon: 'cil-list'
-        },
-        {
-          _name: 'CSidebarNavItem',
-          name: 'Usuarios',
-          to: '/TuTutor/Usuarios',
-          icon: 'cil-people'
-        },  
+        },        
         {
           _name: 'CSidebarNavItem',
           name: 'Coordinadores',
-          to: '/TuTutor/Coordinadores',
+          to: '/Administrador/Coordinadores',
           icon: 'cil-user'
         }, 
         /* {

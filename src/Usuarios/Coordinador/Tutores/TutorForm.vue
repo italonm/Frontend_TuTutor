@@ -91,18 +91,14 @@ export default {
 
   methods: {
     funcion() {
-      if (this.action == "Registrar tutor") {
-        console.log("registrar tutor");
-        this.insertar();
-      } else {
-        console.log("Editar alumno");
-        this.editar();
-      }
+      if (this.action == "Registrar tutor") this.insertar();
+      else this.editar();
     },
 
     insertar() {
       this.$refs.form.validate();
       if (this.valid) {
+        console.log(this.form)
         axios
           .post("/coordinator/add_tutor/", this.form)
           .then(res => {
@@ -112,7 +108,10 @@ export default {
             this.$emit("resetDialog");
             this.$refs.form.reset();
           })
-          .catch(error => console.log(error));
+          .catch(error => {
+            console.log(error)
+            this.$message.error("Datos Duplicados");  
+          });
       } else this.$message.error("Datos incorrectos");
     },
 
@@ -134,16 +133,14 @@ export default {
           })
           .catch(error => {
             console.log(error);
-            this.$message.error(
-              "Datos duplicados: esta unidad de apoyo ya fue registrada"
-            );
+            this.$message.error("Datos duplicados");
           });
       } else this.$message.error("Datos incorrectos");
     },
 
     cancelar() {
       this.$refs.form.reset();
-      this.$emit("resetDialog", this.newDialog);
+      this.$emit("resetDialog");
     }
   }
 };
