@@ -26,6 +26,12 @@ export default [
         },  
         {
           _name: 'CSidebarNavItem',
+          name: 'Historial de Sesiones',
+          to: '/Alumno/Historial de Sesiones',
+          icon: 'cil-MagnifyingGlass'
+        },
+        {
+          _name: 'CSidebarNavItem',
           name: 'Mis Solicitudes',
           to: '/Alumno/Mis Solicitudes',
           icon: 'cil-pencil'
