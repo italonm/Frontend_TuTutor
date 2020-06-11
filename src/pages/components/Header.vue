@@ -11,6 +11,9 @@
         <span style="font-size:13.5px; color:#FFFFFF" id="sesión"></span>
       </CHeaderNavItem>
     </CHeaderNav>
+     <CCol  class="col-sm-2">
+      <v-img :src="previewImagen" class="uploading-image img-fluid" height="50" contain max-width="1000" max-height="1000" alt="Responsive Image"/>
+     </CCol>
     <CHeaderNav class="mr-4">
       <Desplegable />
     </CHeaderNav>
@@ -19,7 +22,12 @@
 
 <script>
 import Desplegable from "./Desplegable";
-export default {
+export default { 
+  data() {
+			return {
+        previewImagen: "http://184.73.231.88:5000/api/admin/show_logo/37"+"?"+Date.now()
+      }
+  },
   name: "TheHeader",
   components: {
     Desplegable
@@ -39,6 +47,6 @@ export default {
     } else if (JSON.parse(localStorage.getItem("EsTutor"))) {
       document.getElementById("sesión").innerHTML = "Sesión de Tutor";
     }
-  }
+  },
 };
 </script>
