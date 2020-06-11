@@ -23,13 +23,7 @@ export default [
           name: 'Unidades Académicas',
           to: '/Administrador/Unidades Académicas',
           icon: 'cil-list'
-        },
-        {
-          _name: 'CSidebarNavItem',
-          name: 'Usuarios',
-          to: '/Administrador/Usuarios',
-          icon: 'cil-people'
-        },  
+        },        
         {
           _name: 'CSidebarNavItem',
           name: 'Coordinadores',
