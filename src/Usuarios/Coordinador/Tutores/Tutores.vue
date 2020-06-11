@@ -74,10 +74,10 @@ export default {
     return {
       tutores: [],
       headers: [
-        { text: "Código", value: "code" },
-        { text: "Nombre", value: "full_name" },
-        { text: "Teléfono", value: "phone_number" },
-        { text: "Correo", value: "email" },
+        { text: "Código", value: "person_code" },
+        { text: "Nombre", value: "person_full_name" },
+        { text: "Teléfono", value: "person_phone_number" },
+        { text: "Correo", value: "person_email" },
         { text: "Editar", value: "editar", sortable: false },
         { text: "Eliminar", value: "eliminar", sortable: false }
       ],
@@ -87,7 +87,8 @@ export default {
         person_email: "",
         person_phone_number: "",
         person_code: "",
-        person_id: ""
+        person_id: "",
+        program_id: localStorage.getItem("Id_facultad"),
       },
       search: "",
       dialog: false,
@@ -102,7 +103,7 @@ export default {
   methods: {
     listar() {
       axios
-        .get("/coordinator/show_tutors/")
+        .get("/coordinator/show_tutors/"+ localStorage.getItem("Id_facultad"))
         .then(res => {
           this.tutores = res.data.users;
         })
@@ -116,17 +117,8 @@ export default {
 
     editar(item) {
       this.action = "Editar tutor";
-      this.rellenar(item);
-      //this.form = Object.assign({}, item);
+      this.form = Object.assign({}, item);
       this.dialog = true;
-    },
-    rellenar(item) {
-      this.form.person_name = item.name;
-      this.form.person_last_name = item.last_name;
-      this.form.person_email = item.email;
-      this.form.person_phone_number = item.phone_number;
-      this.form.person_code = item.code;
-      this.form.person_id = item.id;
     },
     eliminar(item) {
       this.$confirm(
@@ -141,7 +133,7 @@ export default {
         .then(() => {
           //servicio
           axios
-            .post("/user/delete_person/", { person_id: item.id })
+            .post("/user/delete_person/", { person_id: item.person_id })
             .then(res => {
               console.log(res);
               this.listar();
