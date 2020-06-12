@@ -14,21 +14,15 @@ export default [
         },
         {
           _name: 'CSidebarNavItem',
-          name: 'Agenda',
-          to: '/Alumno/Agenda',
-          icon: 'cil-calendar'
+          name: 'Mis Tutorías',
+          to: '/Alumno/Mis Tutorías',
+          icon: 'cil-user'
         },
         {
           _name: 'CSidebarNavItem',
-          name: 'Tutor',
-          to: '/Alumno/Tutor',
-          icon: 'cil-user'
-        },  
-        {
-          _name: 'CSidebarNavItem',
-          name: 'Historial de Sesiones',
-          to: '/Alumno/Historial de Sesiones',
-          icon: 'cil-MagnifyingGlass'
+          name: 'Agenda',
+          to: '/Alumno/Agenda',
+          icon: 'cil-calendar'
         },
         {
           _name: 'CSidebarNavItem',
