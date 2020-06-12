@@ -16,7 +16,7 @@
           </el-input>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="4">
         <div class="grid-content">
           <el-button
             type="success"
@@ -26,6 +26,18 @@
           >&nbsp;Agregar</el-button>
         </div>
       </el-col>
+      <!-------->
+      <el-col :span="4">
+        <div class="grid-content">
+          <el-button
+            type="success"
+            icon="fas fa-user-plus"
+            @click="agregarMasivamente()"
+            class="buttonAdd"
+          >&nbsp;Masivamente</el-button>
+        </div>
+      </el-col>
+      <!-------------->
     </el-row>
 
     <!-- Tabla-->
@@ -62,13 +74,20 @@
       v-on:resetDialog="dialog=$event"
       v-on:resetList="listar()"
     ></alumnoForm>
+
+    <!---Formulario Masivo-->
+    <alumnoMasivoForm
+      :dialog2="dialog2"
+      v-on:resetDialog="dialog2=$event"
+    ></alumnoMasivoForm>
+
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
 import AlumnoForm from "./AlumnoForm";
-
+import AlumnoMasivoForm from "./MasivoAlumnoForm"
 export default {
   data() {
     return {
@@ -93,6 +112,7 @@ export default {
 
       search: "",
       dialog: false,
+      dialog2:false,
       action: ""
     };
   },
@@ -122,8 +142,12 @@ export default {
       this.form = Object.assign({}, item);
       this.dialog = true;
     },
-
+    agregarMasivamente(){
+      console.log("this is the masivamente")
+      this.dialog2=true;
+    },
     eliminar(item) {
+      
       this.$confirm(
         "Esta seguro de eliminar: " + item.name + "?",
         "Advertencia",
@@ -135,6 +159,8 @@ export default {
       )
         .then(() => {
           //servicio
+          console.log(item.person_id);
+          console.log(item);
           axios
             .post("/user/delete_person/", { person_id: item.person_id })
             .then(res => {
@@ -152,7 +178,8 @@ export default {
   },
 
   components: {
-    alumnoForm: AlumnoForm
+    alumnoForm: AlumnoForm,
+    alumnoMasivoForm:AlumnoMasivoForm
   }
 };
 </script>

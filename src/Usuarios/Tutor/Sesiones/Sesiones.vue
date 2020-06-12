@@ -134,7 +134,7 @@ export default {
         .catch(error => console.log(error));
     },
     detalles(item){
-        this.action = "Detalles de la sesión"        
+        this.action = "Detalles de la sesión"   
         this.form = Object.assign({},item);
         this.dialog = true;
     },
