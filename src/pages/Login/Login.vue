@@ -111,7 +111,7 @@ export default {
     },      
 		methods:{      
       register(){
-        this.$router.push("/PasswordSet")
+        this.$router.push("/PassSet")
       },
       ShowPass(){
         var x = document.getElementById("pass");
