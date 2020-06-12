@@ -17,14 +17,14 @@ import Apoyo from "../../Usuarios/Coordinador/Unidades de apoyo/Unidades de apoy
 import Agenda from "../../Usuarios/Alumno/Agenda/Agenda";
 import Tutor from "../../Usuarios/Alumno/Tutor/Tutor";
 import SolicitudesAlumno from "../../Usuarios/Alumno/Mis Solicitudes/Mis Solicitudes";
-import Historial from "../../Usuarios/Alumno/Historial de Citas/Historial de Citas"
+import SolicitarTutor from "../../Usuarios/Alumno/Tutor/AsignarTutor/Solicitar Tutor";
 //COMPONENTES DE TUTOR
-import WelcomeTutor from "../../Usuarios/Tutor/Bienvenido/Bienvenido"
-import Asignaciones from "../../Usuarios/Tutor/Asignaciones/Asignaciones"
-import Citas from "../../Usuarios/Tutor/Citas/Citas"
-import Sesiones from "../../Usuarios/Tutor/Sesiones/Sesiones"
-import SolicitudesTutor from "../../Usuarios/Tutor/Solicitudes/Solicitudes"
-import AlumnosTutor from "../../Usuarios/Tutor/Alumnos/Alumnos"
+import WelcomeTutor from "../../Usuarios/Tutor/Bienvenido/Bienvenido";
+import Asignaciones from "../../Usuarios/Tutor/Asignaciones/Asignaciones";
+import Citas from "../../Usuarios/Tutor/Citas/Citas";
+import Sesiones from "../../Usuarios/Tutor/Sesiones/Sesiones";
+import SolicitudesTutor from "../../Usuarios/Tutor/Solicitudes/Solicitudes";
+import AlumnosTutor from "../../Usuarios/Tutor/Alumnos/Alumnos";
 //COMPONENTE BIENVENIDOS
 import Welcome from "../../Usuarios/Welcome";
 import Vue from "vue";
@@ -36,7 +36,6 @@ import MainTutor from "../../pages/Mains/MainTutor";
 import MainAlumno from "../../pages/Mains/MainAlumno";
 // LOGIN
 import Login from "../../pages/Login/Login.vue";
-
 export const routes = [
     { path: "", redirect: "Login" },
     { path: "/Login", component: Login },
@@ -67,7 +66,7 @@ export const routes = [
             { path: "Reportes", component: Welcome },
             { path: "Solicitudes", component: Solicitudes }, //valeria
             { path: "/Coordinador/Miembros/Unidades de apoyo", component: Apoyo }, //valeria
-            { path: "/Coordinador/Miembros/Soporte", component: Soporte }, //herbert            
+            { path: "/Coordinador/Miembros/Soporte", component: Soporte }, //herbert
         ],
     },
     {
@@ -77,9 +76,9 @@ export const routes = [
             //Alumno
             { path: "Bienvenido", component: Welcome }, //italo / Herbert
             { path: "Agenda", component: Agenda }, //italo / Herbert
-            { path: "Tutor", component: Tutor }, //italo / Herbert
-            { path: "Mis Solicitudes", component: SolicitudesAlumno }, //italo / Herbert           
-            { path: "Historial de Sesiones", component: Historial }, //Valeria           
+            { path: "Mis Tutorías", component: Tutor }, //italo / Herbert
+            { path: "Solicitar Tutor", component: SolicitarTutor }, //italo / Herbert
+            { path: "Mis Solicitudes", component: SolicitudesAlumno }, //italo / Herbert
         ],
     },
     {
@@ -94,8 +93,7 @@ export const routes = [
             { path: "Solicitudes", component: SolicitudesTutor }, //luiggi / valeria / melvin
             { path: "Alumnos", component: AlumnosTutor }, //luiggi / valeria / melvin
         ],
-    }
-   
+    },
 ];
 
 Vue.use(Router);
