@@ -200,8 +200,8 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
     methods: {
       listar() {
         console.log("mostrar eventos");
-        this.events=this.eventos;
         console.log(this.eventos);
+        this.events=this.eventos;
      },
       getEventColor (event) {
         return event.color

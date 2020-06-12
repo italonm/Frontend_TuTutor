@@ -16,7 +16,7 @@
           </el-input>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="4">
         <div class="grid-content">
           <el-button
             type="success"
@@ -26,6 +26,18 @@
           >&nbsp;Agregar</el-button>
         </div>
       </el-col>
+       <!-------->
+      <el-col :span="4">
+        <div class="grid-content">
+          <el-button
+            type="success"
+            icon="fas fa-user-plus"
+            @click="agregarMasivamente()"
+            class="buttonAdd"
+          >&nbsp;Masivamente</el-button>
+        </div>
+      </el-col>
+      <!-------------->
     </el-row>
 
     <!-- Tabla-->
@@ -62,13 +74,20 @@
       v-on:resetDialog="dialog=$event"
       v-on:resetList="listar()"
     ></tutorForm>
+
+        <!---Formulario Masivo-->
+    <tutorMasivoForm
+      :dialog2="dialog2"
+      v-on:resetDialog="dialog2=$event"
+    ></tutorMasivoForm>
+
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
 import TutorForm from "./TutorForm";
-
+import TutorMasivoForm from "./MasivoTutorForm";
 export default {
   data() {
     return {
@@ -92,6 +111,7 @@ export default {
       },
       search: "",
       dialog: false,
+      dialog2:false,
       action: ""
     };
   },
@@ -120,6 +140,11 @@ export default {
       this.form = Object.assign({}, item);
       this.dialog = true;
     },
+    
+    agregarMasivamente(){
+      console.log("this is the masivamente")
+      this.dialog2=true;
+    },
     eliminar(item) {
       this.$confirm(
         "Esta seguro de eliminar: " + item.name + "?",
@@ -131,6 +156,9 @@ export default {
         }
       )
         .then(() => {
+          
+          console.log(item.person_id);
+          console.log(item);
           //servicio
           axios
             .post("/user/delete_person/", { person_id: item.person_id })
@@ -149,7 +177,8 @@ export default {
   },
 
   components: {
-    tutorForm: TutorForm
+    tutorForm: TutorForm,
+    tutorMasivoForm:TutorMasivoForm
   }
 };
 </script>

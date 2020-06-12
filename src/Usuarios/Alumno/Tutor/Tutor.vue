@@ -118,7 +118,6 @@ export default {
 
     },
     showHorario(tutor){
-      console.log("mostrat horario");
       
       this.scheduler=tutor.t_schedule;
       this.dialog=true;
@@ -128,8 +127,7 @@ export default {
       this.tutoria.s_id_student=localStorage.getItem("Id_usuario");
       this.tutoria.s_code_tutor=tutor.t_code;
       this.tutoria.s_tt=1;
-      console.log("mostrar tutoria");
-      console.log(this.tutoria);
+
       axios
         .post("/student/register_assignment/",this.tutoria)
         .then(res => {
@@ -138,7 +136,6 @@ export default {
         })
         .catch(error => console.log(error));
 
-      console.log("solicitar tutor");
     }
   },
   computed:{
