@@ -21,7 +21,7 @@
 export default {
     methods:{
         validar(){
-            this.$router.push("/Registrar Contraseña")
+            this.$router.push("/RegPass")
         }
     }
 }
