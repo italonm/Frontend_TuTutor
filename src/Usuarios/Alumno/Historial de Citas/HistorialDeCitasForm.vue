@@ -60,8 +60,7 @@ export default {
     };
   },
 
-  methods: {
-    
+  methods: {    
     aceptar() {
       this.$refs.form.reset();
       this.$emit("resetDialog");
