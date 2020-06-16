@@ -114,7 +114,7 @@ export default {
     },
 
     editar(item) {
-      this.action = "Editar coordinador";
+      this.action = "Editar coordinador";    
       this.form = Object.assign({}, item);
       this.dialog = true;
     },

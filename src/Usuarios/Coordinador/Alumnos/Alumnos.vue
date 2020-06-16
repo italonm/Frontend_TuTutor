@@ -16,7 +16,7 @@
           </el-input>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="4">
         <div class="grid-content">
           <el-button
             type="success"
@@ -26,6 +26,18 @@
           >&nbsp;Agregar</el-button>
         </div>
       </el-col>
+      <!-------->
+      <el-col :span="4">
+        <div class="grid-content">
+          <el-button
+            type="success"
+            icon="fas fa-user-plus"
+            @click="agregarMasivamente()"
+            class="buttonAdd"
+          >&nbsp;Masivamente</el-button>
+        </div>
+      </el-col>
+      <!-------------->
     </el-row>
 
     <!-- Tabla-->
@@ -62,22 +74,29 @@
       v-on:resetDialog="dialog=$event"
       v-on:resetList="listar()"
     ></alumnoForm>
+
+    <!---Formulario Masivo-->
+    <alumnoMasivoForm
+      :dialog2="dialog2"
+      v-on:resetDialog="dialog2=$event"
+    ></alumnoMasivoForm>
+
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
 import AlumnoForm from "./AlumnoForm";
-
+import AlumnoMasivoForm from "./MasivoAlumnoForm"
 export default {
   data() {
     return {
       alumnos: [],
       headers: [
-        { text: "Código", value: "code" },
-        { text: "Nombre", value: "full_name" },
-        { text: "Teléfono", value: "phone_number" },
-        { text: "Correo", value: "email" },
+        { text: "Código", value: "person_code" },
+        { text: "Nombre", value: "person_full_name" },
+        { text: "Teléfono", value: "person_phone_number" },
+        { text: "Correo", value: "person_email" },
         { text: "Editar", value: "editar", sortable: false },
         { text: "Eliminar", value: "eliminar", sortable: false }
       ],
@@ -87,11 +106,13 @@ export default {
         person_email: "",
         person_phone_number: "",
         person_code: "",
-        person_id: ""
+        person_id: "",
+        program_id: localStorage.getItem("Id_facultad"),
       },
 
       search: "",
       dialog: false,
+      dialog2:false,
       action: ""
     };
   },
@@ -102,8 +123,9 @@ export default {
 
   methods: {
     listar() {
+      console.log(localStorage.getItem("Id_facultad"))
       axios
-        .get("/coordinator/show_students/")
+        .get("/coordinator/show_students/"+localStorage.getItem("Id_facultad"))
         .then(res => {
           this.alumnos = res.data.users;
         })
@@ -112,28 +134,20 @@ export default {
 
     insertar() {
       this.action = "Registrar alumno";
-      this.funcion = "insertar";
       this.dialog = true;
     },
 
     editar(item) {
       this.action = "Editar alumno";
-      this.funcion = "editar";
-      console.log(item);
-      this.rellenarForm(item);
-      //this.form = Object.assign({}, item);
+      this.form = Object.assign({}, item);
       this.dialog = true;
     },
-    rellenarForm(item) {
-      this.form.person_name = item.name;
-      this.form.person_last_name = item.last_name;
-      this.form.person_phone_number = item.phone_number;
-      this.form.person_code = item.code;
-      this.form.person_email = item.email;
-      this.form.person_id = item.id;
+    agregarMasivamente(){
+      console.log("this is the masivamente")
+      this.dialog2=true;
     },
-
     eliminar(item) {
+      
       this.$confirm(
         "Esta seguro de eliminar: " + item.name + "?",
         "Advertencia",
@@ -145,8 +159,10 @@ export default {
       )
         .then(() => {
           //servicio
+          console.log(item.person_id);
+          console.log(item);
           axios
-            .post("/user/delete_person/", { person_id: item.id })
+            .post("/user/delete_person/", { person_id: item.person_id })
             .then(res => {
               console.log(res);
               this.listar();
@@ -162,7 +178,8 @@ export default {
   },
 
   components: {
-    alumnoForm: AlumnoForm
+    alumnoForm: AlumnoForm,
+    alumnoMasivoForm:AlumnoMasivoForm
   }
 };
 </script>
