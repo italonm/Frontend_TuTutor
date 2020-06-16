@@ -10,27 +10,6 @@
                 lg="3"
                 class="mb-4 controls"
                 >
-                <v-btn
-                    fab
-                    small
-                    absolute
-                    left
-                    color="primary"
-                    @click="$refs.calendar.prev()"
-                >
-                    <v-icon dark>mdi-chevron-left</v-icon>
-                </v-btn>
-                <v-btn
-                    fab
-                    small
-                    absolute
-                    right
-                    color="primary"
-                    @click="$refs.calendar.next()"
-                >
-                    <v-icon dark>mdi-chevron-right</v-icon>
-                </v-btn>
-                <br><br><br>
                 <v-select
                     v-model="weekdays"
                     :items="weekdaysOptions"
@@ -48,130 +27,43 @@
                     :items="intervalsOptions"
                     label="Intervalos"
                 ></v-select>
-
+                <br>
                 <h6> Agregar disponibilidad: </h6> 
-                <v-menu
-                    ref="startMenu"
-                    v-model="startMenu"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    :return-value.sync="start"
-                    transition="scale-transition"
-                    min-width="290px"
-                    offset-y
-                >
-                    <template v-slot:activator="{ on }">
-                    <v-text-field
-                        v-model="start"
-                        label="Elegir día"
-                        readonly
-                        v-on="on"
-                    ></v-text-field>
-                    </template>
-                    <v-date-picker
-                    v-model="start"
-                    no-title
-                    scrollable
-                    :min= "actualidad"
-                    >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        color="primary"
-                        @click="startMenu = false"
-                    >
-                        Cancel
-                    </v-btn>
-                    <v-btn
-                        color="primary"
-                        @click="$refs.startMenu.save(start)"
-                    >
-                        OK
-                    </v-btn>
-                    </v-date-picker>
-                </v-menu>
-
-                <v-menu
-                    ref="startMenuTime"
-                    v-model="startMenuTime"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    :return-value.sync="startTime"
-                    transition="scale-transition"
-                    min-width="290px"
-                    offset-y
-                >
-                    <template v-slot:activator="{ on }">
-                    <v-text-field
-                        v-model="startTime"
-                        label="Elegir hora inicio"
-                        readonly
-                        v-on="on"
-                    ></v-text-field>
-                    </template>
-                    <v-time-picker
-                    v-model="startTime"
-                    scrollable
-                    min="6:00"
-                    >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        color="primary"
-                        @click="startMenuTime = false"
-                    >
-                        Cancel
-                    </v-btn>
-                    <v-btn
-                        color="primary"
-                        @click="$refs.startMenuTime.save(startTime)"
-                    >
-                        OK
-                    </v-btn>
-                    </v-time-picker>
-                </v-menu>
-
-                <v-menu
-                    ref="endMenuTime"
-                    v-model="endMenuTime"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    :return-value.sync="endTime"
-                    transition="scale-transition"
-                    min-width="290px"
-                    offset-y
-                >
-                    <template v-slot:activator="{ on }">
-                    <v-text-field
-                        v-model="endTime"
-                        label="Elegir hora fin"
-                        readonly
-                        v-on="on"
-                    ></v-text-field>
-                    </template>
-                    <v-time-picker
-                    v-model="endTime"
-                    scrollable
-                    :min="startTime"
-                    max="24:00"
-                    >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        color="primary"
-                        @click="endMenuTime = false"
-                    >
-                        Cancel
-                    </v-btn>
-                    <v-btn
-                        color="primary"
-                        @click="$refs.endMenuTime.save(endTime)"
-                    >
-                        OK
-                    </v-btn>
-                    </v-time-picker>
-                </v-menu>
-                <v-btn color="success" @click="agregarEvento">Añadir al calendario</v-btn>
-
+                <el-select v-model="valueDate" placeholder="Selecciona el día">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+                <br><br>
+                <el-time-select
+                  placeholder="Hora inicio"
+                  style="width: 100%;"
+                  v-model="startTime"
+                  :picker-options="{
+                    start: '06:00',
+                    step: '00:15',
+                    end: '22:00'
+                  }"
+                  >
+                </el-time-select>
+                <br><br>
+                <el-time-select
+                  placeholder="Hora fin"
+                  v-model="endTime"
+                  style="width: 100%;"
+                  :picker-options="{
+                    start: '06:00',
+                    step: '00:15',
+                    end: '22:00',
+                    minTime: startTime
+                  }">
+                </el-time-select>
+                <br><br>
+                <v-btn color="success" width= "110%"  @click="agregarEvento">Añadir al calendario</v-btn>
                 </v-col>
-
             <v-col
             sm="12"
             lg="9"
@@ -196,6 +88,7 @@
                     :events="events"
                     :event-color="getEventColor"
                     @click:event="showEvent"
+                    category-hide-dynamic= "true"
                     >
                     </v-calendar>
                     <v-menu
@@ -257,8 +150,8 @@ import axios from 'axios';
     height: 40
   }
 var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
-var now = new Date(); 
-var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
+//var now = new Date(); 
+//var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
   export default {
     props: ["dialog"],
     data: () => ({
@@ -266,10 +159,10 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       startMenu: false,
       startMenuTime:false,
       endMenuTime:false,
-      start: diaActual,
-      actualidad: diaActual,
-      startTime: "07:00",
-      endTime: "18:00",
+      start: "2020-06-01",
+      actualidad: "2020-06-01",
+      startTime:"",
+      endTime:"",
       endMenu: false,
       nowMenu: false,
       minWeeks: 1,
@@ -301,7 +194,32 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       eventosAgregados:[],
       borrarEvento:{
         schedule_id:""
-      }
+      },
+      options: [{
+          value: "2020-06-01",
+          label: 'Lunes'
+        }, {
+          value: "2020-06-02",
+          label: 'Martes'
+        }, {
+          value: "2020-06-03",
+          label: 'Miercoles'
+        }, {
+          value: "2020-06-04",
+          label: 'Jueves'
+        }, {
+          value: "2020-06-05",
+          label: 'Viernes'
+        },{
+          value: "2020-06-06",
+          label: 'Sabado'
+        },{
+          value: "2020-06-07",
+          label: 'Domingo'
+        },
+        
+        ],
+        valueDate: ''
     }),
     computed: {
       hasIntervals () {
@@ -337,8 +255,8 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       },
       agregarEvento(){
         this.eventosAgregados.push({id:null , name: "Disponible",
-                          start: this.start +" "+ this.startTime,
-                          end: this.start +" "+ this.endTime, color:"blue"})
+                          start: this.valueDate +" "+ this.startTime,
+                          end: this.valueDate +" "+ this.endTime, color:"green"})
         this.schedule.events = this.eventosAgregados;
         console.log(this.schedule);
         axios
@@ -352,8 +270,8 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
             this.$message.error("Error al registrar datos");
           });
         this.events.push({id:null , name: "Disponible",
-                          start: this.start +" "+ this.startTime,
-                          end: this.start +" "+ this.endTime, color:"blue"})                  
+                          start: this.valueDate +" "+ this.startTime,
+                          end: this.valueDate +" "+ this.endTime, color:"green"})                  
         console.log(this.events); 
       },
       showEvent ({ nativeEvent, event }) {
@@ -398,3 +316,18 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
   }
 </script>
 
+<style>
+.theme--light.v-btn {
+    color: rgba(0, 0, 0, 0);
+}
+.v-calendar-daily_head-day {
+    height: 25px;
+    flex: 1 1 auto;
+    width: 0;
+    position: relative;
+}
+.v-btn--fab.v-size--default {
+    height: 0px;
+    width: 0px;
+}
+</style>
