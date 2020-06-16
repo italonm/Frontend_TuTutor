@@ -139,6 +139,8 @@ export default {
 
     cancelar() {
       this.dialog = false;
+      this.$emit("resetDialog");
+      //this.$refs.dialog.reset();
       this.listar();
     },
 

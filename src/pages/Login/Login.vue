@@ -37,9 +37,8 @@
         </form>
       </div>
       <div class="form-container sign-in-container">
-        <form
-          style="background-color: #FFFFFF; display: flex;align-items: center;justify-content: center;flex-direction: column;padding: 0 50px;height: 100%;text-align: center;"
-          action="#"
+        <div
+          style="background-color: #FFFFFF; display: flex;align-items: center;justify-content: center;flex-direction: column;padding: 0 50px;height: 100%;text-align: center;"          
         >
           <div class="Iniciar">Inicia Sesión</div>
           <div class="social-container">
@@ -59,7 +58,7 @@
           <a style="color:#333; font-size: 12px; margin: 15px 0" hre  f="#">Olvidaste tu contraseña?</a>
           <button style="border-radius: 20px; border: 1.3px solid #3C4B64; background-color: transparent;color: #3C4B64;font-size: 11px;padding: 12px 45px;letter-spacing: 1px;text-transform: uppercase;transition: transform 80ms ease-in;"
           @click='logItIn'>Iniciar</button>
-        </form>
+        </div>
       </div>
       <div class="overlay-container">
         <div class="overlay">
@@ -121,9 +120,7 @@ export default {
         } else {
           y.className = "fa fa-eye"
           x.type = "password";
-        }
-        
-        
+        }                
       },
 			logItIn(){              
         var that = this;        
@@ -190,5 +187,5 @@ export default {
 };
 </script>
 <style scoped>
-@import "./Login.css";
+  @import "./Login.css";
 </style>
