@@ -10,10 +10,11 @@
         </div>
       </el-col>
     </el-row>
-
+    
     <el-row :gutter="30">
       <el-col :xs="20" :sm="12" :md="12" :lg="8">
         <el-card class="box-group" style="overflow:auto">
+          
           <div v-for="tutor in filterTutor" :key="tutor" class="text item">
             <el-card class="box-card" style="border-style:dashed;">
               <el-row>
@@ -120,13 +121,13 @@ export default {
       scheduler: [],
       customCalendar:[],
       tutoria: {
-        s_id_student: "",
-        s_code_tutor: "",
-        s_tt: ""
+        student_id: "",
+        tutor_id: "",
+        tutor_code:"",
+        tutoring_type_id: ""
       },
       dialog: false,
       color: "#0476D0",
-      //dia: ""
     };
   },
   methods: {
@@ -153,9 +154,6 @@ export default {
       this.showBoxHorario = true;
       this.scheduler = tutorInfo.t_schedule;
       this.generateListCalendar();
-      //var birthday = new Date("2020-06-13 08:00");
-      //var options = { weekday: "long" };
-      //this.dia = new Intl.DateTimeFormat("es-PE", options).format(birthday);
     },
     generateListCalendar(){
       console.log("imprime shceduler")
@@ -174,12 +172,14 @@ export default {
       }
     },
     solicitarTutor(tutor) {
-      this.tutoria.s_id_student = localStorage.getItem("Id_usuario");
-      this.tutoria.s_code_tutor = tutor.t_code;
-      this.tutoria.s_tt = 1;
+      console.log(tutor);
+      this.tutoria.student_id = localStorage.getItem("Id_usuario");
+      this.tutoria.tutor_code = tutor.t_code;
+      this.tutoria.tutor_id=tutor.t_id_tutor;
+      this.tutoria.tutoring_type_id = localStorage.getItem('Id_Tipo_Tutoria');
 
       axios
-        .post("/student/register_assignment/", this.tutoria)
+        .post("/student/request_assignment/", this.tutoria)
         .then(res => {
           console.log(res);
           this.$message({ message: "Registro exitoso.", type: "success" });
