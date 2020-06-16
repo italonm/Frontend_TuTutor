@@ -1,223 +1,84 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="870px" color="color">
     <v-card>
-      <v-card-title class="cardAdd justify-center"
-        >Horario de disponibilidad</v-card-title
-      >
-      <v-layout wrap>
-        <v-col sm="12" lg="3" class="mb-4 controls">
-          <v-btn
-            fab
-            small
-            absolute
-            left
-            color="primary"
-            @click="$refs.calendar.prev()"
-          >
-            <v-icon dark>mdi-chevron-left</v-icon>
-          </v-btn>
-          <v-btn
-            fab
-            small
-            absolute
-            right
-            color="primary"
-            @click="$refs.calendar.next()"
-          >
-            <v-icon dark>mdi-chevron-right</v-icon>
-          </v-btn>
-          <br />
-          <br />
-          <br />
-          <v-select
-            v-model="weekdays"
-            :items="weekdaysOptions"
-            label="Rango de días"
-          ></v-select>
-          <v-text-field
-            v-if="type === 'custom-weekly'"
-            v-model="minWeeks"
-            label="Minimum Weeks"
-            type="number"
-          ></v-text-field>
-          <v-select
-            v-if="hasIntervals"
-            v-model="intervals"
-            :items="intervalsOptions"
-            label="Intervalos"
-          ></v-select>
-
-          <h6>Agregar disponibilidad:</h6>
-          <v-menu
-            ref="startMenu"
-            v-model="startMenu"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            :return-value.sync="start"
-            transition="scale-transition"
-            min-width="290px"
-            offset-y
-          >
-            <template v-slot:activator="{ on }">
-              <v-text-field
+      <v-card-title class="cardAdd justify-center">Registro de sesión</v-card-title>
+      <v-container>
+        <v-row justify="space-between">
+          <v-col sm="8" lg="8" class="pl-4">
+            <v-sheet height="400" color="blue">
+              <v-calendar
+                ref="calendar"
                 v-model="start"
-                label="Elegir día"
-                readonly
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              v-model="start"
-              no-title
-              scrollable
-              :min="actualidad"
-            >
-              <v-spacer></v-spacer>
-              <v-btn color="primary" @click="startMenu = false">Cancel</v-btn>
-              <v-btn color="primary" @click="$refs.startMenu.save(start)"
-                >OK</v-btn
-              >
-            </v-date-picker>
-          </v-menu>
+                type="week"
+                :start="start"
+                min-weeks:1
+                max-days:7
+                :events="events"
+                :event-color="getEventColor"
+                weekdays="[1, 2, 3, 4, 5, 6]"
+                first-interval="16"
+                interval-minutes="30"
+                interval-count="24"
+                interval-height="40"
+                color="blue"
+              ></v-calendar>
+            </v-sheet>
+          </v-col>
 
-          <v-menu
-            ref="startMenuTime"
-            v-model="startMenuTime"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            :return-value.sync="startTime"
-            transition="scale-transition"
-            min-width="290px"
-            offset-y
-          >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="startTime"
-                label="Elegir hora inicio"
-                readonly
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-time-picker v-model="startTime" scrollable min="6:00">
-              <v-spacer></v-spacer>
-              <v-btn color="primary" @click="startMenuTime = false"
-                >Cancel</v-btn
-              >
-              <v-btn
-                color="primary"
-                @click="$refs.startMenuTime.save(startTime)"
-                >OK</v-btn
-              >
-            </v-time-picker>
-          </v-menu>
+          <v-col sm="4" lg="4" class="pl-4">
+            <v-row class="flex-column ma-0 fill-height" justify="center">
+              <v-col class="px-0">
+                <v-btn fab small absolute left color="primary" @click="$refs.calendar.prev()">
+                  <v-icon dark>mdi-chevron-left</v-icon>
+                </v-btn>
+                <v-btn fab small absolute right color="primary" @click="$refs.calendar.next()">
+                  <v-icon dark>mdi-chevron-right</v-icon>
+                </v-btn>
+                <div class="text">
+                  <h4 center absolute>Horario</h4>
+                </div>
+              </v-col>
 
-          <v-menu
-            ref="endMenuTime"
-            v-model="endMenuTime"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            :return-value.sync="endTime"
-            transition="scale-transition"
-            min-width="290px"
-            offset-y
-          >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="endTime"
-                label="Elegir hora fin"
-                readonly
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-time-picker
-              v-model="endTime"
-              scrollable
-              :min="startTime"
-              max="24:00"
-            >
-              <v-spacer></v-spacer>
-              <v-btn color="primary" @click="endMenuTime = false">Cancel</v-btn>
-              <v-btn color="primary" @click="$refs.endMenuTime.save(endTime)"
-                >OK</v-btn
-              >
-            </v-time-picker>
-          </v-menu>
-          <v-btn color="success" @click="agregarEvento"
-            >Añadir al calendario</v-btn
-          >
-        </v-col>
+              <v-col class="px-0">
+                <div class="text">
+                  <el-date-picker
+                    v-model="cita.s_date"
+                    type="date"
+                    placeholder="Seleccione un día"
+                    value-format="yyyy-MM-dd"
+                    @change="updateDays"
+                  ></el-date-picker>
+                </div>
+              </v-col>
 
-        <v-col sm="12" lg="9" class="pl-4">
-          <v-sheet height="500" color="color">
-            <v-calendar
-              ref="calendar"
-              v-model="start"
-              :type="type"
-              :start="start"
-              :min-weeks="minWeeks"
-              :max-days="maxDays"
-              :now="now"
-              :dark="dark"
-              :weekdays="weekdays"
-              :first-interval="intervals.first"
-              :interval-minutes="intervals.minutes"
-              :interval-count="intervals.count"
-              :interval-height="intervals.height"
-              :color="color"
-              :events="events"
-              :event-color="getEventColor"
-              @click:event="showEvent"
-            ></v-calendar>
-            <v-menu
-              v-model="selectedOpen"
-              :close-on-content-click="false"
-              :activator="selectedElement"
-              offset-x
-            >
-              <v-card color="grey lighten-4" min-width="300px" flat>
-                <v-toolbar :color="selectedEvent.color" dark>
-                  <v-spacer></v-spacer>
-                  <v-toolbar-title
-                    v-html="selectedEvent.name"
-                  ></v-toolbar-title>
-                  <v-spacer></v-spacer>
-                  <v-btn icon @click="deleteEvent(selectedEvent)">
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                  <v-btn icon @click="selectedOpen = false">
-                    <v-icon>mdi-close-circle-outline</v-icon>
-                  </v-btn>
-                </v-toolbar>
-                <v-card-text>
-                  Inicio del evento:
-                  <span v-html="selectedEvent.start"></span>
-                  <br />Fin del evento:
-                  <span v-html="selectedEvent.end"></span>
-                </v-card-text>
-                <v-card-actions></v-card-actions>
-              </v-card>
-            </v-menu>
-          </v-sheet>
-        </v-col>
-      </v-layout>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="error" @click="cancelar">Cerrar</v-btn>
-      </v-card-actions>
+              <v-col class="px-0">
+                <div class="text">
+                  <el-select
+                    v-model="cita.s_hour"
+                    placeholder="Seleccione una hora"
+                    style="width:220px !important"
+                  >
+                    <i slot="prefix" class="el-input__icon el-icon-time"></i>
+                    <el-option v-for="item in freeOptions" :key="item" :label="item" :value="item"></el-option>
+                  </el-select>
+                </div>
+              </v-col>
+
+              <v-col class="px-0">
+                <v-btn absolute left color="success" @click="citar">Citar</v-btn>&nbsp;
+                <v-btn absolute right color="error" @click="cancelar">Cerrar</v-btn>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
 import axios from "axios";
-const weekdaysDefault = [1, 2, 3, 4, 5, 6, 0];
-const intervalsDefault = {
-  first: 0,
-  minutes: 60,
-  count: 24,
-  height: 40,
-};
-var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
+
 var now = new Date();
 var diaActual =
   now.getFullYear() +
@@ -228,163 +89,119 @@ var diaActual =
   (now.getDate() < 10 ? "0" : "") +
   now.getDate();
 export default {
-  props: ["dialog"],
-  data: () => ({
-    dark: false,
-    startMenu: false,
-    startMenuTime: false,
-    endMenuTime: false,
-    start: diaActual,
-    actualidad: diaActual,
-    startTime: "07:00",
-    endTime: "18:00",
-    endMenu: false,
-    nowMenu: false,
-    minWeeks: 1,
-    now: null,
-    type: "week",
-    selectedEvent: {},
-    selectedElement: null,
-    selectedOpen: false,
-    availableDates: [],
-    weekdays: weekdaysDefault,
-    weekdaysOptions: [
-      { text: "Lunes - Domingo", value: weekdaysDefault },
-      { text: "Lunes, Miercoles y Viernes", value: [1, 3, 5] },
-      { text: "Lunes - Viernes", value: [1, 2, 3, 4, 5] },
-    ],
-    intervals: intervalsDefault,
-    intervalsOptions: [
-      { text: "Cada hora", value: intervalsDefault },
-      {
-        text: "Cada 30 minutos",
-        value: { first: 0, minutes: 30, count: 48, height: 30 },
+  props: ["dialog", "idtutor"],
+  data() {
+    return {
+      start: diaActual,
+      freeOptions: "",
+      cita: {
+        s_date: "",
+        s_hour: "",
+        s_id_student: localStorage.getItem("Id_usuario"),
+        s_code_tutor: ""
       },
-      {
-        text: "Cada 15 minutos",
-        value: { first: 0, minutes: 15, count: 95, height: 60 },
-      },
-    ],
-    maxDays: 7,
-    color: "blue",
-    events: [],
-    schedule: {
-      tutor_id: Id_usuario,
-      events: [],
-    },
-    eventosAgregados: [],
-    borrarEvento: {
-      schedule_id: "",
-    },
-  }),
-  computed: {
-    hasIntervals() {
-      return (
-        this.type in
+      events: [
         {
-          week: 1,
-          day: 1,
-          "4day": 1,
-          "custom-daily": 1,
-        }
-      );
-    },
-    hasEnd() {
-      return (
-        this.type in
+          name: "Disponible",
+          start: "2020-06-11 09:00:00",
+          end: "2020-06-11 12:00",
+          color: "green"
+        },
         {
-          "custom-weekly": 1,
-          "custom-daily": 1,
+          name: "Reservado",
+          start: "2020-06-11 10:00",
+          end: "2020-06-11 10:30",
+          color: "brown"
+        },
+        {
+          name: "Reservado",
+          start: "2020-06-11 11:00",
+          end: "2020-06-11 11:30",
+          color: "brown"
         }
-      );
-    },
+      ]
+    };
   },
+
   created() {
     this.listar();
   },
+
   methods: {
-    listar() {
-      axios
-        .get("/tutor/show_schedule/" + Id_usuario)
-        .then((res) => {
-          this.events = res.data.schedules;
-        })
-        .catch((error) => console.log(error));
-    },
+    listar() {},
+
     getEventColor(event) {
       return event.color;
     },
-    cancelar() {
-      this.newDialog = false;
-      this.$emit("resetDialog", this.newDialog);
-      this.listar();
-    },
-    agregarEvento() {
-      this.eventosAgregados.push({
-        id: null,
-        name: "Disponible",
-        start: this.start + " " + this.startTime,
-        end: this.start + " " + this.endTime,
-        color: "blue",
-      });
-      this.schedule.events = this.eventosAgregados;
-      console.log(this.schedule);
+
+    citar() {
+      console.log(this.cita);
+      this.cita.s_code_tutor = this.idtutor;
       axios
-        .post("/tutor/add_schedule/", this.schedule)
-        .then((res) => {
+        .post("/student/register_appointment/", this.cita)
+        .then(res => {
           console.log(res);
-          this.listar();
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
-          this.$message.error("Error al registrar datos");
         });
-      this.events.push({
-        id: null,
-        name: "Disponible",
-        start: this.start + " " + this.startTime,
-        end: this.start + " " + this.endTime,
-        color: "blue",
-      });
-      console.log(this.events);
     },
-    showEvent({ nativeEvent, event }) {
-      const open = () => {
-        this.selectedEvent = event;
-        this.selectedElement = nativeEvent.target;
-        setTimeout(() => (this.selectedOpen = true), 10);
-      };
 
-      if (this.selectedOpen) {
-        this.selectedOpen = false;
-        setTimeout(open, 10);
-      } else {
-        open();
-      }
+    updateDays() {
+      axios
+        .post("/student/show_free_hours/", {
+          s_date: this.cita.s_date,
+          s_code_tutor: this.idtutor
+        })
+        .then(res => {
+          this.freeOptions = res.data;
+          console.log(res.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
 
-      nativeEvent.stopPropagation();
-    },
-    deleteEvent(selectedEvent) {
-      this.borrarEvento.schedule_id = selectedEvent.id;
-      console.log(this.borrarEvento.schedule_id);
-      if (selectedEvent.name == "Reservado") {
-        this.$message.error("Evento reservado. No se puede eliminar");
-      } else if (selectedEvent.name == "Disponible") {
-        axios
-          .post("/tutor/delete_schedule/", this.borrarEvento)
-          .then((res) => {
-            this.selectedOpen = false;
-            console.log(res);
-            this.$message({ message: "Eliminación exitosa.", type: "success" });
-            console.log(this.events);
-            this.listar();
-          })
-          .catch((error) => {
-            console.log(error);
-            this.$message.error("No se pudo eliminar");
-          });
-      }
-    },
-  },
+    cancelar() {
+      this.$emit("closeDialog");
+      this.listar();
+    }
+  }
 };
-</script>
+</script>>
+<style lang="scss">
+.v-calendar .v-event-timed-container {
+  margin-right: 0px !important ;
+}
+.v-event-timed {
+  // left: 2.5% !important;
+  // right: 2.5% !important;
+}
+.my-event {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 2px;
+  background-color: #1867c0;
+  color: #ffffff;
+  border: 1px solid #1867c0;
+  font-size: 12px;
+  padding: 3px;
+  cursor: pointer;
+  margin-bottom: 1px;
+  left: 4px;
+  margin-right: 8px;
+  position: relative;
+}
+
+.my-event.with-time {
+  position: absolute;
+  right: 4px;
+  margin-right: 0px;
+}
+.text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
