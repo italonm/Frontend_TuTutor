@@ -2,9 +2,8 @@
   <div class="nav containerPrincipal">
     <div class="containerLogin" id="container">
       <div class="form-container sign-up-container">
-        <form
-          style="background-color: #FFFFFF; display: flex;align-items: center;justify-content: center;flex-direction: column;padding: 0 50px;height: 100%;text-align: center;"
-          action="#"
+        <div
+          style="background-color: #FFFFFF; display: flex;align-items: center;justify-content: center;flex-direction: column;padding: 0 50px;height: 100%;text-align: center;"     
         >
           <div class="Iniciar">Regístrate</div>
           <div class="social-container">
@@ -33,8 +32,8 @@
           />
           <button
             style="border-radius: 20px; border: 1.3px solid #3C4B64; background-color: transparent;color: #3C4B64;font-size: 11px;padding: 12px 45px;letter-spacing: 1px;text-transform: uppercase;transition: transform 80ms ease-in;"
-          >Registrar</button>
-        </form>
+          @click="register">Registrar</button>
+        </div>
       </div>
       <div class="form-container sign-in-container">
         <div
@@ -111,6 +110,9 @@ export default {
       });
     },      
 		methods:{      
+      register(){
+        this.$router.push("/PassSet")
+      },
       ShowPass(){
         var x = document.getElementById("pass");
         var y = document.getElementById("pass icon");
