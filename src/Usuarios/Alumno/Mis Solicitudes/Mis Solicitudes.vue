@@ -84,7 +84,7 @@ export default {
       axios
         .get(
           "/student/show_assignment_request_student/" +
-            19 /*localStorage.getItem("Id_usuario")*/
+            localStorage.getItem("Id_usuario")
         )
         .then(res => {
           this.tutorias = res.data.tableData;

@@ -17,7 +17,7 @@
       ------------->
       <v-container fluid grid-list-xl>
         <v-layout wrap justify-space-around>
-          <v-flex v-for="tipo in filterTipoTutoria" :key="tipo.t_email">
+          <v-flex v-for="tipo in filterTipoTutoria" :key="tipo.tt_name">
             <v-card class="mx-auto" max-width="300">
               <v-img
                 class="white--text align-end"
@@ -37,7 +37,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-btn color="green" text @click="solicitarTutor(tipo)">
-                  <i class="fas fa-search"></i>Buscar tutores
+                  <i class="el-icon-search"></i>Buscar tutores
                 </v-btn>
               </v-card-actions>
             </v-card>
