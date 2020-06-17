@@ -10,11 +10,12 @@
         </div>
       </el-col>
     </el-row>
-
+    
     <el-row :gutter="30">
       <el-col :xs="20" :sm="12" :md="12" :lg="8">
         <el-card class="box-group" style="overflow:auto">
-          <div v-for="tutor in filterTutor" :key="tutor" class="text item">
+          
+          <div v-for="tutor in filterTutor" :key="tutor.t_id_tutor" class="text item">
             <el-card class="box-card" style="border-style:dashed;">
               <el-row>
                 <el-col :sm="5" :xs="5">
@@ -48,7 +49,7 @@
         <el-card class="box-information" style="overflow:auto; height:480px" v-show="showBox">
           <h5>{{this.tutorInfo.t_fullname}}</h5>
           <v-img
-            src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+            src="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-assets/images/portrait/small/avatar-s-13.jpg"
             class="white--text align-end"
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
             height="200px"
@@ -70,7 +71,7 @@
             </el-col>
 
             <el-col :xs="12" :sm="9" :md="9">
-              <v-btn text color="primary" icon="fas fa-search" @click="showHorario(tutorInfo)">
+              <v-btn text color="primary" @click="showHorario(tutorInfo)">
                 Horarios
                 <i class="el-icon-arrow-right"></i>
               </v-btn>
@@ -87,7 +88,7 @@
           <v-app-bar dark color="green">
             <v-toolbar-title>AGENDA</v-toolbar-title>
           </v-app-bar>
-          <div v-for="schedul in customCalendar" :key="schedul" class="text item">
+          <div v-for="schedul in customCalendar" :key="schedul.day[3]" class="text item">
             <v-list class="transparent">
               <!--------->
               <v-list-item >
@@ -95,7 +96,7 @@
                   style="border-right: 3px solid red; font-size: 20px;color:purple; font-weight:bold;"
                 >{{ schedul.day[0] }} {{schedul.day[1]}}</v-list-item-title>
 
-                <v-list-item-subtitle class="text-center" v-for="hora in schedul" :key="hora">{{schedul.day[2] }}</v-list-item-subtitle>
+                <v-list-item-subtitle class="text-center">{{schedul.day[2] }}</v-list-item-subtitle>
               </v-list-item>
               <!--------->
             </v-list>
@@ -120,13 +121,13 @@ export default {
       scheduler: [],
       customCalendar:[],
       tutoria: {
-        s_id_student: "",
-        s_code_tutor: "",
-        s_tt: ""
+        student_id: "",
+        tutor_id: "",
+        tutor_code:"",
+        tutoring_type_id: ""
       },
       dialog: false,
       color: "#0476D0",
-      //dia: ""
     };
   },
   methods: {
@@ -152,34 +153,36 @@ export default {
     showHorario(tutorInfo) {
       this.showBoxHorario = true;
       this.scheduler = tutorInfo.t_schedule;
+      console.log(this.scheduler);
       this.generateListCalendar();
-      //var birthday = new Date("2020-06-13 08:00");
-      //var options = { weekday: "long" };
-      //this.dia = new Intl.DateTimeFormat("es-PE", options).format(birthday);
     },
     generateListCalendar(){
-      console.log("imprime shceduler")
       var etiqueta;
       this.customCalendar=[];
       for (etiqueta of this.scheduler){
         var dias=new Object();
         var birthday = new Date(etiqueta.start);
-        var options = { weekday: "long",day: 'numeric'};
+        var options = { weekday: "long",day: 'numeric'/*, month:"long"*/};
         dias.day=new Intl.DateTimeFormat("es-PE", options).format(birthday);
+        console.log(dias.day);
         dias.day=dias.day.split(" ");
+        console.log(dias.day)
         var reg=/ (.+)$/g;
         dias.day[2]=(etiqueta.start).match(reg)+' -'+(etiqueta.end).match(reg);
+        dias.day[3]=etiqueta.start;//key
         this.customCalendar.push(dias);
+        console.log(dias.day[3]);
        
       }
     },
     solicitarTutor(tutor) {
-      this.tutoria.s_id_student = localStorage.getItem("Id_usuario");
-      this.tutoria.s_code_tutor = tutor.t_code;
-      this.tutoria.s_tt = 1;
+      this.tutoria.student_id = localStorage.getItem("Id_usuario");
+      this.tutoria.tutor_code = tutor.t_code;
+      this.tutoria.tutor_id=tutor.t_id_tutor;
+      this.tutoria.tutoring_type_id = localStorage.getItem('Id_Tipo_Tutoria');
 
       axios
-        .post("/student/register_assignment/", this.tutoria)
+        .post("/student/request_assignment/", this.tutoria)
         .then(res => {
           console.log(res);
           this.$message({ message: "Registro exitoso.", type: "success" });
