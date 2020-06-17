@@ -145,7 +145,7 @@ export default {
       actualizarContador(){
         console.log(localStorage.getItem("Id_usuario"));
         axios
-        .get("http://184.73.231.88:5000/api/tutor/show_counter/" + "97")
+        .get("http://184.73.231.88:5000/api/tutor/show_counter/" + localStorage.getItem("Id_usuario"))
         .then(res => {
           console.log(res.data);
           this.notificaciones = res.data.contador;
