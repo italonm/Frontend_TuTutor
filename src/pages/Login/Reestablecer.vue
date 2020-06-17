@@ -5,7 +5,7 @@
         <div class="center">
             <h2>Ingresa tu contraseña</h2>        
             <div id="pass-container" style="display: flex; width: 100%; margin-bottom: 15px; width: 100%; background-color: #FFFFFF;">            
-                <input id="pass" style ="padding: 12px 15px; margin: 8px 0;	width: 100%;" type="password" placeholder="Contraseña">          
+                <input id="pass" style ="padding: 12px 15px; margin: 8px 0;	width: 100%;" type="password" placeholder="Contraseña" v-model="setPass.password">          
                 <i id="pass icon" class="fa fa-eye" style="position: absolute; right:7%; padding: 24px; min-width: 50px; text-align: right;" @click="ShowPass()"></i>
             </div>
             <h2>&nbsp;</h2>
@@ -21,10 +21,32 @@
     </div>
 </template>
 <script>
+import axios from "axios";
 export default {
+    data(){
+        return{
+            setPass:{
+                id:"",
+                password:"",                
+            }
+        }
+    },
     methods:{
         Registrar(){
-            console.log("AUXILIO")
+            var that = this                
+            that.setPass.id = parseInt(localStorage.getItem('Id_usuario'))
+            console.log(this.setPass)
+            axios.post('user/set_password/',that.setPass)
+            .then(response =>{       
+                console.log(response)          
+                this.$router.push("/Login")                
+            })
+            .catch(function(error) {
+                if (error.response){
+                    console.log(error)
+                    this.$message.error("Datos inválidos, por favor ingrese de nuevo.")
+                }          
+            })           
         },
         ShowPass(){
         var x = document.getElementById("pass");

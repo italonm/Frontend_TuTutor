@@ -18,10 +18,11 @@
     </div>
 </template>
 <script>
+
 export default {
     methods:{
         establecer(){
-            this.$router.push("/Reestablecer")
+            
         }
     }
 }
