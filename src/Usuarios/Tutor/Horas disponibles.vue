@@ -10,6 +10,27 @@
                 lg="3"
                 class="mb-4 controls"
                 >
+                <v-btn
+                    fab
+                    small
+                    absolute
+                    left
+                    color="primary"
+                    @click="$refs.calendar.prev()"
+                >
+                    <v-icon dark>mdi-chevron-left</v-icon>
+                </v-btn>
+                <v-btn
+                    fab
+                    small
+                    absolute
+                    right
+                    color="primary"
+                    @click="$refs.calendar.next()"
+                >
+                    <v-icon dark>mdi-chevron-right</v-icon>
+                </v-btn>
+                <br><br><br>
                 <v-select
                     v-model="weekdays"
                     :items="weekdaysOptions"
@@ -27,24 +48,54 @@
                     :items="intervalsOptions"
                     label="Intervalos"
                 ></v-select>
-                <br>
+
                 <h6> Agregar disponibilidad: </h6> 
-                <el-select v-model="valueDate" placeholder="Selecciona el día">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-                <br><br>
+                <v-menu
+                    ref="startMenu"
+                    v-model="startMenu"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    :return-value.sync="start"
+                    transition="scale-transition"
+                    min-width="290px"
+                    offset-y
+                >
+                    <template v-slot:activator="{ on }">
+                    <v-text-field
+                        v-model="start"
+                        label="Elegir día"
+                        readonly
+                        v-on="on"
+                    ></v-text-field>
+                    </template>
+                    <v-date-picker
+                    v-model="start"
+                    no-title
+                    scrollable
+                    :min= "actualidad"
+                    >
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="primary"
+                        @click="startMenu = false"
+                    >
+                        Cancel
+                    </v-btn>
+                    <v-btn
+                        color="primary"
+                        @click="$refs.startMenu.save(start)"
+                    >
+                        OK
+                    </v-btn>
+                    </v-date-picker>
+                </v-menu>
                 <el-time-select
                   placeholder="Hora inicio"
                   style="width: 100%;"
                   v-model="startTime"
                   :picker-options="{
                     start: '06:00',
-                    step: '00:15',
+                    step: '00:30',
                     end: '22:00'
                   }"
                   >
@@ -56,14 +107,16 @@
                   style="width: 100%;"
                   :picker-options="{
                     start: '06:00',
-                    step: '00:15',
+                    step: '00:30',
                     end: '22:00',
                     minTime: startTime
                   }">
                 </el-time-select>
                 <br><br>
-                <v-btn color="success" width= "110%"  @click="agregarEvento">Añadir al calendario</v-btn>
+                <v-btn color="success" @click="agregarEvento">Añadir al calendario</v-btn>
+
                 </v-col>
+
             <v-col
             sm="12"
             lg="9"
@@ -88,7 +141,6 @@
                     :events="events"
                     :event-color="getEventColor"
                     @click:event="showEvent"
-                    category-hide-dynamic= "true"
                     >
                     </v-calendar>
                     <v-menu
@@ -109,7 +161,7 @@
                             <v-spacer></v-spacer>
                             <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                             <v-spacer></v-spacer>
-                            <v-btn icon @click="deleteEvent(selectedEvent)">
+                            <v-btn icon @click="deleteEvent(selectedEvent.id)">
                                 <v-icon>mdi-delete</v-icon>
                             </v-btn>
                             <v-btn icon @click="selectedOpen = false">
@@ -134,6 +186,7 @@
             </v-layout>
             <v-card-actions>
                 <v-spacer></v-spacer>
+                <v-btn color="blue" @click="cancelar">Repetir horario pasado</v-btn>
                 <v-btn color="error" @click="cancelar">Cerrar</v-btn>
             </v-card-actions>
       </v-card>
@@ -150,8 +203,8 @@ import axios from 'axios';
     height: 40
   }
 var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
-//var now = new Date(); 
-//var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
+var now     = new Date(); 
+var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
   export default {
     props: ["dialog"],
     data: () => ({
@@ -159,10 +212,10 @@ var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
       startMenu: false,
       startMenuTime:false,
       endMenuTime:false,
-      start: "2020-06-01",
-      actualidad: "2020-06-01",
-      startTime:"",
-      endTime:"",
+      start: diaActual,
+      actualidad: diaActual,
+      startTime: "",
+      endTime: "",
       endMenu: false,
       nowMenu: false,
       minWeeks: 1,
@@ -171,7 +224,6 @@ var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
-      availableDates: [],
       weekdays: weekdaysDefault,
       weekdaysOptions: [
         { text: 'Lunes - Domingo', value: weekdaysDefault},
@@ -194,32 +246,7 @@ var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
       eventosAgregados:[],
       borrarEvento:{
         schedule_id:""
-      },
-      options: [{
-          value: "2020-06-01",
-          label: 'Lunes'
-        }, {
-          value: "2020-06-02",
-          label: 'Martes'
-        }, {
-          value: "2020-06-03",
-          label: 'Miercoles'
-        }, {
-          value: "2020-06-04",
-          label: 'Jueves'
-        }, {
-          value: "2020-06-05",
-          label: 'Viernes'
-        },{
-          value: "2020-06-06",
-          label: 'Sabado'
-        },{
-          value: "2020-06-07",
-          label: 'Domingo'
-        },
-        
-        ],
-        valueDate: ''
+      }
     }),
     computed: {
       hasIntervals () {
@@ -254,25 +281,44 @@ var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
       this.listar();
       },
       agregarEvento(){
-        this.eventosAgregados.push({id:null , name: "Disponible",
-                          start: this.valueDate +" "+ this.startTime,
-                          end: this.valueDate +" "+ this.endTime, color:"green"})
+        var dt = new Date(this.start);
+        dt.setDate(dt.getDate() + 1);
+        var diaSemana = dt.getDay()
+        var nombreDia = ""
+        if (diaSemana == 0)
+        nombreDia = "Domingo"
+        else if (diaSemana == 1)
+        nombreDia = "Lunes"
+        else if (diaSemana == 2)
+        nombreDia = "Martes"
+        else if (diaSemana == 3)
+        nombreDia = "Miercoles"
+        else if (diaSemana == 4)
+        nombreDia = "Jueves"
+        else if (diaSemana == 5)
+        nombreDia = "Viernes"
+        else 
+        nombreDia = "Sabado"
+
+        this.eventosAgregados.push({id:null , name: nombreDia,
+                          start: this.start +" "+ this.startTime,
+                          end: this.start +" "+ this.endTime, color:"green"}) 
         this.schedule.events = this.eventosAgregados;
         console.log(this.schedule);
         axios
           .post("/tutor/add_schedule/", this.schedule)
           .then(res => {
             console.log(res);
+            this.$message({ message: "Registro exitoso.", type: "success" });
             this.listar();
           })
           .catch(error => {
             console.log(error);
             this.$message.error("Error al registrar datos");
           });
-        this.events.push({id:null , name: "Disponible",
-                          start: this.valueDate +" "+ this.startTime,
-                          end: this.valueDate +" "+ this.endTime, color:"green"})                  
-        console.log(this.events); 
+        this.events.push({id:null , name: nombreDia,
+                          start: this.start +" "+ this.startTime,
+                          end: this.start +" "+ this.endTime, color:"green"})  
       },
       showEvent ({ nativeEvent, event }) {
         const open = () => {
@@ -290,44 +336,42 @@ var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
 
         nativeEvent.stopPropagation()
       },
-      deleteEvent(selectedEvent){
-        this.borrarEvento.schedule_id = selectedEvent.id;
+      deleteEvent(selectedEventID){
+        this.borrarEvento.schedule_id = selectedEventID;
         console.log(this.borrarEvento.schedule_id);
-        if(selectedEvent.name == "Reservado"){
-          this.$message.error("Evento reservado. No se puede eliminar");
-        }
-        else if (selectedEvent.name == "Disponible"){
-          axios
-            .post("/tutor/delete_schedule/", this.borrarEvento)
-            .then(res => {
-              this.selectedOpen = false
-              console.log(res);
-              this.$message({ message: "Eliminación exitosa.", type: "success" });
-              console.log(this.events);
-              this.listar();
-            })
-            .catch(error => {
-              console.log(error);
-              this.$message.error("No se pudo eliminar");
-            });
-        }
+        axios
+          .post("/tutor/delete_schedule/", this.borrarEvento)
+          .then(res => {
+            console.log(res);
+            this.$message({ message: "Eliminación exitosa.", type: "success" });
+            this.selectedOpen = false
+            console.log(this.events);
+            this.listar();
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message.error("No se pudo eliminar");
+          });
       },
+      insertar() {
+        console.log(this.events);
+        this.schedule.events = this.eventosAgregados;
+        console.log(this.schedule);
+        axios
+          .post("/tutor/add_schedule/", this.schedule)
+          .then(res => {
+            console.log(res);
+            this.$message({ message: "Registro exitoso.", type: "success" });
+            this.newDialog = false;
+            this.$emit("resetDialog", this.newDialog);
+            this.listar();
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message.error("Error al registrar datos");
+          });
+      }
     }
   }
 </script>
 
-<style>
-.theme--light.v-btn {
-    color: rgba(0, 0, 0, 0);
-}
-.v-calendar-daily_head-day {
-    height: 25px;
-    flex: 1 1 auto;
-    width: 0;
-    position: relative;
-}
-.v-btn--fab.v-size--default {
-    height: 0px;
-    width: 0px;
-}
-</style>
