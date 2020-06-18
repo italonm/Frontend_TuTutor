@@ -34,7 +34,7 @@
             </v-col>
 
             <div class="form-group">
-              <h6>Selecciona periodicidad:</h6>
+              <h6>Selecciona duración:</h6>
               <select
                 v-model="signtipo.tt_periodicity"
                 class="form-control"
@@ -150,12 +150,20 @@ export default {
         axios
           .post("/coordinator/add_tutoring_type/", this.signtipo)
           .then(res => {
+            console.log(this.$refs.form);
             console.log(res);
             this.$emit("resetList");
             this.$message({ message: "Registro exitoso.", type: "success" });
             this.newDialog = false;
             this.$emit("resetDialog", this.newDialog);
-            this.$refs.form.reset();
+            this.signtipo.tt_id= "",
+            this.signtipo.tt_name= "",
+            this.signtipo.tt_description= "",
+            this.signtipo.tt_isrequired= "Si",
+            this.signtipo.tt_quantity= "",
+            this.signtipo.tt_periodicity= "Semanal",
+            this.signtipo.tt_assigned= "Si",
+            this.signtipo.tt_permanent= "Si"
           })
           .catch(error => {
             console.log(error);
