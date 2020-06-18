@@ -125,7 +125,8 @@ export default {
         tt_quantity: "",
         tt_periodicity: "Semanal",
         tt_assigned: "",
-        tt_permanent: ""
+        tt_permanent: "",
+        program_id: JSON.parse(localStorage.getItem("Id_facultad"))
       }
     };
   },
@@ -161,7 +162,7 @@ export default {
             this.$message.error("Datos duplicados");
           });
       } else this.$message.error("Datos incorrectos");
-    },
+    },  
 
     editar() {
       //servicio
