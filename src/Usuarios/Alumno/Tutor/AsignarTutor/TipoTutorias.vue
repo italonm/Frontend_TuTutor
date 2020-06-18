@@ -114,9 +114,9 @@ export default {
       this.showBox = true;
       this.tipoTutoriaInfo = tipo;
     },
-    solicitarTutor(/*tipo*/) {
+    solicitarTutor(tipo) {
       console.log("mostrar tipo tutoria");
-      //localStorage.setItem("Id_Tipo_Tutoria", tipo.tt_id);
+      localStorage.setItem("Id_Tipo_Tutoria", tipo.id);
       this.showProgram = false;
     }
   },
