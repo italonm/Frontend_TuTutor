@@ -16,7 +16,6 @@
           </el-input>
         </div>
       </el-col>
-
     </el-row>
 
     <!-- Tabla-->
@@ -48,8 +47,6 @@
         <el-button type="info" icon="fas fa-calendar-times" circle @click="agendar(item)"></el-button>
       </template>
     </v-data-table>
-
-
   </el-container>
 </template>
 
@@ -64,7 +61,7 @@ export default {
         { text: "Fecha", value: "date" },
         { text: "Tutor", value: "tutor" },
         { text: "Tipo Tutoría", value: "tipotutoria" },
-        { text: "estado", value: "estado"}
+        { text: "estado", value: "estado" }
       ],
       form: {
         person_name: "",
@@ -85,9 +82,13 @@ export default {
   methods: {
     listar() {
       axios
-        .get("/student/show_assignment_request_student/" +localStorage.getItem("Id_usuario"))
+        .get(
+          "/student/show_assignment_request_student/" +
+            localStorage.getItem("Id_usuario")
+        )
         .then(res => {
           this.tutorias = res.data.tableData;
+          console.log(this.tutorias);
         })
         .catch(error => console.log(error));
     },
@@ -103,7 +104,5 @@ export default {
       this.dialog = true;
     }
   }
-
- 
 };
 </script>

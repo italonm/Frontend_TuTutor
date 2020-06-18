@@ -143,11 +143,13 @@ export default {
   name: "Configuración",
   methods: {
     verificar() {
-      if (this.editarlogo.institution_id) this.editar();
-      else this.registrar();
+      if (this.editarlogo.institution_id == "") 
+      this.registrar();
+      else this.editar();
     },
     listar() {
       var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
+      console.log(Id_usuario);
       axios
         .get("/admin/show_institution/" + Id_usuario)
         .then(res => {
@@ -198,14 +200,18 @@ export default {
             .then(this.$message({ message: "Subiendo logo", type: "success" }))
             .catch(e => {
               console.log(e);
+              this.listar();
             });
           this.logoActualizado = false;
         }
         axios
           .post("/admin/add_institution/", this.logo)
           .then(
-            this.$message({ message: "Modificación exitoso.", type: "success" })
+            this.$message({ message: "Registro exitoso.", type: "success" })
           )
+          .then(console.log("Listado"))
+          .then(this.listar())
+          .then(this.listar())
           .catch(e => {
             console.log(e);
           });

@@ -48,7 +48,7 @@
 
     <!--Formulario-->
     <resultadoForm
-      :listaCitas="listaCitas"
+      :listaAlumnos="listaAlumnos"
       :dialog="dialog"
       :action="action"
       v-on:resetDialog="dialog=$event"
@@ -64,34 +64,43 @@ export default {
   data() {
     return {
         headers: [
-        { text: "Fecha", value: "tt_name" },
-        { text: "Horario", value: "tt_description" },
-        { text: "Fecha", value: "tt_quantity" },
-        { text: "Numero de alumnos", value: "tt_periodicity" },
-        { text: "Tiempo restante", value: "tt_isrequired" },
+        { text: "Fecha", value: "fecha" },
+        { text: "Hora Inicio", value: "horaIni" },
+        { text: "Hora Fin", value: "horaFin" },
+        { text: "Ubicacion", value: "ubicacion" },
+        { text: "Cantidad de alumnos", value: "cant_students" },
+      //  { text: "Tiempo restante", value: "tt_isrequired" },
         { text: "Registrar / Editar resultado", value: "editar", sortable: false },
         { text: "Cancelar cita", value: "eliminar", sortable: false }
         ],
         listaCitas:[],
+        listaAlumnos:[],
         search: "",
         dialog: false,
         action: ""
     }
   },
   created() {
+    console.log(JSON.parse(localStorage.getItem("Id_usuario")));
     this.listar();
   },
   methods: {
     listar() {
       axios
-        .get("/coordinator/show_tutoring_types/")
+        .get("/tutor/show_sessions_tutor/"+ JSON.parse(localStorage.getItem("Id_usuario")))
         .then(res => {
-          this.listaCitas = res.data.tutoriaData;
+          this.listaCitas = res.data.data 
+          console.log(this.listaCitas);
         })
         .catch(error => console.log(error));
     },
     editar(item) {
-      this.listaCitas = Object.assign({}, item);
+      axios
+          .get("/tutor/show_all_students_in_session/"+ item.id_session)
+          .then(res => {
+            this.listaAlumnos = res.data.data;
+          })
+      .catch(error => console.log(error));
       this.action = "Editar resultado de la cita";
       this.dialog = true;
     }

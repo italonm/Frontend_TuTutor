@@ -98,7 +98,7 @@ export default {
     listar() {
       axios
         .get(
-          "http://184.73.231.88:5000/api/coordinator/show_assignment_requests/"
+          "http://184.73.231.88:5000/api/coordinator/show_assignment_requests/" + localStorage.getItem("Id_usuario")
         )
         .then(res => {
           this.solicitudes = res.data.tableData;
@@ -153,6 +153,7 @@ export default {
         )
         .then(res => {
           console.log(res);
+          this.selected = [];
           this.listar();
           this.dialog = false;
           this.$message({
@@ -171,6 +172,7 @@ export default {
         )
         .then(res => {
           console.log(res);
+          this.selected = [];
           this.listar();
           this.dialog = false;
           this.$message({
