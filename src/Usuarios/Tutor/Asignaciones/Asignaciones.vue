@@ -32,13 +32,7 @@ import axios from "axios"
   export default {
     data(){
       return{
-        components:[],
-        component:{
-          name:"",
-          tutoring_type:"",
-          last_name:"",
-          state:"",
-        }
+        components:[]
       }    	
     },  
     mounted: function(){      
@@ -46,17 +40,23 @@ import axios from "axios"
     },
     methods:{
       listar(){           
-        var comp
+        var comp        
         axios.get("/tutor/show_assignments/" + localStorage.getItem("Id_usuario"))
         .then(response=>{
           console.log(response)
           for(comp in response.data.assignments)
           {
-            this.component.name = response.data.assignments[comp].participants[0].name
-            this.component.last_name = response.data.assignments[comp].participants[0].last_name
-            this.component.state = response.data.assignments[comp].state
-            this.component.tutoring_type = response.data.assignments[comp].tutoring_type            
-            this.components.push(this.component)
+            var aux = {
+              name:"",
+              tutoring_type:"",
+              last_name:"",
+              state:"",
+            }
+            aux.name = response.data.assignments[comp].participants[0].name
+            aux.last_name = response.data.assignments[comp].participants[0].last_name
+            aux.state = response.data.assignments[comp].state
+            aux.tutoring_type = response.data.assignments[comp].tutoring_type                                    
+            this.components.push(aux)   
           }          
           console.log(this.components)                    
         })
