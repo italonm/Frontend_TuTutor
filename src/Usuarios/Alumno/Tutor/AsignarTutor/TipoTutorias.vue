@@ -17,23 +17,23 @@
       ------------->
       <v-container fluid grid-list-xl>
         <v-layout wrap justify-space-around>
-          <v-flex v-for="tipo in filterTipoTutoria" :key="tipo.tt_name">
+          <v-flex v-for="tipo in filterTipoTutoria" :key="tipo.name">
             <v-card class="mx-auto" max-width="300">
               <v-img
                 class="white--text align-end"
                 height="100px"
                 src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
               >
-                <v-card-title>{{tipo.tt_name}}</v-card-title>
+                <v-card-title>{{tipo.name}}</v-card-title>
               </v-img>
               <v-card-subtitle class="pb-0">
                 DESCRIPCIÓN:
                 
               </v-card-subtitle>
               <v-card-text class="text--primary">
-                <div>{{ tipo.tt_description }}</div>
-                <div>{{ tipo.tt_isrequired }} es tutoria obligatoria</div>
-                <div>Duración {{tipo.tt_periodicity}}</div>
+                <div>{{ tipo.description }}</div>
+                <div>{{ tipo.is_required }} es tutoria obligatoria</div>
+                <div>Duración {{tipo.periodicity}}</div>
               </v-card-text>
               <v-card-actions>
                 <v-btn color="green" text @click="solicitarTutor(tipo)">
@@ -100,10 +100,11 @@ export default {
   },
   methods: {
     listaTiposTutorias() {
+      console.log(localStorage.getItem("Id_usuario"))
       axios
-        .get("/coordinator/show_tutoring_types/")
+        .get("/student/show_tutoring_types/"+localStorage.getItem("Id_usuario"))
         .then(res => {
-          this.tiposTutoria = res.data.tutoriaData;
+          this.tiposTutoria = res.data.tutoring_types;
 
           console.log(this.tiposTutoria);
         })
@@ -113,17 +114,18 @@ export default {
       this.showBox = true;
       this.tipoTutoriaInfo = tipo;
     },
-    solicitarTutor(tipo) {
+    solicitarTutor(/*tipo*/) {
       console.log("mostrar tipo tutoria");
-      localStorage.setItem("Id_Tipo_Tutoria", tipo.tt_id);
+      //localStorage.setItem("Id_Tipo_Tutoria", tipo.tt_id);
       this.showProgram = false;
     }
   },
   computed: {
     filterTipoTutoria: function() {
       console.log(localStorage.getItem("Id_facultad"));
+      console.log(this.tiposTutoria);
       return this.tiposTutoria.filter(tipo => {
-        return tipo.tt_name.toLowerCase().match(this.search.toLowerCase());
+        return tipo.name.toLowerCase().match(this.search.toLowerCase());
       });
     }
   },
