@@ -107,7 +107,7 @@ export default {
   methods: {
     listar() {
       axios
-        .get("/coordinator/show_tutoring_types/")
+        .get("/coordinator/show_tutoring_types/" + localStorage.getItem("Id_facultad"))
         .then(res => {
           this.tipotutorias = res.data.tutoriaData;
         })
