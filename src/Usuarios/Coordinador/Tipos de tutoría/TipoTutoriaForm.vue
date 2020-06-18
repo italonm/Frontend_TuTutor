@@ -125,7 +125,8 @@ export default {
         tt_quantity: "",
         tt_periodicity: "Semanal",
         tt_assigned: "",
-        tt_permanent: ""
+        tt_permanent: "",
+        program_id: JSON.parse(localStorage.getItem("Id_facultad"))
       }
     };
   },
@@ -134,7 +135,7 @@ export default {
     guardar() {
       if (this.action == "Registrar tipo de tutoría") {
         this.insertar();
-      } else if (this.action == "Editar tipo de tutoría") {
+      } else if (this.action ==  "Editar tipo de tutoría") {
         this.editar();
       }
     },
@@ -161,7 +162,7 @@ export default {
             this.$message.error("Datos duplicados");
           });
       } else this.$message.error("Datos incorrectos");
-    },
+    },  
 
     editar() {
       //servicio

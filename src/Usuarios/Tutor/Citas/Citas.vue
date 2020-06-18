@@ -58,7 +58,6 @@
 </template>
 
 <script>
-var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
 import axios from "axios";
 import resultado from "./Resultado"
 export default {
@@ -82,14 +81,16 @@ export default {
     }
   },
   created() {
+    console.log(JSON.parse(localStorage.getItem("Id_usuario")));
     this.listar();
   },
   methods: {
     listar() {
       axios
-        .get("/tutor/show_sessions_tutor/"+ Id_usuario)
+        .get("/tutor/show_sessions_tutor/"+ JSON.parse(localStorage.getItem("Id_usuario")))
         .then(res => {
           this.listaCitas = res.data.data 
+          console.log(this.listaCitas);
         })
         .catch(error => console.log(error));
     },
