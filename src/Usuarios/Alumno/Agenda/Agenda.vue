@@ -65,12 +65,8 @@
     </el-col>
     <!----------------->
 
-    <el-col :xs="20" :sm="12" :md="12" :lg="3" :span="2">
-        <v-spacer></v-spacer> 
-    </el-col>
-
     <!------SESIONES DEL ALUMNO------>
-    <el-col :xs="20" :sm="12" :md="12" :lg="7" :span="6">
+    <el-col :xs="20" :sm="12" :md="12" :lg="7">
       <el-row>
         <el-col :xs="20" :sm="12" :md="12" :lg="15">
         <v-menu
@@ -86,9 +82,8 @@
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
             v-model="start"
-            class="mt-3"
+            class="ml-10"
             label="Ver desde"
-            prepend-icon="event"
             dense
             readonly
             outlined
@@ -120,22 +115,20 @@
         </v-date-picker>
         </v-menu>
         </el-col>
-
-        <v-spacer></v-spacer>
-
-        <el-col :xs="20" :sm="12" :md="12" :lg="8" :span="15">
-        <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
+        
+        <el-col :xs="20" :sm="12" :md="12" :lg="8">
+        <v-btn outlined class="ml-8" color="grey darken-2" @click="setToday">
             Hoy
         </v-btn>
         </el-col>
       </el-row>
 
-      <v-card max-width="600" class="mx-auto" max-height="100">
+      <v-card max-width="600" class="ml-10" max-height="100">
         <v-card-title class="cardAdd justify-center">
             Sesiones futuras
         </v-card-title>
 
-        <v-list :three-line="threeLine">
+        <v-list two-line style="max-height:600px">
         <v-list-item-group 
             style="pointer-events:none"
             color = "blue"
@@ -228,27 +221,27 @@
             this.$refs.calendar.next()
         },
         getEvents() {
-            console.log(localStorage.getItem("Id_usuario"));
+            //console.log(localStorage.getItem("Id_usuario"));
         axios
             .get("http://184.73.231.88:5000/api/student/show_student_history/" + localStorage.getItem("Id_usuario"))
             .then(res => {
             this.events = res.data.sessions;
-            console.log(this.events);
+            //console.log(this.events);
             })
             .catch(error => console.log(error));
         },
 
         listarSesiones() {
-        console.log(localStorage.getItem("Id_usuario")); 
-        console.log(this.fechaSesiones);
-        axios
-        .post("http://184.73.231.88:5000/api/student/show_sessions_with_date/", {"student_id" : localStorage.getItem("Id_usuario"), "date" : this.fechaSesiones})
-        .then(res => {
-            console.log(res.data);
-            this.notificaciones = res.data.sessions; 
-            console.log(this.notificaciones);              
-        })
-        .catch(error => console.log(error));
+          //console.log(localStorage.getItem("Id_usuario")); 
+          //console.log(this.fechaSesiones);
+          axios
+          .post("http://184.73.231.88:5000/api/student/show_sessions_with_date/", {"student_id" : localStorage.getItem("Id_usuario"), "date" : this.fechaSesiones})
+          .then(res => {
+              console.log(res.data);
+              this.notificaciones = res.data.sessions; 
+              //console.log(this.notificaciones);              
+          })
+          .catch(error => console.log(error));
         },
     },
 
