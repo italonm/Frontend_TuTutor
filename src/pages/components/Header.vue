@@ -53,7 +53,7 @@ export default {
   methods: {
     getImage() {
       axios
-        .get("/admin/show_logo/" + 37, { responseType: "arraybuffer" })
+        .get("/admin/show_logo/" + 1, { responseType: "arraybuffer" })
         .then(response => {
           let image = btoa(
             new Uint8Array(response.data).reduce(

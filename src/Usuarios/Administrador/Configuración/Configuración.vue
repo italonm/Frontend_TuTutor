@@ -159,7 +159,6 @@ export default {
             res.data.institution_phone_number;
           this.logo.institution_web_page = res.data.institution_web_page;
           this.editarlogo.institution_id = res.data.institution_id;
-          console.log(Id_usuario);
           axios
             .get("/admin/show_logo/" + Id_usuario, {
               responseType: "arraybuffer"
@@ -215,7 +214,6 @@ export default {
       this.$refs.form.validate();
       if (this.valid) {
         if (this.logoActualizado) {
-          console.log(formData);
           this.logo.admin_id = JSON.parse(localStorage.getItem("Id_usuario"));
           axios
             .post("/admin/add_logo/" + this.logo.admin_id, formData)
