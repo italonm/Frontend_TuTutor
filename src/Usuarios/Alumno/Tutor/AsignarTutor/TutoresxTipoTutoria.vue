@@ -15,7 +15,7 @@
       <el-col :xs="20" :sm="12" :md="12" :lg="8">
         <el-card class="box-group" style="overflow:auto">
           
-          <div v-for="tutor in filterTutor" :key="tutor.t_id_tutor" class="text item">
+          <div v-for="tutor in filterTutor" :key="tutor.t_id_tutor">
             <el-card class="box-card" style="border-style:dashed;">
               <el-row>
                 <el-col :sm="5" :xs="5">
@@ -88,15 +88,15 @@
           <v-app-bar dark color="green">
             <v-toolbar-title>AGENDA</v-toolbar-title>
           </v-app-bar>
-          <div v-for="schedul in customCalendar" :key="schedul.day[3]" class="text item">
+          <div v-for="schedul in customCalendar" :key="schedul.day[3]">
             <v-list class="transparent">
               <!--------->
               <v-list-item >
-                <v-list-item-title
+                <v-list-item-title 
                   style="border-right: 3px solid red; font-size: 20px;color:purple; font-weight:bold;"
-                >{{ schedul.day[0] }} {{schedul.day[1]}}</v-list-item-title>
+                >{{ schedul.day[0] }} {{schedul.day[1]}} </v-list-item-title>
 
-                <v-list-item-subtitle class="text-left">{{schedul.day[2] }}</v-list-item-subtitle>
+                <v-list-item-subtitle class="text-center">{{ schedul.day[2] }}</v-list-item-subtitle>
               </v-list-item>
               <!--------->
             </v-list>
@@ -168,7 +168,7 @@ export default {
         console.log(dias.day);
         dias.day=dias.day.split(" ");
         console.log(dias.day)
-        var reg=/(.+)$/g;
+        var reg=/ (.+?)$/g;
         dias.day[2]=(etiqueta.start).match(reg)+' -'+(etiqueta.end).match(reg);
         dias.day[3]=etiqueta.start;//key
         this.customCalendar.push(dias);
