@@ -316,9 +316,7 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
             console.log(error);
             this.$message.error("Error al registrar datos");
           });
-        this.events.push({id:null , name: nombreDia,
-                          start: this.start +" "+ this.startTime,
-                          end: this.start +" "+ this.endTime, color:"green"})  
+        this.eventosAgregados=[];
       },
       showEvent ({ nativeEvent, event }) {
         const open = () => {
