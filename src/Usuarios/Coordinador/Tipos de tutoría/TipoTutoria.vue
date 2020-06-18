@@ -76,7 +76,7 @@ export default {
         { text: "Nombre", value: "tt_name" },
         { text: "Descripción", value: "tt_description" },
         { text: "Cantidad de alumnos", value: "tt_quantity" },
-        { text: "Periodicidad", value: "tt_periodicity" },
+        { text: "Duración", value: "tt_periodicity" },
         { text: "¿Es obligatorio?", value: "tt_isrequired" },
         { text: "¿El tutor es asignado?", value: "tt_assigned" },
         { text: "¿El tutor es fijo?", value: "tt_permanent" },
