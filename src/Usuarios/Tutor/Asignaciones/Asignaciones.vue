@@ -20,108 +20,53 @@
       </el-col>
     </el-row>
 
-
-    <v-card max-width="1200px">
-    <v-list>
-      <v-list-group
-        v-for="item in items"
-        :key="item.title"
-        v-model="item.active"
-        :prepend-icon="item.action"
-        no-action
-      >
-        <template v-slot:activator>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title"></v-list-item-title>
-          </v-list-item-content>
-        </template>
-
-        <v-list-item
-          v-for="subItem in item.items"
-          :key="subItem.title"
-        >
-          <v-list-item-content>
-            <v-list-item-title v-text="subItem.title"></v-list-item-title>
-            <v-container>
-            <v-data-table
-                v-model="selected"
-                :footer-props="{'items-per-page-options': [5, 10, 15, -1],
-                                'items-per-page-text': 'Registros por página:',
-                                'items-per-page-all-text': 'Listar todos'}"
-                :headers="headers"
-                :items="solicitudes"
-                :search="search"
-                :items-per-page="5"
-                :sort-by="['date']"
-                item-key="id"
-                show-select
-                multi-sort
-                class="elevation-1"
-                loading-text="Cargando.."
-                height="250px"
-                fixed-header
-                ></v-data-table>
-            </v-container>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-group>
-    </v-list>
-    </v-card>
+    <div class="containerBody">
+       <Elemento v-for="comp in components" :key="comp" :state="comp.state" :name="comp.name" :last_name="comp.last_name" :tutoring_type="comp.tutoring_type"></Elemento>
+    </div>
   </el-container>
 </template>
 
 <script>
+import Elemento from "./Elemento.vue"
+import axios from "axios"
   export default {
-    data () {
-      return {
-        items: [
+    data(){
+      return{
+        components:[],
+        component:{
+          name:"",
+          tutoring_type:"",
+          last_name:"",
+          state:"",
+        }
+      }    	
+    },  
+    mounted: function(){      
+      this.listar()
+    },
+    methods:{
+      listar(){           
+        var comp
+        axios.get("/tutor/show_assignments/" + localStorage.getItem("Id_usuario"))
+        .then(response=>{
+          console.log(response)
+          for(comp in response.data.assignments)
           {
-            title: 'Attractions',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            title: 'Dining',
-            active: true,
-            items: [
-              { title: 'Breakfast & brunch' },
-              { title: 'New American' },
-              { title: 'Sushi' },
-            ],
-          },
-          {
-            title: 'Education',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            title: 'Family',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            title: 'Health',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            title: 'Office',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            title: 'Promotions',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-        ],
+            this.component.name = response.data.assignments[comp].participants[0].name
+            this.component.last_name = response.data.assignments[comp].participants[0].last_name
+            this.component.state = response.data.assignments[comp].state
+            this.component.tutoring_type = response.data.assignments[comp].tutoring_type            
+            this.components.push(this.component)
+          }          
+          console.log(this.components)                    
+        })
       }
     },
+    components:{
+      Elemento    	
+    }
   }
 </script>
+<style>
+  @import "./Asignaciones.css"
+</style>

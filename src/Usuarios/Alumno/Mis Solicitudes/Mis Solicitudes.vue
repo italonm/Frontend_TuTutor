@@ -5,7 +5,7 @@
       <el-col :span="9">
         <div class="grid-content">
           <h1 style="text-align: center;">
-            <i class="fas fa-chalkboard-teacher"></i>&nbsp;Mis tutorías
+            <i class="fas fa-chalkboard-teacher"></i>&nbsp;Mis Solicitudes
           </h1>
         </div>
       </el-col>
@@ -14,16 +14,6 @@
           <el-input placeholder="Buscar tutoría" v-model="search" clearable>
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
-        </div>
-      </el-col>
-      <el-col :span="7">
-        <div class="grid-content">
-          <el-button
-            type="success"
-            icon="fas fa-user-plus"
-            @click="insertar()"
-            class="buttonAdd"
-          >&nbsp;Agregar</el-button>
         </div>
       </el-col>
     </el-row>
@@ -57,31 +47,21 @@
         <el-button type="info" icon="fas fa-calendar-times" circle @click="agendar(item)"></el-button>
       </template>
     </v-data-table>
-
-    <!--Formulario
-    <coordinadorForm
-      :form="form"
-      :dialog="dialog"
-      :action="action"
-      v-on:resetDialog="dialog=false"
-      v-on:resetList="listar()"
-    ></coordinadorForm>-->
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
-// import CoordinadorForm from "./CoordinadorForm";
 
 export default {
   data() {
     return {
       tutorias: [],
       headers: [
-        { text: "Nombre", value: "t_fullname" },
-        { text: "Email", value: "t_email" },
-        { text: "Horario", value: "t_schedule" },
-        { text: "Reservar cita", value: "agendar", sortable: false }
+        { text: "Fecha", value: "date" },
+        { text: "Tutor", value: "tutor" },
+        { text: "Tipo Tutoría", value: "tipotutoria" },
+        { text: "estado", value: "estado" }
       ],
       form: {
         person_name: "",
@@ -91,7 +71,6 @@ export default {
         person_code: ""
       },
       search: "",
-      dialog: false,
       action: ""
     };
   },
@@ -103,9 +82,13 @@ export default {
   methods: {
     listar() {
       axios
-        .get("/student/show_tutoring_list/" + 100)
+        .get(
+          "/student/show_assignment_request_student/" +
+            localStorage.getItem("Id_usuario")
+        )
         .then(res => {
-          this.tutorias = res.data.tutor;
+          this.tutorias = res.data.tableData;
+          console.log(this.tutorias);
         })
         .catch(error => console.log(error));
     },
@@ -121,9 +104,5 @@ export default {
       this.dialog = true;
     }
   }
-
-  //   components: {
-  //     coordinadorForm: CoordinadorForm
-  //   }
 };
 </script>

@@ -2,9 +2,8 @@
   <div class="nav containerPrincipal">
     <div class="containerLogin" id="container">
       <div class="form-container sign-up-container">
-        <form
-          style="background-color: #FFFFFF; display: flex;align-items: center;justify-content: center;flex-direction: column;padding: 0 50px;height: 100%;text-align: center;"
-          action="#"
+        <div
+          style="background-color: #FFFFFF; display: flex;align-items: center;justify-content: center;flex-direction: column;padding: 0 50px;height: 100%;text-align: center;"     
         >
           <div class="Iniciar">Regístrate</div>
           <div class="social-container">
@@ -33,13 +32,12 @@
           />
           <button
             style="border-radius: 20px; border: 1.3px solid #3C4B64; background-color: transparent;color: #3C4B64;font-size: 11px;padding: 12px 45px;letter-spacing: 1px;text-transform: uppercase;transition: transform 80ms ease-in;"
-          >Registrar</button>
-        </form>
+          @click="register">Registrar</button>
+        </div>
       </div>
       <div class="form-container sign-in-container">
-        <form
-          style="background-color: #FFFFFF; display: flex;align-items: center;justify-content: center;flex-direction: column;padding: 0 50px;height: 100%;text-align: center;"
-          action="#"
+        <div
+          style="background-color: #FFFFFF; display: flex;align-items: center;justify-content: center;flex-direction: column;padding: 0 50px;height: 100%;text-align: center;"          
         >
           <div class="Iniciar">Inicia Sesión</div>
           <div class="social-container">
@@ -51,15 +49,15 @@
             </a>
           </div>
           <span style="font-size: 12px; padding: 0 50">o inicia a través de</span>
-          <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;" type="text" placeholder="Usuario" v-model="login.user_name"/>          
+          <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;" type="text" placeholder="Usuario" v-model="login.user_name" @keyup.enter="logItIn"/>          
           <div id="pass-container" style="display: flex; width: 100%; margin-bottom: 15px; width: 100%; background-color: #FFFFFF;">            
-            <input id="pass" style ="padding: 12px 15px; margin: 8px 0;	width: 100%;" type="password" placeholder="Contraseña" v-model="login.password" value>          
-            <i id="pass icon" class="fa fa-eye" style="position: absolute; right:7%; padding: 24px; min-width: 50px; text-align: right;" @click="ShowPass()"></i>
+            <input id="pass" style ="padding: 12px 15px; margin: 8px 0;	width: 100%;" type="password" placeholder="Contraseña" v-model="login.password" value @keyup.enter="logItIn">          
+            <i id="pass icon" class="fa fa-eye" style="position: absolute; right:7%; padding: 24px; min-width: 50px; text-align: right;" @click="ShowPass()" ></i>
           </div>
           <a style="color:#333; font-size: 12px; margin: 15px 0" hre  f="#">Olvidaste tu contraseña?</a>
           <button style="border-radius: 20px; border: 1.3px solid #3C4B64; background-color: transparent;color: #3C4B64;font-size: 11px;padding: 12px 45px;letter-spacing: 1px;text-transform: uppercase;transition: transform 80ms ease-in;"
-          @click='logItIn'>Iniciar</button>
-        </form>
+          id="LogButton" @click='logItIn'>Iniciar</button>
+        </div>
       </div>
       <div class="overlay-container">
         <div class="overlay">
@@ -109,9 +107,12 @@ export default {
       });
       document.getElementById('signIn').addEventListener('click', () => {
         container.classList.remove("right-panel-active");
-      });
+      });     
     },      
 		methods:{      
+      register(){
+        this.$router.push("/PassSet")
+      },
       ShowPass(){
         var x = document.getElementById("pass");
         var y = document.getElementById("pass icon");
@@ -121,15 +122,12 @@ export default {
         } else {
           y.className = "fa fa-eye"
           x.type = "password";
-        }
-        
-        
+        }                
       },
 			logItIn(){              
         var that = this;        
         axios.post('http://184.73.231.88:5000/api/user/log_in/',that.login)
         .then(response =>{                         
-            console.log(response)
             let Id_usuario = response.data.id;
             let Id_programa = response.data.program_id;
             let Id_institución = response.data.id_institution;
@@ -190,5 +188,5 @@ export default {
 };
 </script>
 <style scoped>
-@import "./Login.css";
+  @import "./Login.css";
 </style>

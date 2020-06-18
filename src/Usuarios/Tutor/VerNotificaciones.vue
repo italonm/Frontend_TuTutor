@@ -111,15 +111,14 @@ export default {
   },
 
   methods: {
-   listar() {
-       console.log(localStorage.getItem("Id_usuario"));
+   listar() { 
        axios
       .get("http://184.73.231.88:5000/api/tutor/show_notifications/" + localStorage.getItem("Id_usuario"))
       .then(res => {
         console.log(res.data);
         this.notificaciones = res.data.notificaciones;
         console.log(this.noleidas);
-        this.noleidas = res.data.notificaciones.filter(notificacion => notificacion.estado == "No Leido");
+        this.noleidas = res.data.notificaciones.filter(notificacion => notificacion.estado == "No leido");
         this.leidas = res.data.notificaciones.filter(notificacion => notificacion.estado == "Leido");
         for (var i = 0; i < this.noleidas.length; i++) {
           this.selected.push(i);

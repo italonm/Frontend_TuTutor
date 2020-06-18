@@ -113,7 +113,7 @@
           <v-btn
             text
             color="primary"
-            @click="$refs.startMenu.save(start); changeDay(start)"
+            @click="$refs.startMenu.save(start); changeDay(start);"
           >
             Aceptar
           </v-btn>
@@ -230,7 +230,7 @@
         getEvents() {
             console.log(localStorage.getItem("Id_usuario"));
         axios
-            .get("http://184.73.231.88:5000/api/student/show_student_history/" + "54")
+            .get("http://184.73.231.88:5000/api/student/show_student_history/" + localStorage.getItem("Id_usuario"))
             .then(res => {
             this.events = res.data.sessions;
             console.log(this.events);
@@ -242,7 +242,7 @@
         console.log(localStorage.getItem("Id_usuario")); 
         console.log(this.fechaSesiones);
         axios
-        .post("http://184.73.231.88:5000/api/student/show_sessions_with_date/", {"student_id" : 54, "date" : this.fechaSesiones})
+        .post("http://184.73.231.88:5000/api/student/show_sessions_with_date/", {"student_id" : localStorage.getItem("Id_usuario"), "date" : this.fechaSesiones})
         .then(res => {
             console.log(res.data);
             this.notificaciones = res.data.sessions; 
