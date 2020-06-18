@@ -41,10 +41,7 @@
         <v-list :three-line="threeLine">
         <v-list-item-group 
             style="pointer-events:none"
-            color = "blue"
-            v-model="selected"
             multiple
-            active-class="blue--text"
         >
             <template v-for="(notificacion, index) in leidas">
             <v-list-item :key="notificacion.id">              
@@ -55,8 +52,7 @@
                   <v-list-item-subtitle v-text="notificacion.lugar"></v-list-item-subtitle>
               </v-list-item-content>
 
-              <v-list-item-action v-if="(notificacion.estado === 'Leido')">
-                  
+              <v-list-item-action>                  
                   <h5 color="grey" >
                   {{"Leído"}}
                   </h5>
@@ -120,6 +116,7 @@ export default {
         console.log(this.noleidas);
         this.noleidas = res.data.notificaciones.filter(notificacion => notificacion.estado == "No leido");
         this.leidas = res.data.notificaciones.filter(notificacion => notificacion.estado == "Leido");
+        this.selected = [];
         for (var i = 0; i < this.noleidas.length; i++) {
           this.selected.push(i);
         }
