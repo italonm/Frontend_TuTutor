@@ -143,7 +143,6 @@ export default {
         }
       )
         .then(() => {
-          //http://184.73.231.88:5000/api/
           console.log(item);
           axios
           .post("/coordinator/delete_support_unit/",item)

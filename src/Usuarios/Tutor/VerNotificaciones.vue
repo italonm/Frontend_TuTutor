@@ -1,7 +1,7 @@
 <template>
-<v-dialog v-model="dialog" persistent max-width="600px" color="color">
+<v-dialog v-model="dialog" persistent max-width="700px" max-height="500" color="color">
       
-      <v-card max-width="600" class="mx-auto" >
+      <v-card max-width="700" class="mx-auto" >
         <v-card-title class="cardAdd justify-center">
             Notificaciones
         </v-card-title>
@@ -114,7 +114,7 @@ export default {
    listar() {
        console.log(localStorage.getItem("Id_usuario"));
        axios
-      .get("http://184.73.231.88:5000/api/tutor/show_notifications/" + "97")
+      .get("http://184.73.231.88:5000/api/tutor/show_notifications/" + localStorage.getItem("Id_usuario"))
       .then(res => {
         console.log(res.data);
         this.notificaciones = res.data.notificaciones;
