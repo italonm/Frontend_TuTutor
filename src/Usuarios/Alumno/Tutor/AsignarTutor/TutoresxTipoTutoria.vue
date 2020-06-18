@@ -135,7 +135,7 @@ export default {
       axios
         .get(
           "/student/show_tutors_in_request/" +
-            1 /*localStorage.getItem("Id_facultad")*/
+             localStorage.getItem("Id_facultad")
         )
         .then(res => {
           this.tutores = res.data.people;

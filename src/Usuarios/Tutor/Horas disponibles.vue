@@ -268,6 +268,7 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       axios
         .get("/tutor/show_schedule/"+Id_usuario)
         .then(res => {
+          console.log(Id_usuario)
           this.events = res.data.schedules;
         })
         .catch(error => console.log(error));
