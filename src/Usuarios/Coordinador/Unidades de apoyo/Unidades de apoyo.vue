@@ -97,6 +97,7 @@ export default {
         email: "",
         phone_number: "",
         responsible: "",
+        institution_id: localStorage.getItem("Id_institución"),
       },
       search: "",
       dialog: false,
@@ -110,8 +111,9 @@ export default {
 
   methods: {
     listar() {
-        axios
-      .get('http://184.73.231.88:5000/api/coordinator/show_support_units/')
+      console.log(localStorage.getItem("Id_institución"));
+      axios      
+      .get('http://184.73.231.88:5000/api/coordinator/show_support_units/' + localStorage.getItem("Id_institución"))
       .then(res => {
         this.unidades = res.data.users;
         console.log(res.data.users);
@@ -141,7 +143,6 @@ export default {
         }
       )
         .then(() => {
-          //http://184.73.231.88:5000/api/
           console.log(item);
           axios
           .post("/coordinator/delete_support_unit/",item)

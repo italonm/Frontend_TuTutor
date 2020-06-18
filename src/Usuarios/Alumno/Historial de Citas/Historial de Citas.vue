@@ -2,7 +2,7 @@
   <el-container direction="vertical">
     <!-- Titulo-->
     <el-row>
-      <el-col :span="8">
+      <el-col :span="12">
         <div class="grid-content">
           <h1 style="text-align: center;">
             <i class="fas fa-history"></i>&nbsp;Historial de sesiones
@@ -84,7 +84,6 @@ export default {
         isFormal: "",
         reason1: "",
         reason2: "",
-        result: "",
       },
       search: "",
       dialog: false,   
@@ -99,10 +98,10 @@ export default {
     listar() {
        console.log(localStorage.getItem("Id_usuario"));
        axios
-      .get("http://184.73.231.88:5000/api/student/show_student_history/" + "54")
+      .get("http://184.73.231.88:5000/api/student/show_student_history/" + localStorage.getItem("Id_usuario"))
       .then(res => {
         console.log(res.data);
-        this.unidades = res.data.users;
+        this.unidades = res.data.sessions;
       })
       .catch(error => console.log(error));
     },

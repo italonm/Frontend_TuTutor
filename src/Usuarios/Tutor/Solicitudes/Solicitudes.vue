@@ -99,7 +99,7 @@ export default {
     listar() {      
       console.log(localStorage.getItem("Id_usuario"));
       axios
-        .get( "http://184.73.231.88:5000/api/tutor/show_assignment_requests/" + "97" )
+        .get( "http://184.73.231.88:5000/api/tutor/show_assignment_requests/" + localStorage.getItem("Id_usuario") )
         .then(res => {
           console.log(res.data);
           this.solicitudes = res.data.tableData;
@@ -152,6 +152,7 @@ export default {
             { obj_list: this.selected } )
         .then(res => {
           console.log(res);
+          this.selected = [];
           this.listar();
           this.dialog = false;
           this.$message({
@@ -168,6 +169,7 @@ export default {
             { obj_list: this.selected } )
         .then(res => {
           console.log(res);
+          this.selected = [];
           this.listar();
           this.dialog = false;
           this.$message({
