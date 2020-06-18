@@ -30,7 +30,8 @@ export default {
     },
     methods:{        
         validar(){
-            var that = this            
+            var that = this          
+            console.log(that.setCode)  
             axios.post('user/authenticate_mail/',that.setCode)
             .then(response =>{ 
                 console.log(response.data.id)                

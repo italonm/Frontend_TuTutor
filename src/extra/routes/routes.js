@@ -39,12 +39,14 @@ import Login from "../../pages/Login/Login.vue";
 import PassSet from "../../pages/Login/PasswordSet.vue";
 import RegPass from "../../pages/Login/RegistrarContraseña.vue";
 import Reestablecer from "../../pages/Login/Reestablecer.vue";
+import Registrar from "../../pages/Login/Registro.vue";
 export const routes = [
     { path: "", redirect: "Login" },
     { path: "/Login", component: Login },
     { path: "/PassSet", component: PassSet },
     { path: "/RegPass", component: RegPass },    
-    { path: "/Reestablecer", component: Reestablecer },    
+    { path: "/Reestablecer", component: Reestablecer }, 
+    { path: "/Registrar", component: Registrar },        
     {
         path: "/Administrador",
         component: MainAdmin,

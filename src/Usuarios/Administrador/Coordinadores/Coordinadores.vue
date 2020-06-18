@@ -86,7 +86,8 @@ export default {
         person_last_name: "",
         person_email: "",
         person_phone_number: "",
-        person_code: ""
+        person_code: "",
+        institution_id: localStorage.getItem("Id_institución")
       },
       search: "",
       dialog: false,
@@ -114,7 +115,7 @@ export default {
     },
 
     editar(item) {
-      this.action = "Editar coordinador";    
+      this.action = "Editar coordinador";
       this.form = Object.assign({}, item);
       this.dialog = true;
     },

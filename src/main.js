@@ -14,7 +14,7 @@ axios.defaults.baseURL = "http://184.73.231.88:5000/api";
 Vue.use(CoreuiVue);
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
-
+export const bus = new Vue();
 new Vue({
     vuetify,
     router,

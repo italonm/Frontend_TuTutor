@@ -89,85 +89,30 @@
                     </v-btn>
                     </v-date-picker>
                 </v-menu>
-
-                <v-menu
-                    ref="startMenuTime"
-                    v-model="startMenuTime"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    :return-value.sync="startTime"
-                    transition="scale-transition"
-                    min-width="290px"
-                    offset-y
-                >
-                    <template v-slot:activator="{ on }">
-                    <v-text-field
-                        v-model="startTime"
-                        label="Elegir hora inicio"
-                        readonly
-                        v-on="on"
-                    ></v-text-field>
-                    </template>
-                    <v-time-picker
-                    v-model="startTime"
-                    scrollable
-                    min="6:00"
-                    >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        color="primary"
-                        @click="startMenuTime = false"
-                    >
-                        Cancel
-                    </v-btn>
-                    <v-btn
-                        color="primary"
-                        @click="$refs.startMenuTime.save(startTime)"
-                    >
-                        OK
-                    </v-btn>
-                    </v-time-picker>
-                </v-menu>
-
-                <v-menu
-                    ref="endMenuTime"
-                    v-model="endMenuTime"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    :return-value.sync="endTime"
-                    transition="scale-transition"
-                    min-width="290px"
-                    offset-y
-                >
-                    <template v-slot:activator="{ on }">
-                    <v-text-field
-                        v-model="endTime"
-                        label="Elegir hora fin"
-                        readonly
-                        v-on="on"
-                    ></v-text-field>
-                    </template>
-                    <v-time-picker
-                    v-model="endTime"
-                    scrollable
-                    :min="startTime"
-                    max="24:00"
-                    >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        color="primary"
-                        @click="endMenuTime = false"
-                    >
-                        Cancel
-                    </v-btn>
-                    <v-btn
-                        color="primary"
-                        @click="$refs.endMenuTime.save(endTime)"
-                    >
-                        OK
-                    </v-btn>
-                    </v-time-picker>
-                </v-menu>
+                <el-time-select
+                  placeholder="Hora inicio"
+                  style="width: 100%;"
+                  v-model="startTime"
+                  :picker-options="{
+                    start: '06:00',
+                    step: '00:30',
+                    end: '22:00'
+                  }"
+                  >
+                </el-time-select>
+                <br><br>
+                <el-time-select
+                  placeholder="Hora fin"
+                  v-model="endTime"
+                  style="width: 100%;"
+                  :picker-options="{
+                    start: '06:00',
+                    step: '00:30',
+                    end: '22:00',
+                    minTime: startTime
+                  }">
+                </el-time-select>
+                <br><br>
                 <v-btn color="success" @click="agregarEvento">Añadir al calendario</v-btn>
 
                 </v-col>
@@ -216,7 +161,7 @@
                             <v-spacer></v-spacer>
                             <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                             <v-spacer></v-spacer>
-                            <v-btn icon @click="deleteEvent(selectedEvent)">
+                            <v-btn icon @click="deleteEvent(selectedEvent.id)">
                                 <v-icon>mdi-delete</v-icon>
                             </v-btn>
                             <v-btn icon @click="selectedOpen = false">
@@ -241,6 +186,7 @@
             </v-layout>
             <v-card-actions>
                 <v-spacer></v-spacer>
+                <v-btn color="blue" @click="cancelar">Repetir horario pasado</v-btn>
                 <v-btn color="error" @click="cancelar">Cerrar</v-btn>
             </v-card-actions>
       </v-card>
@@ -257,7 +203,7 @@ import axios from 'axios';
     height: 40
   }
 var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
-var now = new Date(); 
+var now     = new Date(); 
 var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
   export default {
     props: ["dialog"],
@@ -268,8 +214,8 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       endMenuTime:false,
       start: diaActual,
       actualidad: diaActual,
-      startTime: "07:00",
-      endTime: "18:00",
+      startTime: "",
+      endTime: "",
       endMenu: false,
       nowMenu: false,
       minWeeks: 1,
@@ -278,7 +224,6 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
-      availableDates: [],
       weekdays: weekdaysDefault,
       weekdaysOptions: [
         { text: 'Lunes - Domingo', value: weekdaysDefault},
@@ -323,6 +268,7 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       axios
         .get("/tutor/show_schedule/"+Id_usuario)
         .then(res => {
+          console.log(Id_usuario)
           this.events = res.data.schedules;
         })
         .catch(error => console.log(error));
@@ -336,25 +282,44 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       this.listar();
       },
       agregarEvento(){
-        this.eventosAgregados.push({id:null , name: "Disponible",
+        var dt = new Date(this.start);
+        dt.setDate(dt.getDate() + 1);
+        var diaSemana = dt.getDay()
+        var nombreDia = ""
+        if (diaSemana == 0)
+        nombreDia = "Domingo"
+        else if (diaSemana == 1)
+        nombreDia = "Lunes"
+        else if (diaSemana == 2)
+        nombreDia = "Martes"
+        else if (diaSemana == 3)
+        nombreDia = "Miercoles"
+        else if (diaSemana == 4)
+        nombreDia = "Jueves"
+        else if (diaSemana == 5)
+        nombreDia = "Viernes"
+        else 
+        nombreDia = "Sabado"
+
+        this.eventosAgregados.push({id:null , name: nombreDia,
                           start: this.start +" "+ this.startTime,
-                          end: this.start +" "+ this.endTime, color:"blue"})
+                          end: this.start +" "+ this.endTime, color:"green"}) 
         this.schedule.events = this.eventosAgregados;
         console.log(this.schedule);
         axios
           .post("/tutor/add_schedule/", this.schedule)
           .then(res => {
             console.log(res);
+            this.$message({ message: "Registro exitoso.", type: "success" });
             this.listar();
           })
           .catch(error => {
             console.log(error);
             this.$message.error("Error al registrar datos");
           });
-        this.events.push({id:null , name: "Disponible",
+        this.events.push({id:null , name: nombreDia,
                           start: this.start +" "+ this.startTime,
-                          end: this.start +" "+ this.endTime, color:"blue"})                  
-        console.log(this.events); 
+                          end: this.start +" "+ this.endTime, color:"green"})  
       },
       showEvent ({ nativeEvent, event }) {
         const open = () => {
@@ -372,28 +337,41 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
 
         nativeEvent.stopPropagation()
       },
-      deleteEvent(selectedEvent){
-        this.borrarEvento.schedule_id = selectedEvent.id;
+      deleteEvent(selectedEventID){
+        this.borrarEvento.schedule_id = selectedEventID;
         console.log(this.borrarEvento.schedule_id);
-        if(selectedEvent.name == "Reservado"){
-          this.$message.error("Evento reservado. No se puede eliminar");
-        }
-        else if (selectedEvent.name == "Disponible"){
-          axios
-            .post("/tutor/delete_schedule/", this.borrarEvento)
-            .then(res => {
-              this.selectedOpen = false
-              console.log(res);
-              this.$message({ message: "Eliminación exitosa.", type: "success" });
-              console.log(this.events);
-              this.listar();
-            })
-            .catch(error => {
-              console.log(error);
-              this.$message.error("No se pudo eliminar");
-            });
-        }
+        axios
+          .post("/tutor/delete_schedule/", this.borrarEvento)
+          .then(res => {
+            console.log(res);
+            this.$message({ message: "Eliminación exitosa.", type: "success" });
+            this.selectedOpen = false
+            console.log(this.events);
+            this.listar();
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message.error("No se pudo eliminar");
+          });
       },
+      insertar() {
+        console.log(this.events);
+        this.schedule.events = this.eventosAgregados;
+        console.log(this.schedule);
+        axios
+          .post("/tutor/add_schedule/", this.schedule)
+          .then(res => {
+            console.log(res);
+            this.$message({ message: "Registro exitoso.", type: "success" });
+            this.newDialog = false;
+            this.$emit("resetDialog", this.newDialog);
+            this.listar();
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message.error("Error al registrar datos");
+          });
+      }
     }
   }
 </script>
