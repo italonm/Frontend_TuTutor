@@ -153,6 +153,7 @@ export default {
         )
         .then(res => {
           console.log(res);
+          this.selected = [];
           this.listar();
           this.dialog = false;
           this.$message({
@@ -171,6 +172,7 @@ export default {
         )
         .then(res => {
           console.log(res);
+          this.selected = [];
           this.listar();
           this.dialog = false;
           this.$message({
