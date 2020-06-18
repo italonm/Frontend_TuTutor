@@ -135,7 +135,7 @@ export default {
     guardar() {
       if (this.action == "Registrar tipo de tutoría") {
         this.insertar();
-      } else if (this.action == "Editar tipo de tutoría") {
+      } else if (this.action ==  "Editar tipo de tutoría") {
         this.editar();
       }
     },
