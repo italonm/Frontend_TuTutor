@@ -96,7 +96,7 @@
                   style="border-right: 3px solid red; font-size: 20px;color:purple; font-weight:bold;"
                 >{{ schedul.day[0] }} {{schedul.day[1]}}</v-list-item-title>
 
-                <v-list-item-subtitle class="text-center">{{schedul.day[2] }}</v-list-item-subtitle>
+                <v-list-item-subtitle class="text-left">{{schedul.day[2] }}</v-list-item-subtitle>
               </v-list-item>
               <!--------->
             </v-list>
@@ -132,10 +132,11 @@ export default {
   },
   methods: {
     listarTutores() {
+      console.log(localStorage.getItem("Id_facultad"));
       axios
         .get(
           "/student/show_tutors_in_request/" +
-             localStorage.getItem("Id_facultad")
+            localStorage.getItem("Id_facultad")
         )
         .then(res => {
           this.tutores = res.data.people;
@@ -162,12 +163,12 @@ export default {
       for (etiqueta of this.scheduler){
         var dias=new Object();
         var birthday = new Date(etiqueta.start);
-        var options = { weekday: "long",day: 'numeric'/*, month:"long"*/};
+        var options = { weekday: "long",day: 'numeric'};
         dias.day=new Intl.DateTimeFormat("es-PE", options).format(birthday);
         console.log(dias.day);
         dias.day=dias.day.split(" ");
         console.log(dias.day)
-        var reg=/ (.+)$/g;
+        var reg=/(.+)$/g;
         dias.day[2]=(etiqueta.start).match(reg)+' -'+(etiqueta.end).match(reg);
         dias.day[3]=etiqueta.start;//key
         this.customCalendar.push(dias);
