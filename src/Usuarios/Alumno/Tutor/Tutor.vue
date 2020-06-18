@@ -46,10 +46,10 @@
               <div>{{tutoria.t_description}}</div>
             </v-card-text>
             <v-card-actions>
-              <v-btn color="green" text @click="editar(tutoria)">
+              <v-btn color="green" text @click="agendar(tutoria)">
                 <i class="fas fa-calendar-times"></i>Agendar cita
               </v-btn>
-              <v-btn color="#212DA8" text @click="editar(tutoria)">Sesiones</v-btn>
+              <v-btn color="#212DA8" text>Sesiones</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -57,14 +57,18 @@
     </v-container>
 
     <!--Formulario-->
-    <sesionForm :dialog="dialog" :idtutor="idtutor" v-on:closeDialog="dialog = false"></sesionForm>
+    <sesionForm
+      :dialog="dialog"
+      :idtutor="idtutor"
+      :events="events"
+      v-on:closeDialog="dialog = false"
+    ></sesionForm>
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
 import SesionForm from "./SesionForm";
-
 export default {
   data() {
     return {
@@ -84,7 +88,8 @@ export default {
       },
       search: "",
       dialog: false,
-      idtutor: ""
+      idtutor: "",
+      events: []
     };
   },
 
@@ -94,8 +99,9 @@ export default {
 
   methods: {
     listar() {
+      var Id_usuario = localStorage.getItem("Id_usuario");
       axios
-        .get("/student/show_tutoring_list/" + 100)
+        .get("/student/show_tutoring_list/" + Id_usuario)
         .then(res => {
           this.tutorias = res.data.tutor;
         })
@@ -107,9 +113,15 @@ export default {
       that.$router.push("/Alumno/Solicitar Tutor");
     },
 
-    editar(tutoria) {
+    agendar(tutoria) {
       this.idtutor = tutoria.t_code;
       this.dialog = true;
+      axios
+        .get("/student/show_calendar/" + this.idtutor)
+        .then(res => {
+          this.events = res.data.events;
+        })
+        .catch(error => console.log(error));
     },
 
     miFiltrado(tutorias) {

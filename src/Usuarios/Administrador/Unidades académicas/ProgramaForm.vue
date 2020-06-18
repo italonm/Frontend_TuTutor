@@ -6,11 +6,11 @@
       </v-card-title>
       <v-card-text>
         <v-container>
-          <v-form ref="form" v-model="valid" :lazy-validation="lazy">
+          <v-form ref="formPrograma" v-model="valid" :lazy-validation="lazy">
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="form.program_name"
+                  v-model="formPrograma.program_name"
                   :rules="nameValidation"
                   label="Nombre"
                   required
@@ -19,7 +19,7 @@
 
               <v-col cols="12" md="6">
                 <v-select
-                  v-model="form.program_id_coordinator"
+                  v-model="formPrograma.program_id_coordinator"
                   :items="coordinadores"
                   item-text="person_full_name"
                   item-value="person_id"
@@ -53,7 +53,7 @@ export default {
       nameValidation: nameRules,
       checkbox: false,
       coordinadores: [],
-      form: {
+      formPrograma: {
         program_name: "",
         program_id_faculty: this.faculty_id,
         program_id_coordinator: 0
@@ -63,7 +63,7 @@ export default {
 
   created() {
     axios
-      .get("/admin/show_coordinators/")
+      .get("/admin/show_coordinators_available/")
       .then(res => {
         this.coordinadores = res.data.users;
       })
@@ -71,17 +71,17 @@ export default {
   },
   methods: {
     insertar() {
-      this.form.program_id_faculty = this.faculty_id;
-      this.$refs.form.validate();
+      this.formPrograma.program_id_faculty = this.faculty_id;
+      this.$refs.formPrograma.validate();
       if (this.valid) {
         axios
-          .post("/admin/add_program/", this.form)
+          .post("/admin/add_program/", this.formPrograma)
           .then(res => {
             console.log(res);
             this.$emit("resetList");
             this.$message({ message: "Registro exitoso.", type: "success" });
             this.$emit("resetDialog");
-            this.$refs.form.reset();
+            this.reset();
           })
           .catch(error => {
             console.log(error);
@@ -90,8 +90,13 @@ export default {
       } else this.$message.error("Datos incorrectos");
     },
 
+    reset() {
+      this.formPrograma.program_name = "";
+      this.formPrograma.program_id_faculty = this.faculty_id;
+      this.formPrograma.program_id_coordinator = 0;
+    },
     cancelar() {
-      this.$refs.form.reset();
+      this.reset();
       this.$emit("resetDialog");
     }
   }

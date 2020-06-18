@@ -12,11 +12,11 @@
                 type="week"
                 :start="start"
                 min-weeks:1
-                max-days:7
+                max-days:3
                 :events="events"
                 :event-color="getEventColor"
-                weekdays="[1, 2, 3, 4, 5, 6]"
-                first-interval="16"
+                :weekdays="weekdays"
+                first-interval="14"
                 interval-minutes="30"
                 interval-count="24"
                 interval-height="40"
@@ -89,58 +89,55 @@ var diaActual =
   (now.getDate() < 10 ? "0" : "") +
   now.getDate();
 export default {
-  props: ["dialog", "idtutor"],
+  props: ["dialog", "idtutor", "events"],
   data() {
     return {
       start: diaActual,
       freeOptions: "",
+      weekdays: [1, 2, 3, 4, 5, 6],
       cita: {
         s_date: "",
         s_hour: "",
         s_id_student: localStorage.getItem("Id_usuario"),
         s_code_tutor: ""
-      },
-      events: [
-        {
-          name: "Disponible",
-          start: "2020-06-11 09:00:00",
-          end: "2020-06-11 12:00",
-          color: "green"
-        },
-        {
-          name: "Reservado",
-          start: "2020-06-11 10:00",
-          end: "2020-06-11 10:30",
-          color: "brown"
-        },
-        {
-          name: "Reservado",
-          start: "2020-06-11 11:00",
-          end: "2020-06-11 11:30",
-          color: "brown"
-        }
-      ]
+      }
     };
   },
-
-  created() {
-    this.listar();
-  },
-
   methods: {
-    listar() {},
-
     getEventColor(event) {
       return event.color;
     },
 
     citar() {
-      console.log(this.cita);
       this.cita.s_code_tutor = this.idtutor;
+      this.$confirm("¿Desea reservar una cita?", "Warning", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancelar",
+        type: "info"
+      })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "Cita reservada"
+          });
+          this.citarServicio();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Cita no solicitada"
+          });
+        });
+    },
+
+    citarServicio() {
       axios
         .post("/student/register_appointment/", this.cita)
         .then(res => {
           console.log(res);
+          this.cita.s_date = "";
+          this.cita.s_hour = "";
+          this.$emit("closeDialog");
         })
         .catch(error => {
           console.log(error);
@@ -155,7 +152,6 @@ export default {
         })
         .then(res => {
           this.freeOptions = res.data;
-          console.log(res.data);
         })
         .catch(error => {
           console.log(error);
@@ -163,6 +159,8 @@ export default {
     },
 
     cancelar() {
+      this.cita.s_date = "";
+      this.cita.s_hour = "";
       this.$emit("closeDialog");
       this.listar();
     }

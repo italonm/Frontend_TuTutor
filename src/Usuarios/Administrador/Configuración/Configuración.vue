@@ -94,6 +94,7 @@
 
 <script>
 import axios from "axios";
+import { bus } from "../../../main";
 import {
   nameRules,
   emailRules,
@@ -142,15 +143,13 @@ export default {
   name: "Configuración",
   methods: {
     verificar() {
-      if (this.editarlogo.institution_id) this.editar();
-      else this.registrar();
+      if (this.editarlogo.institution_id == "") this.registrar();
+      else this.editar();
     },
     listar() {
       var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
       axios
-        .get(
-          "http://184.73.231.88:5000/api/admin/show_institution/" + Id_usuario
-        )
+        .get("/admin/show_institution/" + Id_usuario)
         .then(res => {
           this.logo.institution_name = res.data.institution_name;
           this.logo.institution_address = res.data.institution_address;
@@ -160,14 +159,10 @@ export default {
             res.data.institution_phone_number;
           this.logo.institution_web_page = res.data.institution_web_page;
           this.editarlogo.institution_id = res.data.institution_id;
-          console.log(Id_usuario);
           axios
-            .get(
-              "http://184.73.231.88:5000/api/admin/show_logo/" + Id_usuario,
-              {
-                responseType: "arraybuffer"
-              }
-            )
+            .get("/admin/show_logo/" + Id_usuario, {
+              responseType: "arraybuffer"
+            })
             .then(response => {
               let image = btoa(
                 new Uint8Array(response.data).reduce(
@@ -181,6 +176,7 @@ export default {
             });
         })
         .catch(error => console.log(error));
+      bus.$emit("updateLogo", 1);
     },
     uploadImage(e) {
       const image = e.target.files[0];
@@ -196,29 +192,23 @@ export default {
       this.$refs.form.validate();
       if (this.valid) {
         if (this.logoActualizado) {
-          this.logo.admin_id = JSON.parse(
-            window.localStorage.getItem("Id_usuario")
-          );
+          this.logo.admin_id = JSON.parse(localStorage.getItem("Id_usuario"));
           axios
-            .post(
-              "http://184.73.231.88:5000/api/admin/add_logo/" +
-                this.logo.admin_id,
-              formData
-            )
+            .post("/admin/add_logo/" + this.logo.admin_id, formData)
             .then(this.$message({ message: "Subiendo logo", type: "success" }))
             .catch(e => {
               console.log(e);
+              this.listar();
             });
           this.logoActualizado = false;
         }
         axios
-          .post(
-            "http://184.73.231.88:5000/api/admin/add_institution/",
-            this.logo
-          )
+          .post("/admin/add_institution/", this.logo)
           .then(
-            this.$message({ message: "Modificación exitoso.", type: "success" })
+            this.$message({ message: "Registro exitoso.", type: "success" })
           )
+          .then(this.listar())
+          .then(this.listar())
           .catch(e => {
             console.log(e);
           });
@@ -228,20 +218,14 @@ export default {
       this.$refs.form.validate();
       if (this.valid) {
         if (this.logoActualizado) {
-          console.log(formData);
           this.logo.admin_id = JSON.parse(localStorage.getItem("Id_usuario"));
           axios
-            .post(
-              "http://184.73.231.88:5000/api/admin/add_logo/" +
-                this.logo.admin_id,
-              formData
-            )
+            .post("/admin/add_logo/" + this.logo.admin_id, formData)
             .then(this.$message({ message: "Subiendo datos", type: "success" }))
             .then(res => {
               console.log(res);
               this.listar();
             })
-            .then(console.log("Imagen Subida"))
             .catch(e => {
               console.log(e);
             });
@@ -255,14 +239,10 @@ export default {
         this.editarlogo.institution_web_page = this.logo.institution_web_page;
 
         axios
-          .post(
-            "http://184.73.231.88:5000/api/admin/update_institution/",
-            this.editarlogo
-          )
+          .post("/admin/update_institution/", this.editarlogo)
           .then(
             this.$message({ message: "Registro exitoso.", type: "success" })
           )
-          .then(console.log("Listado"))
           .then(this.listar())
           .then(this.listar())
           .catch(e => {
@@ -270,6 +250,6 @@ export default {
           });
       } else this.$message.error("Datos incorrectos");
     }
-  },
+  }
 };
 </script>

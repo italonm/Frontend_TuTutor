@@ -10,7 +10,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="form.faculty_name"
+                  v-model="formFaculty.faculty_name"
                   :rules="nameValidation"
                   label="Nombre"
                   required
@@ -19,21 +19,30 @@
 
               <v-col cols="12" md="6">
                 <v-select
-                  v-model="form.faculty_id_coordinator"
+                  v-model="formFaculty.faculty_id_coordinator"
                   :items="coordinadores"
                   item-text="person_full_name"
                   item-value="person_id"
                   label="Coordinador"
+                  required
                 ></v-select>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12" md="6">
-                <v-checkbox v-model="form.faculty_unique_faculty" :label="`Tutoría única`"></v-checkbox>
+                <v-checkbox
+                  v-model="formFaculty.faculty_unique_faculty"
+                  label="Tutoría única"
+                  required
+                ></v-checkbox>
               </v-col>
 
               <v-col cols="12" md="6">
-                <v-checkbox v-model="form.faculty_required_tutorship" :label="`Tutoría fija`"></v-checkbox>
+                <v-checkbox
+                  v-model="formFaculty.faculty_required_tutorship"
+                  label="Tutoría fija"
+                  required
+                ></v-checkbox>
               </v-col>
             </v-row>
           </v-form>
@@ -60,20 +69,20 @@ export default {
       valid: true,
       lazy: false,
       nameValidation: nameRules,
-      checkbox: false,
       coordinadores: [],
-      form: {
+      formFaculty: {
         faculty_name: "",
         faculty_unique_faculty: false,
         faculty_required_tutorship: false,
-        faculty_id_coordinator: ""
+        faculty_id_coordinator: "",
+        institution_id: localStorage.getItem("Id_institución")
       }
     };
   },
 
   created() {
     axios
-      .get("/admin/show_coordinators/")
+      .get("/admin/show_coordinators_available/")
       .then(res => {
         this.coordinadores = res.data.users;
       })
@@ -82,15 +91,16 @@ export default {
   methods: {
     insertar() {
       this.$refs.form.validate();
+      console.log(this.formFaculty);
       if (this.valid) {
         axios
-          .post("/admin/add_faculty/", this.form)
+          .post("/admin/add_faculty/", this.formFaculty)
           .then(res => {
             console.log(res);
             this.$emit("resetList");
             this.$message({ message: "Registro exitoso.", type: "success" });
             this.$emit("resetDialog");
-            this.$refs.form.reset();
+            this.reset();
           })
           .catch(error => {
             console.log(error);
@@ -99,8 +109,14 @@ export default {
       } else this.$message.error("Datos incorrectos");
     },
 
+    reset() {
+      this.formFaculty.faculty_name = "";
+      this.formFaculty.faculty_unique_faculty = false;
+      this.formFaculty.faculty_required_tutorship = false;
+      this.formFaculty.faculty_id_coordinator = "";
+    },
     cancelar() {
-      this.$refs.form.reset();
+      this.reset();
       this.$emit("resetDialog");
     }
   }

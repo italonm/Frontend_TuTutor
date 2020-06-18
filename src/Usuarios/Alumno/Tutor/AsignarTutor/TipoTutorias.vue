@@ -1,37 +1,52 @@
 <template>
-    <div>
+  <div>
     <div v-show="showProgram">
-    <el-row>
-       <el-col :span="8">
-        <div class="grid-content">
-          <el-input placeholder="Buscar Tutor" v-model="search" clearable>
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-          </el-input>
-        </div>
-      </el-col>
-    </el-row>
+      <el-row>
+        <el-col :span="8">
+          <div class="grid-content">
+            <el-input placeholder="Buscar Tutoria" v-model="search" clearable>
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+          </div>
+        </el-col>
+      </el-row>
 
-    <el-row :gutter="12">
-        <el-col :span="12">
+      <!-----------
         <el-card class="box-group" style="overflow:auto">
-        <div v-for="tipo in filterTipoTutoria" :key="tipo" class="text item" @click="showMensaje(tipo)">
-           <el-card class="box-card"    style="border-style:dashed;" >
-              
-              <el-row :gutter="12">
-                <el-col :span="12">
-                   <i class="fas fa-user-tie"></i> 
-                    {{tipo.tt_name}}
-                  
-                </el-col>
-                <el-col :span="7" :offset="5">
-                  <p></p>
-                  <el-button size="mini" type="info"  icon="fas fa-search" @click="solicitarTutor(tipo)"  plain>&nbsp;Buscar tutores</el-button>
-                </el-col>
-              </el-row>
-            </el-card>
-        </div>
-        </el-card>
-      </el-col>
+        
+      ------------->
+      <v-container fluid grid-list-xl>
+        <v-layout wrap justify-space-around>
+          <v-flex v-for="tipo in filterTipoTutoria" :key="tipo.name">
+            <v-card class="mx-auto" max-width="300">
+              <v-img
+                class="white--text align-end"
+                height="100px"
+                src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+              >
+                <v-card-title>{{tipo.name}}</v-card-title>
+              </v-img>
+              <v-card-subtitle class="pb-0">
+                DESCRIPCIÓN:
+                
+              </v-card-subtitle>
+              <v-card-text class="text--primary">
+                <div>{{ tipo.description }}</div>
+                <div>{{ tipo.is_required }} es tutoria obligatoria</div>
+                <div>Duración {{tipo.periodicity}}</div>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="green" text @click="solicitarTutor(tipo)">
+                  <i class="el-icon-search"></i>Buscar tutores
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+
+
+        <!------
       <el-col :span="11" :offset="1">
         <el-card class="box-information" style="overflow:auto" v-show="showBox">
          <div slot="header" class="clearfix">
@@ -54,93 +69,95 @@
             </el-form>
         </el-card>
       </el-col>
-    </el-row>
+
+
+        --------->
     </div>
-    <tutoresxTipoTutoria v-show="!showProgram"
-    ></tutoresxTipoTutoria>
-    </div>
+    <tutoresxTipoTutoria v-show="!showProgram"></tutoresxTipoTutoria>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
-import TutoresxTipoTutoria from "./TutoresxTipoTutoria"
+import TutoresxTipoTutoria from "./TutoresxTipoTutoria";
 export default {
-  data(){
-    return{
-      tiposTutoria:[],
-      
-      showProgram:false,
-      search:'',
-      showBox:false,
-      tipoTutoriaInfo:'',
-      scheduler:[],
-      tutoria:{
-        s_id_student:'',
-        s_code_tutor:'',
-        s_tt:''},
-        dialog: false,
-    }
+  data() {
+    return {
+      tiposTutoria: [],
+
+      showProgram: true,
+      search: "",
+      showBox: false,
+      tipoTutoriaInfo: "",
+      scheduler: [],
+      tutoria: {
+        s_id_student: "",
+        s_code_tutor: "",
+        s_tt: ""
+      },
+      dialog: false
+    };
   },
-  methods:{
+  methods: {
     listaTiposTutorias() {
+      console.log(localStorage.getItem("Id_usuario"))
       axios
-        .get("/coordinator/show_tutoring_types/")
+        .get("/student/show_tutoring_types/"+localStorage.getItem("Id_usuario"))
         .then(res => {
-          this.tiposTutoria = res.data.tutoriaData;
-        
-          console.log(this.tutores);
+          this.tiposTutoria = res.data.tutoring_types;
+
+          console.log(this.tiposTutoria);
         })
         .catch(error => console.log(error));
     },
-    showMensaje(tipo){
-      this.showBox=true;
-      this.tipoTutoriaInfo=tipo;
+    showMensaje(tipo) {
+      this.showBox = true;
+      this.tipoTutoriaInfo = tipo;
     },
-    solicitarTutor(){
-
-
+    solicitarTutor(tipo) {
+      console.log("mostrar tipo tutoria");
+      localStorage.setItem("Id_Tipo_Tutoria", tipo.id);
+      this.showProgram = false;
     }
   },
-  computed:{
-    filterTipoTutoria: function(){
-      console.log(localStorage.getItem("Id_facultad"))
-      return this.tiposTutoria.filter((tipo)=>{
-          return (tipo.tt_name.toLowerCase()).match(this.search.toLowerCase()) 
+  computed: {
+    filterTipoTutoria: function() {
+      console.log(localStorage.getItem("Id_facultad"));
+      console.log(this.tiposTutoria);
+      return this.tiposTutoria.filter(tipo => {
+        return tipo.name.toLowerCase().match(this.search.toLowerCase());
       });
     }
   },
-  created(){
+  created() {
     this.listaTiposTutorias();
   },
-  components:{
-      
-    tutoresxTipoTutoria: TutoresxTipoTutoria,
+  components: {
+    tutoresxTipoTutoria: TutoresxTipoTutoria
   }
-}
-
+};
 </script>
 <style>
-  .text {
-    font-size: 14px;
-  }
+.text {
+  font-size: 14px;
+}
 
-  .item {
-    padding: 5px 0;
-  }
+.item {
+  padding: 5px 0;
+}
 
-  .box-card {
-    height: 150px;
-    border-radius: 20px;
-    cursor: pointer;
-    border-color:  gray; 
-    border-width: 1.5px;
-    }
-    
+.box-card {
+  height: 150px;
+  border-radius: 20px;
+  cursor: pointer;
+  border-color: gray;
+  border-width: 1.5px;
+}
 
-  .box-group {
-    height: 480px;
-  }
-  .box-information{
-    height: 400px;
-  }
+.box-group {
+  height: 480px;
+}
+.box-information {
+  height: 400px;
+}
 </style>

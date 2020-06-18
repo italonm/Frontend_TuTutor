@@ -98,7 +98,7 @@ export default {
     listar() {
        console.log(localStorage.getItem("Id_usuario"));
        axios
-      .get("http://184.73.231.88:5000/api/student/show_student_history/" + "54")
+      .get("http://184.73.231.88:5000/api/student/show_student_history/" + localStorage.getItem("Id_usuario"))
       .then(res => {
         console.log(res.data);
         this.unidades = res.data.sessions;

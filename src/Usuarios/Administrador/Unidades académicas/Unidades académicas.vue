@@ -162,6 +162,7 @@ export default {
         { text: "Programas", value: "watch", sortable: false },
         { text: "Agregar", value: "add", sortable: false }
       ],
+
       //Programas
       programas: [],
       headersProgramas: [
@@ -169,6 +170,7 @@ export default {
         { text: "Coordinador", value: "coordinator_full_name" },
         { text: "Contacto", value: "coordinator_email" }
       ],
+
       searchUnidad: "",
       searchPrograma: "",
       dialogUnidad: false,
