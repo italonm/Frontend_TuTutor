@@ -103,7 +103,6 @@ export default {
       axios
         .get("/student/show_tutoring_list/" + Id_usuario)
         .then(res => {
-          console.log(res.data);
           this.tutorias = res.data.tutor;
         })
         .catch(error => console.log(error));
@@ -120,7 +119,6 @@ export default {
       axios
         .get("/student/show_calendar/" + this.idtutor)
         .then(res => {
-          console.log(res.data);
           this.events = res.data.events;
         })
         .catch(error => console.log(error));

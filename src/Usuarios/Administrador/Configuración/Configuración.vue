@@ -143,13 +143,11 @@ export default {
   name: "Configuración",
   methods: {
     verificar() {
-      if (this.editarlogo.institution_id == "") 
-      this.registrar();
+      if (this.editarlogo.institution_id == "") this.registrar();
       else this.editar();
     },
     listar() {
       var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
-      console.log(Id_usuario);
       axios
         .get("/admin/show_institution/" + Id_usuario)
         .then(res => {
@@ -178,7 +176,7 @@ export default {
             });
         })
         .catch(error => console.log(error));
-      bus.$emit("updateLogo", this.webValidation);
+      bus.$emit("updateLogo", 1);
     },
     uploadImage(e) {
       const image = e.target.files[0];
@@ -209,7 +207,6 @@ export default {
           .then(
             this.$message({ message: "Registro exitoso.", type: "success" })
           )
-          .then(console.log("Listado"))
           .then(this.listar())
           .then(this.listar())
           .catch(e => {
@@ -229,7 +226,6 @@ export default {
               console.log(res);
               this.listar();
             })
-            .then(console.log("Imagen Subida"))
             .catch(e => {
               console.log(e);
             });
@@ -247,7 +243,6 @@ export default {
           .then(
             this.$message({ message: "Registro exitoso.", type: "success" })
           )
-          .then(console.log("Listado"))
           .then(this.listar())
           .then(this.listar())
           .catch(e => {
