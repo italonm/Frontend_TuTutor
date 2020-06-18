@@ -80,6 +80,8 @@ export default {
 
     insertar() {
       this.$refs.form.validate();
+      console.log(localStorage.getItem("Id_institución"));
+      console.log(this.form);
       if (this.valid) {
         axios
           .post("http://184.73.231.88:5000/api/coordinator/add_support_unit/", this.form)
@@ -98,8 +100,8 @@ export default {
     },
 
     editar() {
-      //this.newDialog = true;
       this.$refs.form.validate();
+      console.log(localStorage.getItem("Id_institución"));
       console.log(this.form);
       if (this.valid) {
         axios

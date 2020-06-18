@@ -38,12 +38,6 @@
               :disabled="true"
               ></v-text-field>
 
-              <v-text-field 
-              v-model="form.result"
-              label="Resultado"
-              :disabled="true"
-              ></v-text-field> 
-
           </v-form>
         </v-container>
       </v-card-text>
@@ -66,8 +60,7 @@ export default {
     };
   },
 
-  methods: {
-    
+  methods: {    
     aceptar() {
       this.$refs.form.reset();
       this.$emit("resetDialog");
