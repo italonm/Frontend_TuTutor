@@ -6,11 +6,11 @@
       </v-card-title>
       <v-card-text>
         <v-container>
-          <v-form ref="form" v-model="valid" :lazy-validation="lazy">
+          <v-form ref="formFaculty" v-model="valid" :lazy-validation="lazy">
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="form.faculty_name"
+                  v-model="formFaculty.faculty_name"
                   :rules="nameValidation"
                   label="Nombre"
                   required
@@ -19,7 +19,7 @@
 
               <v-col cols="12" md="6">
                 <v-select
-                  v-model="form.faculty_id_coordinator"
+                  v-model="formFaculty.faculty_id_coordinator"
                   :items="coordinadores"
                   item-text="person_full_name"
                   item-value="person_id"
@@ -29,11 +29,14 @@
             </v-row>
             <v-row>
               <v-col cols="12" md="6">
-                <v-checkbox v-model="form.faculty_unique_faculty" :label="`Tutoría única`"></v-checkbox>
+                <v-checkbox v-model="formFaculty.faculty_unique_faculty" :label="`Tutoría única`"></v-checkbox>
               </v-col>
 
               <v-col cols="12" md="6">
-                <v-checkbox v-model="form.faculty_required_tutorship" :label="`Tutoría fija`"></v-checkbox>
+                <v-checkbox
+                  v-model="formFaculty.faculty_required_tutorship"
+                  :label="`Tutoría fija`"
+                ></v-checkbox>
               </v-col>
             </v-row>
           </v-form>
@@ -53,7 +56,7 @@ import { nameRules } from "../../Validation";
 import axios from "axios";
 
 export default {
-  props: ["dialog"],
+  props: ["dialog", "formFaculty"],
 
   data() {
     return {
@@ -61,13 +64,7 @@ export default {
       lazy: false,
       nameValidation: nameRules,
       checkbox: false,
-      coordinadores: [],
-      form: {
-        faculty_name: "",
-        faculty_unique_faculty: false,
-        faculty_required_tutorship: false,
-        faculty_id_coordinator: ""
-      }
+      coordinadores: []
     };
   },
 
@@ -81,16 +78,17 @@ export default {
   },
   methods: {
     insertar() {
-      this.$refs.form.validate();
+      this.$refs.formFaculty.validate();
+      console.log(this.formFaculty);
       if (this.valid) {
         axios
-          .post("/admin/add_faculty/", this.form)
+          .post("/admin/add_faculty/", this.formFaculty)
           .then(res => {
             console.log(res);
             this.$emit("resetList");
             this.$message({ message: "Registro exitoso.", type: "success" });
             this.$emit("resetDialog");
-            this.$refs.form.reset();
+            this.$refs.formFaculty.reset();
           })
           .catch(error => {
             console.log(error);
@@ -100,7 +98,7 @@ export default {
     },
 
     cancelar() {
-      this.$refs.form.reset();
+      this.$refs.formFaculty.reset();
       this.$emit("resetDialog");
     }
   }

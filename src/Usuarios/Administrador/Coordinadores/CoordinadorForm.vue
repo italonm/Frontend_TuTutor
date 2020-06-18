@@ -95,6 +95,7 @@ export default {
 
     insertar() {
       this.$refs.form.validate();
+      console.log(this.form);
       if (this.valid) {
         axios
           .post("/admin/add_coordinator/", this.form)

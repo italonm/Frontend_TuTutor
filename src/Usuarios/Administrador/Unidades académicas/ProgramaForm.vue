@@ -44,7 +44,7 @@ import { nameRules } from "../../Validation";
 import axios from "axios";
 
 export default {
-  props: ["faculty_id", "dialog"],
+  props: ["faculty_id", "dialog", "formPrograma"],
 
   data() {
     return {
@@ -52,12 +52,7 @@ export default {
       lazy: false,
       nameValidation: nameRules,
       checkbox: false,
-      coordinadores: [],
-      form: {
-        program_name: "",
-        program_id_faculty: this.faculty_id,
-        program_id_coordinator: 0
-      }
+      coordinadores: []
     };
   },
 
