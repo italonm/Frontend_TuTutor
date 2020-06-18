@@ -124,6 +124,7 @@
     <!--Formularios-->
     <unidadForm
       :dialog="dialogUnidad"
+      :formFaculty="formFaculty"
       v-on:resetDialog="dialogUnidad = false"
       v-on:resetList="listarUnidades()"
     ></unidadForm>
@@ -131,6 +132,7 @@
     <programaForm
       :faculty_id="faculty_id"
       :dialog="dialogPrograma"
+      :formPrograma="formPrograma"
       v-on:resetDialog="dialogPrograma = false"
       v-on:resetList="listarProgramas()"
     ></programaForm>
@@ -162,6 +164,13 @@ export default {
         { text: "Programas", value: "watch", sortable: false },
         { text: "Agregar", value: "add", sortable: false }
       ],
+      formFaculty: {
+        faculty_name: "",
+        faculty_unique_faculty: false,
+        faculty_required_tutorship: false,
+        faculty_id_coordinator: "",
+        institution_id: localStorage.getItem("Id_institución")
+      },
       //Programas
       programas: [],
       headersProgramas: [
@@ -169,6 +178,11 @@ export default {
         { text: "Coordinador", value: "coordinator_full_name" },
         { text: "Contacto", value: "coordinator_email" }
       ],
+      formPrograma: {
+        program_name: "",
+        program_id_faculty: this.faculty_id,
+        program_id_coordinator: 0
+      },
       searchUnidad: "",
       searchPrograma: "",
       dialogUnidad: false,
