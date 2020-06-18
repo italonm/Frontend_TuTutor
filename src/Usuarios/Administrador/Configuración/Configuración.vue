@@ -176,6 +176,7 @@ export default {
             });
         })
         .catch(error => console.log(error));
+      bus.$emit("updateLogo", this.webValidation);
     },
     uploadImage(e) {
       const image = e.target.files[0];
@@ -226,7 +227,6 @@ export default {
             .catch(e => {
               console.log(e);
             });
-          bus.$emit("updateLogo", this.webValidation);
           this.logoActualizado = false;
         }
         this.editarlogo.institution_name = this.logo.institution_name;

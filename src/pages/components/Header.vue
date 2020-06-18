@@ -52,6 +52,7 @@ export default {
   },
   methods: {
     getImage() {
+      console.log("updateheader");
       axios
         .get("/admin/show_logo/" + 1, { responseType: "arraybuffer" })
         .then(response => {
