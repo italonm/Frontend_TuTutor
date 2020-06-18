@@ -179,7 +179,9 @@ export default {
       bus.$emit("updateLogo", 1);
     },
     uploadImage(e) {
+      formData = new FormData();
       const image = e.target.files[0];
+      console.log(image)
       formData.append("file", image, image.name);
       const reader = new FileReader();
       reader.readAsDataURL(image);
