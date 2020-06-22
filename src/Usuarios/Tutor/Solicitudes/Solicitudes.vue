@@ -152,6 +152,7 @@ export default {
             { obj_list: this.selected } )
         .then(res => {
           console.log(res);
+          this.selected = [];
           this.listar();
           this.dialog = false;
           this.$message({
@@ -168,6 +169,7 @@ export default {
             { obj_list: this.selected } )
         .then(res => {
           console.log(res);
+          this.selected = [];
           this.listar();
           this.dialog = false;
           this.$message({

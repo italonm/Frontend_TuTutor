@@ -9,6 +9,7 @@ import Coordinadores from "../../Usuarios/Administrador/Coordinadores/Coordinado
 import Alumnos from "../../Usuarios/Coordinador/Alumnos/Alumnos";
 import Tutores from "../../Usuarios/Coordinador/Tutores/Tutores";
 import TipoTutoria from "../../Usuarios/Coordinador/Tipos de tutoría/TipoTutoria";
+import Reportes from "../../Usuarios/Coordinador/Reportes/Reportes";
 /* import Tutorías from '../../Usuarios/Coordinador/Tutorías/Tutorías' */
 import Solicitudes from "../../Usuarios/Coordinador/Solicitudes/Solicitudes";
 import Soporte from "../../Usuarios/Coordinador/Soporte/Soporte";
@@ -18,6 +19,7 @@ import Agenda from "../../Usuarios/Alumno/Agenda/Agenda";
 import Tutor from "../../Usuarios/Alumno/Tutor/Tutor";
 import SolicitudesAlumno from "../../Usuarios/Alumno/Mis Solicitudes/Mis Solicitudes";
 import SolicitarTutor from "../../Usuarios/Alumno/Tutor/AsignarTutor/Solicitar Tutor";
+import ReportesAlumno from "../../Usuarios/Alumno/Reportes/Reportes";
 //COMPONENTES DE TUTOR
 import WelcomeTutor from "../../Usuarios/Tutor/Bienvenido/Bienvenido";
 import Asignaciones from "../../Usuarios/Tutor/Asignaciones/Asignaciones";
@@ -71,7 +73,7 @@ export const routes = [
             { path: "/Coordinador/Miembros/Alumnos", component: Alumnos }, //herbert
             { path: "Tutorías activas", component: Welcome },
             { path: "Tipos de tutoría", component: TipoTutoria }, //luiggi
-            { path: "Reportes", component: Welcome },
+            { path: "Reportes", component: Reportes },
             { path: "Solicitudes", component: Solicitudes }, //valeria
             { path: "/Coordinador/Miembros/Unidades de apoyo", component: Apoyo }, //valeria
             { path: "/Coordinador/Miembros/Soporte", component: Soporte }, //herbert
@@ -87,6 +89,7 @@ export const routes = [
             { path: "Mis Tutorías", component: Tutor }, //italo / Herbert
             { path: "Solicitar Tutor", component: SolicitarTutor }, //italo / Herbert
             { path: "Mis Solicitudes", component: SolicitudesAlumno }, //italo / Herbert
+            { path: "Mis Reportes", component: ReportesAlumno }, //italo / Herbert
         ],
     },
     {
@@ -103,6 +106,7 @@ export const routes = [
         ],
     },
 ];
+
 
 Vue.use(Router);
 export default new Router({

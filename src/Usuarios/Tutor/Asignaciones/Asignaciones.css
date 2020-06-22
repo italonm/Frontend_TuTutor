@@ -99,14 +99,13 @@
 .btn {
 	background-color: #2A265F;
 	border: 0;
-	border-radius: 50px;
-	box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+	border-radius: 50px;	
 	color: #fff;
 	font-size: 16px;
 	padding: 12px 25px;
 	position: absolute;
-	bottom: 30px;
-	right: 30px;
+	bottom: 20px;
+	right: 20px;
 	letter-spacing: 1px;
 }
 

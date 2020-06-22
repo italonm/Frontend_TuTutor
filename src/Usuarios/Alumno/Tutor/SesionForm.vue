@@ -12,11 +12,11 @@
                 type="week"
                 :start="start"
                 min-weeks:1
-                max-days="3"
+                max-days:3
                 :events="events"
                 :event-color="getEventColor"
                 :weekdays="weekdays"
-                first-interval="16"
+                first-interval="14"
                 interval-minutes="30"
                 interval-count="24"
                 interval-height="40"
@@ -110,10 +110,34 @@ export default {
 
     citar() {
       this.cita.s_code_tutor = this.idtutor;
+      this.$confirm("¿Desea reservar una cita?", "Warning", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancelar",
+        type: "info"
+      })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "Cita reservada"
+          });
+          this.citarServicio();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Cita no solicitada"
+          });
+        });
+    },
+
+    citarServicio() {
       axios
         .post("/student/register_appointment/", this.cita)
         .then(res => {
           console.log(res);
+          this.cita.s_date = "";
+          this.cita.s_hour = "";
+          this.$emit("closeDialog");
         })
         .catch(error => {
           console.log(error);
@@ -128,7 +152,6 @@ export default {
         })
         .then(res => {
           this.freeOptions = res.data;
-          console.log(res.data);
         })
         .catch(error => {
           console.log(error);
@@ -136,6 +159,8 @@ export default {
     },
 
     cancelar() {
+      this.cita.s_date = "";
+      this.cita.s_hour = "";
       this.$emit("closeDialog");
       this.listar();
     }
