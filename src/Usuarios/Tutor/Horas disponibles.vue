@@ -202,7 +202,6 @@ import axios from 'axios';
     count: 24,
     height: 40
   }
-var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
 var now     = new Date(); 
 var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
   export default {
@@ -240,7 +239,7 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       color: 'blue',
       events:[],
       schedule:{
-        tutor_id:Id_usuario,
+        tutor_id:JSON.parse(localStorage.getItem("Id_usuario")),
         events: []
       },
       eventosAgregados:[],
@@ -266,9 +265,8 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
     methods: {
       listar() {
       axios
-        .get("/tutor/show_schedule/"+Id_usuario)
+        .get("/tutor/show_schedule/"+JSON.parse(localStorage.getItem("Id_usuario")))
         .then(res => {
-          console.log(Id_usuario)
           this.events = res.data.schedules;
         })
         .catch(error => console.log(error));
@@ -317,9 +315,7 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
             console.log(error);
             this.$message.error("Error al registrar datos");
           });
-        this.events.push({id:null , name: nombreDia,
-                          start: this.start +" "+ this.startTime,
-                          end: this.start +" "+ this.endTime, color:"green"})  
+        this.eventosAgregados=[];
       },
       showEvent ({ nativeEvent, event }) {
         const open = () => {

@@ -45,8 +45,8 @@ export default {
   },
   created() {
     this.getImage();
-    bus.$on("updateLogo", webValidation => {
-      console.log(webValidation);
+    bus.$on("updateLogo", data => {
+      console.log(data);
       this.getImage();
     });
   },
@@ -72,7 +72,6 @@ export default {
       JSON.parse(localStorage.getItem("Nombre")) +
       " " +
       JSON.parse(localStorage.getItem("Apellidos"));
-    console.log(localStorage.getItem("Nombre_programa"));
     if (JSON.parse(localStorage.getItem("EsCoordinador"))) {
       document.getElementById("sesión").innerHTML =
         "Sesión de Coordinador - " + localStorage.getItem("Nombre_programa");

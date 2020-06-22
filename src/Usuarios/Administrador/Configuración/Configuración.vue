@@ -143,8 +143,8 @@ export default {
   name: "Configuración",
   methods: {
     verificar() {
-      if (this.editarlogo.institution_id) this.editar();
-      else this.registrar();
+      if (this.editarlogo.institution_id == "") this.registrar();
+      else this.editar();
     },
     listar() {
       var Id_usuario = JSON.parse(localStorage.getItem("Id_usuario"));
@@ -176,9 +176,12 @@ export default {
             });
         })
         .catch(error => console.log(error));
+      bus.$emit("updateLogo", 1);
     },
     uploadImage(e) {
+      formData = new FormData();
       const image = e.target.files[0];
+      console.log(image)
       formData.append("file", image, image.name);
       const reader = new FileReader();
       reader.readAsDataURL(image);
@@ -197,14 +200,17 @@ export default {
             .then(this.$message({ message: "Subiendo logo", type: "success" }))
             .catch(e => {
               console.log(e);
+              this.listar();
             });
           this.logoActualizado = false;
         }
         axios
           .post("/admin/add_institution/", this.logo)
           .then(
-            this.$message({ message: "Modificación exitoso.", type: "success" })
+            this.$message({ message: "Registro exitoso.", type: "success" })
           )
+          .then(this.listar())
+          .then(this.listar())
           .catch(e => {
             console.log(e);
           });
@@ -222,11 +228,9 @@ export default {
               console.log(res);
               this.listar();
             })
-            .then(console.log("Imagen Subida"))
             .catch(e => {
               console.log(e);
             });
-          bus.$emit("updateLogo", this.webValidation);
           this.logoActualizado = false;
         }
         this.editarlogo.institution_name = this.logo.institution_name;
@@ -241,7 +245,6 @@ export default {
           .then(
             this.$message({ message: "Registro exitoso.", type: "success" })
           )
-          .then(console.log("Listado"))
           .then(this.listar())
           .then(this.listar())
           .catch(e => {

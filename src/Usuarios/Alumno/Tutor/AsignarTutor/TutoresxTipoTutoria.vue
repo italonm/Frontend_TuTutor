@@ -15,7 +15,7 @@
       <el-col :xs="20" :sm="12" :md="12" :lg="8">
         <el-card class="box-group" style="overflow:auto">
           
-          <div v-for="tutor in filterTutor" :key="tutor.t_id_tutor" class="text item">
+          <div v-for="tutor in filterTutor" :key="tutor.t_id_tutor">
             <el-card class="box-card" style="border-style:dashed;">
               <el-row>
                 <el-col :sm="5" :xs="5">
@@ -88,15 +88,21 @@
           <v-app-bar dark color="green">
             <v-toolbar-title>AGENDA</v-toolbar-title>
           </v-app-bar>
-          <div v-for="schedul in customCalendar" :key="schedul.day[3]" class="text item">
-            <v-list class="transparent">
+          <div v-for="schedul in customCalendar" :key="schedul['fecha']">
+            <v-list disabled>
               <!--------->
-              <v-list-item >
-                <v-list-item-title
-                  style="border-right: 3px solid red; font-size: 20px;color:purple; font-weight:bold;"
-                >{{ schedul.day[0] }} {{schedul.day[1]}}</v-list-item-title>
+              <v-subheader style="border-bottom: 2px solid orange;color:#D97F20;font-weight:bold;">{{schedul['fecha']}}</v-subheader>
 
-                <v-list-item-subtitle class="text-center">{{schedul.day[2] }}</v-list-item-subtitle>
+              <v-list-item class="text-left" v-for="hora of schedul['hora']" :key="hora">
+              <v-list-item-icon>
+              <v-icon style="color:#20C7D9;">mdi-history</v-icon>
+            </v-list-item-icon>
+                <v-list-item-content
+                  style="font-size: 15px;color:#20C7D9; font-weight:bold;"
+                >
+                <v-list-item-subtitle>{{ hora }}</v-list-item-subtitle>
+                </v-list-item-content>
+          
               </v-list-item>
               <!--------->
             </v-list>
@@ -132,10 +138,11 @@ export default {
   },
   methods: {
     listarTutores() {
+      console.log(localStorage.getItem("Id_facultad"));
       axios
         .get(
-          "/student/show_tutors_in_request/" +
-             localStorage.getItem("Id_facultad")
+          "/student/show_tutors_in_request_2/" +
+            localStorage.getItem("Id_facultad")
         )
         .then(res => {
           this.tutores = res.data.people;
@@ -153,26 +160,27 @@ export default {
     showHorario(tutorInfo) {
       this.showBoxHorario = true;
       this.scheduler = tutorInfo.t_schedule;
-      console.log(this.scheduler);
       this.generateListCalendar();
     },
     generateListCalendar(){
       var etiqueta;
       this.customCalendar=[];
-      for (etiqueta of this.scheduler){
-        var dias=new Object();
-        var birthday = new Date(etiqueta.start);
-        var options = { weekday: "long",day: 'numeric'/*, month:"long"*/};
-        dias.day=new Intl.DateTimeFormat("es-PE", options).format(birthday);
-        console.log(dias.day);
-        dias.day=dias.day.split(" ");
-        console.log(dias.day)
-        var reg=/ (.+)$/g;
-        dias.day[2]=(etiqueta.start).match(reg)+' -'+(etiqueta.end).match(reg);
-        dias.day[3]=etiqueta.start;//key
-        this.customCalendar.push(dias);
-        console.log(dias.day[3]);
-       
+
+      for (etiqueta in this.scheduler){
+        var birthday = new Date(etiqueta);
+        var options = { weekday: "long",day: 'numeric',month:"long",year:"numeric"};
+        //dias.day=new Intl.DateTimeFormat("es-PE", options).format(birthday);
+        console.log("mostrar dias");
+        console.log(etiqueta);
+        var contenedor={fecha:"val",hora:[]};
+        contenedor['fecha']=new Intl.DateTimeFormat("es-PE", options).format(birthday);
+        //contenedor['fecha']=etiqueta;
+        contenedor['hora']=this.scheduler[etiqueta];
+        for (var val of this.scheduler[etiqueta]){
+          console.log(val);
+        }
+        this.customCalendar.push(contenedor);
+        console.log(this.customCalendar);
       }
     },
     solicitarTutor(tutor) {
