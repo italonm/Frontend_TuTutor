@@ -15,15 +15,21 @@
                 </div>
                 <h6>{{state}}</h6>
                 <h2>{{tutoring_type}}</h2>
-                <button class="btn">Ver Plan</button>
+                <button class="btn" v-on:click="verPlan()">Ver Plan</button>
             </div>
         </div>
-    </div>
+    </div>    
 </template>
 <script>
 export default {    
     name: "Elemento",    
-    props: ["name" , "tutoring_type", "last_name", "state"]    
+    props: ["name" , "tutoring_type", "last_name", "state", "id_alumno", "callMethod"],     
+    methods:{
+        verPlan(){       
+            this.callMethod();
+            console.log("AUXILIO")
+        },        
+    },    
 }
 </script>
 <style>

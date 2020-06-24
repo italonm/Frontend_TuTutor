@@ -52,12 +52,12 @@ export default [{
         name: 'Solicitudes',
         to: '/Coordinador/Solicitudes',
         icon: 'cil-EnvelopeClosed'
-      }                            
-      /* {
+      },                            
+      {
         _name: 'CSidebarNavItem',
         name: 'Reportes',
-        to: '/Reportes',
+        to: '/Coordinador/Reportes',
         icon: 'cil-chartPie'
-      }, */      
+      },      
     ]
 }]
