@@ -11,7 +11,9 @@
       </el-col>
     </el-row>
     
+
     <el-row :gutter="30">
+<!-----
       <el-col :xs="20" :sm="12" :md="12" :lg="8">
         <el-card class="box-group" style="overflow:auto">
           
@@ -42,7 +44,89 @@
         </el-card>
         <br />
       </el-col>
-      <!----------------->
+      ------------>
+
+      <!---------------------ANALIZAR ESTA PARTE----------------->
+      <el-col :xs="20" :sm="12" :md="12" :lg="16">
+      <el-card class="box-group" style="overflow:auto">
+      <v-container fluid grid-list-xl>
+        <v-layout wrap justify-space-around>
+          <v-flex v-for="tutor in filterTutor" :key="tutor.t_id_tutor">
+            <v-hover>
+              <template v-slot:default="{ hover }">
+                
+                <v-card class="mx-auto" width="300">
+                  <div><v-avatar size="80"  style="margin:auto;display:block;">
+      <img
+        src="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-assets/images/portrait/small/avatar-s-13.jpg"
+        alt="John"
+      >
+    </v-avatar></div>
+                
+
+                  <v-card-text style="text-align:center">
+                    {{tutor.t_fullname.toUpperCase()}}
+                   
+                   
+                   <v-card-text class="text-align:center">
+      <div><i class="fa fa-id-card" aria-hidden="true"></i>  {{tutor.t_code}}</div>
+
+      <div><i class="fa fa-envelope"></i>   {{tutor.t_email}}</div>
+    </v-card-text>
+                   
+
+                  </v-card-text>
+                  <v-divider></v-divider>
+<v-list>
+            <v-list-item >
+              <v-list-item-action>
+                 <i class="fa fa-id-card" aria-hidden="true"></i>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>{{tutor.t_code}}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item >
+
+              <v-list-item-action>
+                <i class="fa fa-envelope"></i>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>{{tutor.t_email}}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+</v-list>
+
+    
+
+                 
+                  <v-card-actions class="justify-space-around">
+                    
+                  </v-card-actions>
+                    
+                  <v-fade-transition>
+                    <v-overlay v-if="hover" absolute color="#036358">
+                      <v-btn @click="showHorario(tutor)">
+                        <i class="el-icon-search"></i>Buscar tutores
+                      </v-btn>
+                    </v-overlay>
+                  </v-fade-transition>
+                </v-card>
+              </template>
+            </v-hover>
+          </v-flex>
+        </v-layout>
+
+      </v-container>
+      </el-card>
+      </el-col>
+      <!----------------------------------------------------->
+
+
+
+
+
+
 
       <!------Informacion del tutor------>
       <el-col :xs="20" :sm="12" :md="12" :lg="8">
@@ -78,7 +162,7 @@
             </el-col>
           </el-row>
         </el-card>
-        <br />
+      <!---  <br /> --->
       </el-col>
       <!----------------->
 
@@ -88,6 +172,7 @@
           <v-app-bar dark color="green">
             <v-toolbar-title>AGENDA</v-toolbar-title>
           </v-app-bar>
+
           <div v-for="schedul in customCalendar" :key="schedul['fecha']">
             <v-list disabled>
               <!--------->
@@ -202,7 +287,7 @@ export default {
     filterTutor: function() {
       console.log(localStorage.getItem("Id_facultad"));
       return this.tutores.filter(tutor => {
-        return tutor.t_fullname.toLowerCase().match(this.search.toLowerCase());
+        return tutor.t_fullname.toLowerCase().match(this.search.toLowerCase()) || tutor.t_code.match(this.search);
       });
     }
   },
