@@ -58,8 +58,11 @@ html {
     max-width: 90%;
   }
   
-  .todo-list .list:hover {
+  .todo-list .list:hover  {
     background: #f7fcfa;
+  }
+  .list:hover .TodoItem__delete {
+    opacity: 1;
   }
   
   .todo-list .list {
@@ -274,3 +277,20 @@ html {
   .material-checkbox > input:checked + span::after {
     border-color: #fff;
   }
+  
+  .TodoItem__delete {  
+    opacity: 0;
+    left: 64%;
+    position: fixed;
+    color: #d96465;
+    border-radius: 100%;
+    
+  }
+  .inner{
+    position: relative;
+    top: -10px;
+    width: 40%;
+    
+  }
+  
+  

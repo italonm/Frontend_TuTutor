@@ -22,19 +22,28 @@
 
                 <div class="todo-list">
                     <!-- Loop Over All Todos -->
-                    <div v-for="todo in todos" :key="todo.id" class="list">
+                    <div v-for="todo in this.todos" :key="todo.id" class="list">
                     <!-- Show Label -->
                         <label class="material-checkbox">
                             <input type="checkbox" v-model="todo.completed">
                             <span></span>
                         </label>
                         <div class="text" :class="{completed: todo.completed}" v-if="!todo.editing" @dblclick="todo.editing = true; editTodoCache=todo.text">{{ todo.text }}</div>
-                        <!-- Show Text Box -->
+                        <!-- Show Text Box -->                        
                         <div class="input__div1" v-else>
                             <div class="input__wrapper1">
                                 <input type="text" v-focus v-model="todo.text" @keyup.enter="editTodo(todo)" @keyup.esc="cancelEdit(todo)" @blur="cancelEdit(todo)"/>
                             </div>
                             <div class="border"></div>
+                        </div>
+                        <div class="inner">
+                            <button
+                                class="TodoItem__delete "
+                                data-testid="deleteTrigger"
+                                @click.prevent="deleteItem(todo)"
+                            >
+                                <span class="icon"><i class="fa fa-trash fa-lg" /></span>
+                            </button>
                         </div>
                     </div>
                 </div>                                
@@ -51,27 +60,14 @@
     </v-dialog>
 </template>
 <script>
+import axios from "axios"
 export default {
-    props:["form", "dialog"],       
+    props:["form", "dialog", "id_assignment", "todos"],       
     data() {
         return {
-        last_id: 2,
-        newTodo: "",
-        editTodoCache: "",
-        todos: [
-            {
-            id: 1,
-            text: "Learn Vue.js",
-            completed: false,
-            editing: false
-            },
-            {
-            id: 2,
-            text: "Build a project with vue.js",
-            completed: false,
-            editing: false
-            }
-        ]
+            last_id: 2,
+            newTodo: "",
+            editTodoCache: "",        
         };
     },
 
@@ -82,10 +78,33 @@ export default {
     },
 
     methods: {
+        listar(){ 
+            this.todos = []          
+            var iter 
+            axios
+            .get("/tutor/show_activities/"+this.id_assignment)
+            .then(res=>{
+                for(iter in res.data.activities){
+                var aux={
+                    id:1,
+                    text:"",
+                    completed:false,
+                    editing:false
+                }
+                aux.id = res.data.activities[iter].id
+                aux.text = res.data.activities[iter].activity
+                if (res.data.activities[iter].state === "Terminado"){
+                    aux.completed = true
+                }
+                this.todos.push(aux)
+                }            
+            })
+        },
+        
         addTodo() {
-            if (this.newTodo.trim() == "") return;
+            if (this.newTodo.trim() == "") return;            
             let todo = {
-                id: ++this.last_id,
+                id: null,
                 text: this.newTodo,
                 components: false,
                 editing: false
@@ -93,6 +112,66 @@ export default {
             this.todos.splice(0,0,todo);
             this.newTodo = "";
         },
+
+        guardar(){
+            var to 
+            var actividades = []
+            for(to in this.todos){
+                var aux={
+                    id:null,
+                    name:"",
+                    state:"",
+                }   
+                aux.id = this.todos[to].id
+                aux.name = this.todos[to].text
+                aux.state = this.todos[to].completed
+                actividades.push(aux)
+            }                        
+            var add={
+                id_assignment: this.id_assignment,
+                activities: actividades
+            }
+            axios
+            .post("/tutor/edit_activities/",add)            
+            .then(res=>{
+                console.log(res)                
+            })
+            .catch(error => {
+                console.log(error);
+                this.$message.error("No se pudo agregar la actividad");
+                return;
+            }); 
+        },
+
+        deleteItem(todo){            
+            var actividades = []
+            var to
+            for(to in this.todos){
+                var aux={
+                    id:null,
+                    name:"",
+                    state:"",
+                }   
+                if (this.todos[to].id != todo.id){
+                    aux.id = this.todos[to].id
+                    aux.name = this.todos[to].text
+                    aux.state = this.todos[to].completed
+                    actividades.push(aux)    
+                }                                
+            }     
+            console.log(actividades)                               
+            axios
+            .post("tutor/delete_activities", actividades)
+            .then(
+                this.listar()
+            )
+            .catch(error => {
+                console.log(error);
+                this.$message.error("No se pudo borrar la actividad");
+                return;
+            }); 
+        },
+
         editTodo(todo) {            
             if (todo.text.trim() == "") todo.text = this.editTodoCache;            
             else {
@@ -106,7 +185,8 @@ export default {
             todo.text = this.editTodoCache;
             todo.editing = false;            
         },
-        cancelar() {                                        
+        cancelar() {                     
+            this.guardar();                   
             this.$emit("resetDialog");                                               
             this.$emit("resetList");
         }
