@@ -29,6 +29,12 @@ export default [
           name: 'Mis Solicitudes',
           to: '/Alumno/Mis Solicitudes',
           icon: 'cil-pencil'
-        },    
+        }, 
+        {
+          _name: 'CSidebarNavItem',
+          name: 'Mis Reportes',
+          to: '/Alumno/Mis Reportes',
+          icon: 'cil-chartPie'
+        }   
     ]
 }]
