@@ -9,45 +9,140 @@
           </h1>
         </div>
       </el-col>
-      <el-col :span="8">
-        <div class="grid-content">
-          <el-input placeholder="Buscar cita" v-model="search" clearable>
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-          </el-input>
-        </div>
-      </el-col>
-      <el-col :span="8">
-      </el-col>
     </el-row>
 
-    <!-- Tabla-->
-    <v-data-table
-      :footer-props="{
-        'items-per-page-options': [5, 10, 15, -1],
-        'items-per-page-text': 'Registros por página:',
-        'items-per-page-all-text': 'Listar todos',
-      }"
-      :headers="headers"
-      :items="listaCitas"
-      :search="search"
-      :items-per-page="5"
-      :sort-by="['code']"
-      multi-sort
-      class="elevation-3"
-      loading-text="Cargando.."
-      height="288px"
-      fixed-header
-    >
-      <template v-slot:item.editar="{ item }">
-        <el-button type="info" icon="el-icon-edit" circle @click="editar(item)"></el-button>
-      </template>
-      <template v-slot:item.eliminar="{ item }">
-        <el-button type="danger" icon="el-icon-close" circle @click="eliminar(item)"></el-button>
-      </template>
-    </v-data-table>
+    <v-card max-width="1200" class="ml-4" max-height="100">
+        <v-card-title class="cardAdd justify-center">
+            Lista de citas pendientes
+        </v-card-title>
+
+        <v-list flat subheader>
+          <v-list-item-group
+              subgroup
+              color = "blue"
+              multiple
+          >
+            <template v-for="(cita, index) in visiblePages">
+              <v-list-item :key="index" >         
+
+                <template v-if="fechaTexto > cita.fecha" >
+                  <v-subheader>Estado: Fecha pasada</v-subheader>
+                  <v-list-item-content style="color: gray">
+                    <v-col>
+                    <v-list-item-title class="ml-2" >Fecha</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.fecha"></v-list-item-subtitle>
+                    </v-col>
+                    <v-col>
+                    <v-list-item-title >Hora Inicio</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.horaIni"></v-list-item-subtitle>
+                    </v-col>
+                    <v-col>
+                    <v-list-item-title >Hora Fin</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.horaFin"></v-list-item-subtitle>
+                    </v-col>
+                    <v-col>
+                    <v-list-item-title>N.Participantes</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.cant_students"></v-list-item-subtitle>
+                    </v-col>
+                    <v-col>
+                    <v-list-item-title >Ubicación</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
+                    </v-col>
+                    </v-list-item-content>
+
+                    <v-list-item-action>
+                      <v-btn text small  @click="editar(cita)">
+                        Resultados
+                        <v-icon color="grey lighten-1">mdi-clipboard-outline</v-icon>
+                      </v-btn>
+
+                        <v-btn text small @click="cancelar(cita)">
+                          Cancelar Cita
+                          <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                    </v-list-item-action>
+                </template>     
+
+                <template v-else>
+                  <v-subheader >Estado: Cita pendiente </v-subheader>
+                  <v-list-item-content style="color: gray">
+                    <v-col>
+                    <v-list-item-title >Fecha</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.fecha"></v-list-item-subtitle>
+                    </v-col>
+                    <v-col>
+                    <v-list-item-title >Hora de Inicio</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.horaIni"></v-list-item-subtitle>
+                    </v-col>
+                    <v-col>
+                    <v-list-item-title >Hora fin</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.horaFin"></v-list-item-subtitle>
+                    </v-col>
+                    <v-col>
+                    <v-list-item-title >N.Participantes</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.cant_students"></v-list-item-subtitle>
+                    </v-col>
+                    <v-col>
+                    <v-list-item-title >Ubicación</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
+                    </v-col>
+                    </v-list-item-content>
+
+                    <v-list-item-action>
+
+                        <v-btn text small @click="cancelar(cita)">
+                          Cancelar Cita
+                          <v-icon>mdi-close</v-icon>
+                        </v-btn>
+
+                    </v-list-item-action>
+
+                </template>   
+
+                <v-list-group
+                    sub-group
+                    no-action
+                >
+
+                <template v-slot:activator>
+                  <v-list-item-content>
+                    <v-list-item-title>Alumnos</v-list-item-title>
+                  </v-list-item-content>
+                </template>
+
+                <v-list-item
+                  v-for="(datosAlumno, i) in cita.alumnos"
+                  :key="i"
+                  link
+                >
+                  <v-list-item-title v-text="datosAlumno.nombre + ' ' + datosAlumno.apellidos"></v-list-item-title>
+                </v-list-item> 
+              </v-list-group>
+
+              </v-list-item>
+              
+              
+
+              <v-divider
+                  v-if="index + 1 < listaCitas.length"
+                  :key="index"
+              ></v-divider>
+
+            </template>
+          </v-list-item-group>
+        </v-list>
+
+        <v-pagination
+                v-model="page"
+                :length= "Math.ceil(listaCitas.length/perPage)"
+        ></v-pagination>
+
+      </v-card>
 
     <!--Formulario-->
     <resultadoForm
+      :resultado = "resultado"
+      :idSesion = "idSesion"
       :listaAlumnos="listaAlumnos"
       :dialog="dialog"
       :action="action"
@@ -59,38 +154,47 @@
 
 <script>
 import axios from "axios";
-import resultado from "./Resultado"
+import resultadoF from "./Resultado"
+var now     = new Date(); 
+var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
 export default {
   data() {
     return {
-        headers: [
-        { text: "Fecha", value: "fecha" },
-        { text: "Hora Inicio", value: "horaIni" },
-        { text: "Hora Fin", value: "horaFin" },
-        { text: "Ubicacion", value: "ubicacion" },
-        { text: "Cantidad de alumnos", value: "cant_students" },
-      //  { text: "Tiempo restante", value: "tt_isrequired" },
-        { text: "Registrar / Editar resultado", value: "editar", sortable: false },
-        { text: "Cancelar cita", value: "eliminar", sortable: false }
-        ],
+        fechaTexto:diaActual,
         listaCitas:[],
         listaAlumnos:[],
+        idSesion:"",
         search: "",
         dialog: false,
-        action: ""
+        action: "",
+        timeDiffInSecond:"",
+        horasDif:[],
+        page:1,
+        perPage: 5,
+        resultado:{
+        comentario:"",
+        asistencia:[],
+        },
+        cancelarCita:{
+          idsesion:""
+        }
     }
   },
   created() {
     console.log(JSON.parse(localStorage.getItem("Id_usuario")));
     this.listar();
   },
+  computed: {
+    visiblePages () {
+      return this.listaCitas.slice((this.page - 1)* this.perPage, this.page* this.perPage)
+    }
+  },
   methods: {
     listar() {
       axios
-        .get("/tutor/show_sessions_tutor/"+ JSON.parse(localStorage.getItem("Id_usuario")))
+        .get("http://184.73.231.88:7002/api/tutor/show_list_formal_sessions/"+ JSON.parse(localStorage.getItem("Id_usuario")))
         .then(res => {
-          this.listaCitas = res.data.data 
-          console.log(this.listaCitas);
+          this.listaCitas = res.data.data;
         })
         .catch(error => console.log(error));
     },
@@ -99,14 +203,59 @@ export default {
           .get("/tutor/show_all_students_in_session/"+ item.id_session)
           .then(res => {
             this.listaAlumnos = res.data.data;
+            this.idSesion = item.id_session
+            axios
+                .get("http://184.73.231.88:7002/api/tutor/show_result/"+ item.id_session)
+                .then(res => {
+                  console.log(item.id_session)
+                  this.resultado.comentario = res.data.resultado;
+                  this.resultado.asistencia = res.data.alumnos;
+                  if (this.resultado.comentario !== null){
+                    this.action = "Editar resultado de la cita"
+                    console.log(this.resultado.comentario);
+                    this.dialog = true;
+                  }
+                  else 
+                    this.action = "Crear resultado de la cita"
+                    this.dialog = true;
+                })
+            .catch(error => console.log(error));
           })
       .catch(error => console.log(error));
-      this.action = "Editar resultado de la cita";
-      this.dialog = true;
+
+    },
+    cancelar(item){
+      this.$confirm(
+        "¿Esta seguro de cancelar esta cita?",
+        "Advertencia",
+        {
+          confirmButtonText: "Confirmar",
+          cancelButtonText: "Cancelar",
+          type: "warning"
+        }
+      )
+      .then(() => {
+        this.cancelarCita.idsesion = item.id_session
+        console.log(item.id_session)
+        axios
+            .post("http://184.73.231.88:7002/api/tutor/cancel_session/", this.cancelarCita)
+            .then(res => {
+              console.log(res);
+              this.listar();
+              this.$message({
+                message: "Rechazo exitoso",
+                type: "success"
+              });
+            })
+            .catch(error => console.log(error));
+      })
+      .catch(() => {
+          this.$message({ type: "info", message: "Cancelación no realizada" });
+      });
     }
   },
   components: {
-    resultadoForm: resultado
+    resultadoForm: resultadoF
   }
 }
 </script>
