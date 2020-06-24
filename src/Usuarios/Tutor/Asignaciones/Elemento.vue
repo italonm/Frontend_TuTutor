@@ -26,8 +26,7 @@ export default {
     props: ["name" , "tutoring_type", "last_name", "state", "id_alumno", "callMethod"],     
     methods:{
         verPlan(){       
-            this.callMethod();
-            console.log("AUXILIO")
+            this.callMethod();            
         },        
     },    
 }

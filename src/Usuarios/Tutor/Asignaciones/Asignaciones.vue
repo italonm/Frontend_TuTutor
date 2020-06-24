@@ -11,7 +11,7 @@
       </el-col>
       <el-col :span="8">
         <div class="grid-content">
-          <el-input placeholder="Buscar asignación" v-model="search" clearable>
+          <el-input placeholder="Buscar asignación"  clearable>
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
         </div>
@@ -20,12 +20,12 @@
       </el-col>
     </el-row>    
     <div class="containerBody">
-       <Elemento v-for="comp in components" :key="comp" :state="comp.state" :name="comp.name" :last_name="comp.last_name" :tutoring_type="comp.tutoring_type" :id_alumno="comp.code" :callMethod="parentMethod"></Elemento>
+       <Elemento v-for="(comp, idx) in components" :key="idx" :state="comp.state" :name="comp.name" :last_name="comp.last_name" :tutoring_type="comp.tutoring_type" :id_alumno="comp.code" :callMethod="parentMethod"></Elemento>
     </div>    
     <!--Formulario-->
     <plan
       :form="form"
-      :dialog="dialog"       
+      :dialog="dialog"   
       v-on:resetDialog="dialog=false"
       v-on:resetList="listar()"
     ></plan>
@@ -45,15 +45,16 @@ import Plan from "./PlanAcción.vue"
         form:{                    
         }         
       }    	
-    },  
-    mounted: function(){      
-      this.listar()
+    },     
+    created(){
+      this.listar();
     },
     methods:{     
       parentMethod: function(){
         this.dialog = true
       },
-      listar(){           
+      listar(){         
+        this.components=[];  
         var comp        
         axios.get("/tutor/show_assignments/" + localStorage.getItem("Id_usuario"))
         .then(response=>{
