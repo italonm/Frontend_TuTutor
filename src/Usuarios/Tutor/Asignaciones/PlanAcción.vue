@@ -36,15 +36,7 @@
                             </div>
                             <div class="border"></div>
                         </div>
-                        <div class="inner">
-                            <button
-                                class="TodoItem__delete "
-                                data-testid="deleteTrigger"
-                                @click.prevent="deleteItem(todo)"
-                            >
-                                <span class="icon"><i class="fa fa-trash fa-lg" /></span>
-                            </button>
-                        </div>
+                        
                     </div>
                 </div>                                
             </div>            
@@ -159,9 +151,11 @@ export default {
                     actividades.push(aux)    
                 }                                
             }     
-            console.log(actividades)                               
+            var activities = actividades
+
             axios
-            .post("tutor/delete_activities", actividades)
+            
+            .post("/tutor/testing_error/", activities)
             .then(
                 this.listar()
             )
