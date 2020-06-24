@@ -1,6 +1,6 @@
 <template>
   <div>
-      <el-row>
+    <el-row>
       <el-col :span="8">
         <div class="grid-content">
             <h1 style="text-align: center;">

@@ -61,7 +61,7 @@ export default {
         { text: "Fecha", value: "date" },
         { text: "Tutor", value: "tutor" },
         { text: "Tipo Tutoría", value: "tipotutoria" },
-        { text: "estado", value: "estado" }
+        { text: "Estado", value: "estado" }
       ],
       form: {
         person_name: "",
