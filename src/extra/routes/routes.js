@@ -20,6 +20,7 @@ import Tutor from "../../Usuarios/Alumno/Tutor/Tutor";
 import SolicitudesAlumno from "../../Usuarios/Alumno/Mis Solicitudes/Mis Solicitudes";
 import SolicitarTutor from "../../Usuarios/Alumno/Tutor/AsignarTutor/Solicitar Tutor";
 import ReportesAlumno from "../../Usuarios/Alumno/Reportes/Reportes";
+import SesionesAlumno from "../../Usuarios/Alumno/Tutor/Sesiones.vue";
 //COMPONENTES DE TUTOR
 import WelcomeTutor from "../../Usuarios/Tutor/Bienvenido/Bienvenido";
 import Asignaciones from "../../Usuarios/Tutor/Asignaciones/Asignaciones";
@@ -90,6 +91,7 @@ export const routes = [
             { path: "Solicitar Tutor", component: SolicitarTutor }, //italo / Herbert
             { path: "Mis Solicitudes", component: SolicitudesAlumno }, //italo / Herbert
             { path: "Mis Reportes", component: ReportesAlumno }, //italo / Herbert
+            { path: "Sesiones", component: SesionesAlumno }, //italo / Herbert
         ],
     },
     {
