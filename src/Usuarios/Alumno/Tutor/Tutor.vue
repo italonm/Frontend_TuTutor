@@ -49,7 +49,7 @@
               <v-btn color="green" text @click="agendar(tutoria)">
                 <i class="fas fa-calendar-times"></i>Agendar cita
               </v-btn>
-              <v-btn color="#212DA8" text>Sesiones</v-btn>
+              <v-btn color="#212DA8" text @click="verTutoria(tutoria)">Ver tutoría</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -122,6 +122,12 @@ export default {
           this.events = res.data.events;
         })
         .catch(error => console.log(error));
+    },
+
+    verTutoria(tutoria) {
+      var that = this;
+      that.$router.push("/Alumno/Sesiones");
+      localStorage.setItem("Id_tutoria", tutoria.t_code);
     },
 
     miFiltrado(tutorias) {
