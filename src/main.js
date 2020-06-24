@@ -16,6 +16,9 @@ Vue.use(CoreuiVue);
 Vue.use(ElementUI, { locale });
 Vue.config.productionTip = false;
 
+import VueApexCharts from 'vue-apexcharts'
+Vue.component('apexchart', VueApexCharts)
+
 const ignoredMessage =
     "The .native modifier for v-on is only valid on components but it was used on <div>.";
 Vue.config.warnHandler = (message, vm, componentTrace) => {
