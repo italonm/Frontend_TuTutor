@@ -10,10 +10,9 @@
         </div>
       </el-col>
     </el-row>
-    
 
     <el-row :gutter="30">
-<!-----
+      <!-----
       <el-col :xs="20" :sm="12" :md="12" :lg="8">
         <el-card class="box-group" style="overflow:auto">
           
@@ -48,85 +47,59 @@
 
       <!---------------------ANALIZAR ESTA PARTE----------------->
       <el-col :xs="20" :sm="12" :md="12" :lg="16">
-      <el-card class="box-group" style="overflow:auto">
-      <v-container fluid grid-list-xl>
-        <v-layout wrap justify-space-around>
-          <v-flex v-for="tutor in filterTutor" :key="tutor.t_id_tutor">
-            <v-hover>
-              <template v-slot:default="{ hover }">
-                
-                <v-card class="mx-auto" width="300">
-                  <div><v-avatar size="80"  style="margin:auto;display:block;">
-      <img
-        src="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-assets/images/portrait/small/avatar-s-13.jpg"
-        alt="John"
-      >
-    </v-avatar></div>
-                
+        <el-card class="box-group" style="overflow:auto">
+          <v-container fluid grid-list-xl>
+            <v-layout wrap justify-space-around>
+              <v-flex v-for="tutor in filterTutor" :key="tutor.t_id_tutor">
+                <v-card class="mx-auto" width="300" aria-selected="true"> 
+                  <div>
+                    <v-avatar size="80" style="margin:auto;display:block;">
+                      <img
+                        src="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-assets/images/portrait/small/avatar-s-13.jpg"
+                        alt="John"
+                      />
+                    </v-avatar>
+                  </div>
 
                   <v-card-text style="text-align:center">
                     {{tutor.t_fullname.toUpperCase()}}
-                   
-                   
-                   <v-card-text class="text-align:center">
-      <div><i class="fa fa-id-card" aria-hidden="true"></i>  {{tutor.t_code}}</div>
+                    <v-card-text class="text-align:center">
+                      <div>
+                        <i class="fa fa-id-card" aria-hidden="true"></i>
+                        {{tutor.t_code}}
+                      </div>
 
-      <div><i class="fa fa-envelope"></i>   {{tutor.t_email}}</div>
-    </v-card-text>
-                   
-
+                      <div>
+                        <i class="fa fa-envelope"></i>
+                        {{tutor.t_email}}
+                      </div>
+                    </v-card-text>
                   </v-card-text>
                   <v-divider></v-divider>
-<v-list>
-            <v-list-item >
-              <v-list-item-action>
-                 <i class="fa fa-id-card" aria-hidden="true"></i>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title>{{tutor.t_code}}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item >
 
-              <v-list-item-action>
-                <i class="fa fa-envelope"></i>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title>{{tutor.t_email}}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-</v-list>
+                  <v-card-actions class="justify-space-around">
+                    <el-button
+                      type="success"
+                      icon="fas fa-user-plus"
+                      @click="solicitarTutor(tutor)"
+                      plain
+                    >&nbsp;Solicitar</el-button>
+                    
+                    <v-btn text color="primary" @click="showHorario(tutor)">
+                      Horarios
+                      <i class="el-icon-arrow-right"></i>
+                    </v-btn>
+                  </v-card-actions>
 
     
-
-                 
-                  <v-card-actions class="justify-space-around">
-                    
-                  </v-card-actions>
-                    
-                  <v-fade-transition>
-                    <v-overlay v-if="hover" absolute color="#036358">
-                      <v-btn @click="showHorario(tutor)">
-                        <i class="el-icon-search"></i>Buscar tutores
-                      </v-btn>
-                    </v-overlay>
-                  </v-fade-transition>
                 </v-card>
-              </template>
-            </v-hover>
-          </v-flex>
-        </v-layout>
-
-      </v-container>
-      </el-card>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </el-card>
+        <br />
       </el-col>
       <!----------------------------------------------------->
-
-
-
-
-
-
 
       <!------Informacion del tutor------>
       <el-col :xs="20" :sm="12" :md="12" :lg="8">
@@ -162,7 +135,7 @@
             </el-col>
           </el-row>
         </el-card>
-      <!---  <br /> --->
+        <!---  <br /> --->
       </el-col>
       <!----------------->
 
@@ -176,18 +149,17 @@
           <div v-for="schedul in customCalendar" :key="schedul['fecha']">
             <v-list disabled>
               <!--------->
-              <v-subheader style="border-bottom: 2px solid orange;color:#D97F20;font-weight:bold;">{{schedul['fecha']}}</v-subheader>
+              <v-subheader
+                style="border-bottom: 2px solid orange;color:#D97F20;font-weight:bold;"
+              >{{schedul['fecha']}}</v-subheader>
 
               <v-list-item class="text-left" v-for="hora of schedul['hora']" :key="hora">
-              <v-list-item-icon>
-              <v-icon style="color:#20C7D9;">mdi-history</v-icon>
-            </v-list-item-icon>
-                <v-list-item-content
-                  style="font-size: 15px;color:#20C7D9; font-weight:bold;"
-                >
-                <v-list-item-subtitle>{{ hora }}</v-list-item-subtitle>
+                <v-list-item-icon>
+                  <v-icon style="color:#20C7D9;">mdi-history</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content style="font-size: 15px;color:#20C7D9; font-weight:bold;">
+                  <v-list-item-subtitle>{{ hora }}</v-list-item-subtitle>
                 </v-list-item-content>
-          
               </v-list-item>
               <!--------->
             </v-list>
@@ -210,11 +182,11 @@ export default {
       showBoxHorario: false,
       tutorInfo: "",
       scheduler: [],
-      customCalendar:[],
+      customCalendar: [],
       tutoria: {
         student_id: "",
         tutor_id: "",
-        tutor_code:"",
+        tutor_code: "",
         tutoring_type_id: ""
       },
       dialog: false,
@@ -247,21 +219,28 @@ export default {
       this.scheduler = tutorInfo.t_schedule;
       this.generateListCalendar();
     },
-    generateListCalendar(){
+    generateListCalendar() {
       var etiqueta;
-      this.customCalendar=[];
+      this.customCalendar = [];
 
-      for (etiqueta in this.scheduler){
+      for (etiqueta in this.scheduler) {
         var birthday = new Date(etiqueta);
-        var options = { weekday: "long",day: 'numeric',month:"long",year:"numeric"};
+        var options = {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        };
         //dias.day=new Intl.DateTimeFormat("es-PE", options).format(birthday);
         console.log("mostrar dias");
         console.log(etiqueta);
-        var contenedor={fecha:"val",hora:[]};
-        contenedor['fecha']=new Intl.DateTimeFormat("es-PE", options).format(birthday);
+        var contenedor = { fecha: "val", hora: [] };
+        contenedor["fecha"] = new Intl.DateTimeFormat("es-PE", options).format(
+          birthday
+        );
         //contenedor['fecha']=etiqueta;
-        contenedor['hora']=this.scheduler[etiqueta];
-        for (var val of this.scheduler[etiqueta]){
+        contenedor["hora"] = this.scheduler[etiqueta];
+        for (var val of this.scheduler[etiqueta]) {
           console.log(val);
         }
         this.customCalendar.push(contenedor);
@@ -269,10 +248,12 @@ export default {
       }
     },
     solicitarTutor(tutor) {
+      console.log("mostrar info tutor")
+      console.log(tutor);
       this.tutoria.student_id = localStorage.getItem("Id_usuario");
       this.tutoria.tutor_code = tutor.t_code;
-      this.tutoria.tutor_id=tutor.t_id_tutor;
-      this.tutoria.tutoring_type_id = localStorage.getItem('Id_Tipo_Tutoria');
+      this.tutoria.tutor_id = tutor.t_id_tutor;
+      this.tutoria.tutoring_type_id = localStorage.getItem("Id_Tipo_Tutoria");
 
       axios
         .post("/student/request_assignment/", this.tutoria)
@@ -287,7 +268,10 @@ export default {
     filterTutor: function() {
       console.log(localStorage.getItem("Id_facultad"));
       return this.tutores.filter(tutor => {
-        return tutor.t_fullname.toLowerCase().match(this.search.toLowerCase()) || tutor.t_code.match(this.search);
+        return (
+          tutor.t_fullname.toLowerCase().match(this.search.toLowerCase()) ||
+          tutor.t_code.match(this.search)
+        );
       });
     }
   },
