@@ -11,7 +11,7 @@
       </el-col>
       <el-col :span="8">
         <div class="grid-content">
-          <el-input placeholder="Buscar asignación" v-model="search" clearable>
+          <el-input placeholder="Buscar asignación"  clearable>
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
         </div>
@@ -20,12 +20,14 @@
       </el-col>
     </el-row>    
     <div class="containerBody">
-       <Elemento v-for="comp in components" :key="comp" :state="comp.state" :name="comp.name" :last_name="comp.last_name" :tutoring_type="comp.tutoring_type" :id_alumno="comp.code" :callMethod="parentMethod"></Elemento>
+       <Elemento v-for="(comp, idx) in components" :key="idx" :state="comp.state" :name="comp.name" :last_name="comp.last_name" :tutoring_type="comp.tutoring_type" :id_alumno="comp.code" :callMethod="parentMethod" :id_assignment="comp.id_assignment"></Elemento>
     </div>    
     <!--Formulario-->
     <plan
       :form="form"
-      :dialog="dialog"       
+      :dialog="dialog"  
+      :id_assignment="id_assign" 
+      :todos="todos"
       v-on:resetDialog="dialog=false"
       v-on:resetList="listar()"
     ></plan>
@@ -42,18 +44,42 @@ import Plan from "./PlanAcción.vue"
       return{
         components:[],             
         dialog: false,
+        id_assign:1,
         form:{                    
-        }         
+        },         
+        todos:[]
       }    	
-    },  
-    mounted: function(){      
-      this.listar()
+    },     
+    created(){
+      this.listar();
     },
     methods:{     
-      parentMethod: function(){
+      parentMethod: function(id){        
+        this.id_assign = id
+        var iter
+        this.todos=[]
+        axios
+        .get("/tutor/show_activities/"+id)
+        .then(res=>{
+            for(iter in res.data.activities){
+              var aux={
+                id:1,
+                text:"",
+                completed:false,
+                editing:false
+              }
+              aux.id = res.data.activities[iter].id
+              aux.text = res.data.activities[iter].activity
+              if (res.data.activities[iter].state === "Terminado"){
+                aux.completed = true
+              }
+              this.todos.push(aux)
+            }            
+        })
         this.dialog = true
-      },
-      listar(){           
+      },      
+      listar(){         
+        this.components=[];  
         var comp        
         axios.get("/tutor/show_assignments/" + localStorage.getItem("Id_usuario"))
         .then(response=>{
@@ -66,7 +92,9 @@ import Plan from "./PlanAcción.vue"
               last_name:"",
               state:"",
               code:"",
-            }            
+              id_assignment:1,
+            }          
+            aux.id_assignment = response.data.assignments[comp].id
             aux.name = response.data.assignments[comp].participants[0].name
             aux.code = response.data.assignments[comp].participants[0].code
             aux.last_name = response.data.assignments[comp].participants[0].last_name

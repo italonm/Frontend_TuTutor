@@ -23,11 +23,10 @@
 <script>
 export default {    
     name: "Elemento",    
-    props: ["name" , "tutoring_type", "last_name", "state", "id_alumno", "callMethod"],     
+    props: ["name" , "tutoring_type", "last_name", "state", "id_alumno", "callMethod", "id_assignment"],     
     methods:{
-        verPlan(){       
-            this.callMethod();
-            console.log("AUXILIO")
+        verPlan(){                   
+            this.callMethod(this.id_assignment);            
         },        
     },    
 }
