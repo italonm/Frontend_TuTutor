@@ -10,11 +10,7 @@
           </div>
         </el-col>
       </el-row>
-
-      <!-----------
-        <el-card class="box-group" style="overflow:auto">
-        
-      ------------->
+<!-----
       <v-container fluid grid-list-xl>
         <v-layout wrap justify-space-around>
           <v-flex v-for="tipo in filterTipoTutoria" :key="tipo.name">
@@ -26,10 +22,7 @@
               >
                 <v-card-title>{{tipo.name}}</v-card-title>
               </v-img>
-              <v-card-subtitle class="pb-0">
-                DESCRIPCIÓN:
-                
-              </v-card-subtitle>
+              <v-card-subtitle class="pb-0">DESCRIPCIÓN:</v-card-subtitle>
               <v-card-text class="text--primary">
                 <div>{{ tipo.description }}</div>
                 <div>{{ tipo.is_required }} es tutoria obligatoria</div>
@@ -44,34 +37,46 @@
           </v-flex>
         </v-layout>
       </v-container>
+--------->
 
+      <!---------------------ANALIZAR ESTA PARTE----------------->
+      <v-container fluid grid-list-xl>
+        <v-layout wrap justify-space-around>
+          <v-flex v-for="tipo in filterTipoTutoria" :key="tipo.name">
+            <v-hover>
+              <template v-slot:default="{ hover }">
+                <v-card class="mx-auto" max-width="344">
+                  <v-img src="https://cdn.vuetifyjs.com/images/cards/forest-art.jpg"></v-img>
 
-        <!------
-      <el-col :span="11" :offset="1">
-        <el-card class="box-information" style="overflow:auto" v-show="showBox">
-         <div slot="header" class="clearfix">
-          <h4 style="font-weight:bold; color:#3C4B64">Acerca de la Tutoría</h4>
-          </div>
-            <el-form ref="formulario" :model="form" label-width="100px" size="mini" label-position="left" style="margin-left:20px;">
-              <el-form-item label="Nombre:">
-                {{tipoTutoriaInfo.tt_name}}
-              </el-form-item>
-              <el-form-item  label="Descripción:" >
-                {{tipoTutoriaInfo.tt_description}}
-              </el-form-item>
-              <el-form-item  label="Periocidad:" >
-                {{tipoTutoriaInfo.tt_periodicity}}
-              </el-form-item>
-              <el-form-item  label="Obligatoria:" >
-                {{tipoTutoriaInfo.tt_isrequired}}
-              </el-form-item>
-              
-            </el-form>
-        </el-card>
-      </el-col>
-
-
-        --------->
+                  <v-card-text>
+                    <h2 class="title primary--text">{{tipo.name}}</h2>
+                    <H6>DESCRIPCION:</H6>
+                    {{ tipo.description }}
+                  </v-card-text>
+                  <v-divider></v-divider>
+                 
+                  <v-card-actions class="justify-space-around">
+                    
+                      <el-tag v-show="tipo.is_required==='Si'" style="border-radius:15px;">Obligatoria</el-tag>
+                      <el-tag v-show="tipo.is_required==='No'" style="border-radius:15px;">Opcional</el-tag>
+                      <el-tag style="border-radius:15px;">{{tipo.periodicity}}</el-tag>
+                    
+                  </v-card-actions>
+                    
+                  <v-fade-transition>
+                    <v-overlay v-if="hover" absolute color="#036358">
+                      <v-btn @click="solicitarTutor(tipo)">
+                        <i class="el-icon-search"></i>Buscar tutores
+                      </v-btn>
+                    </v-overlay>
+                  </v-fade-transition>
+                </v-card>
+              </template>
+            </v-hover>
+          </v-flex>
+        </v-layout>
+      </v-container>
+      <!----------------------------------------------------->
     </div>
     <tutoresxTipoTutoria v-show="!showProgram"></tutoresxTipoTutoria>
   </div>
@@ -100,9 +105,11 @@ export default {
   },
   methods: {
     listaTiposTutorias() {
-      console.log(localStorage.getItem("Id_usuario"))
+      console.log(localStorage.getItem("Id_usuario"));
       axios
-        .get("/student/show_tutoring_types/"+localStorage.getItem("Id_usuario"))
+        .get(
+          "/student/show_tutoring_types/" + localStorage.getItem("Id_usuario")
+        )
         .then(res => {
           this.tiposTutoria = res.data.tutoring_types;
 
