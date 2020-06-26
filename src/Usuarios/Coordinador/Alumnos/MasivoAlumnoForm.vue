@@ -51,7 +51,7 @@ export default {
           axios
             .post(
               "/coordinator/add_student_excel/"+localStorage.getItem("Id_facultad"),this.documentExcel)
-            .then(this.$message({ message: "Subiendo logo", type: "success" }))
+            .then(this.$message({ message: "Subiendo archivo, por favor espere", type: "success" }))
             .catch(e => {
               console.log(e);
             });

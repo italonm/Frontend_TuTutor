@@ -22,7 +22,7 @@ export default [{
             to: '/Coordinador/Miembros/Alumnos'
           },
           {
-            name: 'Profesores',
+            name: 'Tutores',
             to: '/Coordinador/Miembros/Tutores'
           },          
           {
