@@ -1,0 +1,68 @@
+.cardAlumno {
+	width: 390px;
+	height: 115px;
+	background-color: #E5F8F8;
+	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+	align-items: center;
+	border-radius: 6px;
+	overflow: hidden;
+	position: relative;
+	margin: 1.5rem;
+  }
+  
+  .cardAlumno h1 {
+	text-align: center;
+  }
+  
+  .cardAlumno .additional {
+	position: absolute;
+	width: 8px;
+	height: 100%;
+	background: linear-gradient(#A9DAC7, #A9DAC7);
+	transition: width 0.4s;
+	overflow: hidden;
+	z-index: 2;
+  }
+  
+  .cardAlumno .additional .user-card {
+	width: 150px;
+	height: 100%;
+	position: relative;
+	float: left;
+  }
+  
+  .nombre{
+	font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans,
+     Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+	font-weight: 600;
+	color:#3C4B64;
+	font-size: 23px;
+	padding-left:8%;
+	padding-top:4%;
+  }
+  .codigo{
+	font-family: 'Arimo', sans-serif;	
+	color: #767583;	
+	font-weight: 300;
+	font-size: 13px;
+	padding-left:8%;  
+  }
+  .programa{
+	font-family: 'Raleway', sans-serif;
+	padding-top: 1%;
+	color: #656569;
+	font-weight: 500;
+	font-size: 13px;
+	padding-left:8%;  	
+  }
+  .card .detalles{
+	position: absolute;	
+  }
+  
+  .detalles{
+      position: absolute;      
+      bottom: 27%;
+      left: 70%;
+  }
+  
