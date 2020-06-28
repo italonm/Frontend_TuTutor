@@ -19,7 +19,7 @@
                     </div>
                     <div class="border"></div>
                 </div>
-
+                
                 <div class="todo-list">
                     <!-- Loop Over All Todos -->
                     <div v-for="todo in this.todos" :key="todo.id" class="list">
@@ -35,13 +35,21 @@
                                 <input type="text" v-focus v-model="todo.text" @keyup.enter="editTodo(todo)" @keyup.esc="cancelEdit(todo)" @blur="cancelEdit(todo)"/>
                             </div>
                             <div class="border"></div>
-                        </div>
-                        
+                        </div>                        
+                        <button
+                            class="TodoItem__delete justify-end"
+                            style="align-items:flex-end;"
+                            data-testid="deleteTrigger"
+                            @click.prevent="deleteItem(todo)"                            
+                        >
+                            <span class="icon"><i class="fa fa-trash fa-lg" /></span>
+                        </button>     
+                                           
                     </div>
                 </div>                                
             </div>            
             <footer>
-                <span>{{ remaining }} Tareas pendientes.</span>
+                <span>{{ remaining }} Tareas pendientes de {{total}}.</span>
             </footer>
             
             <v-card-actions>
@@ -53,124 +61,99 @@
 </template>
 <script>
 import axios from "axios"
+import {bus} from "../../../main"
 export default {
-    props:["form", "dialog", "id_assignment", "todos"],       
+    props:["form", "dialog", "id_assignment", "todos", "auxTodos"],       
     data() {
         return {
-            last_id: 2,
+            last_id: 0,
             newTodo: "",
-            editTodoCache: "",        
+            editTodoCache: "",                   
         };
     },
 
     computed: {
         remaining() {
             return this.todos.filter(todo => !todo.completed).length;
+        },
+        total(){
+            return this.todos.length;
         }
     },
 
-    methods: {
-        listar(){ 
-            this.todos = []          
-            var iter 
-            axios
-            .get("/tutor/show_activities/"+this.id_assignment)
-            .then(res=>{
-                for(iter in res.data.activities){
-                var aux={
-                    id:1,
-                    text:"",
-                    completed:false,
-                    editing:false
-                }
-                aux.id = res.data.activities[iter].id
-                aux.text = res.data.activities[iter].activity
-                if (res.data.activities[iter].state === "Terminado"){
-                    aux.completed = true
-                }
-                this.todos.push(aux)
-                }            
-            })
-        },
-        
+    methods: {                
         addTodo() {
             if (this.newTodo.trim() == "") return;            
             let todo = {
-                id: null,
+                id: --this.last_id,
                 text: this.newTodo,
                 components: false,
                 editing: false
             };
             this.todos.splice(0,0,todo);
+            let aux ={
+                id:this.last_id,
+                name: this.newTodo,
+                state: false,
+                is_cancelled: false
+            }
+            this.auxTodos.splice(0,0,aux);                                
             this.newTodo = "";
         },
 
         guardar(){
-            var to 
-            var actividades = []
-            for(to in this.todos){
-                var aux={
-                    id:null,
-                    name:"",
-                    state:"",
-                }   
-                aux.id = this.todos[to].id
-                aux.name = this.todos[to].text
-                aux.state = this.todos[to].completed
-                actividades.push(aux)
-            }                        
+            var to2                  
+            for(to2 in this.todos){
+                var index = this.auxTodos.findIndex((a)=>a.id===this.todos[to2].id)
+                this.auxTodos[index].state = this.todos[to2].completed                
+            }
+
+            var to             
+            for(to in this.auxTodos){                
+                if(this.auxTodos[to].id < 0)
+                    this.auxTodos[to].id = null
+            }                              
+
             var add={
                 id_assignment: this.id_assignment,
-                activities: actividades
-            }
+                activities: this.auxTodos
+            }                  
             axios
-            .post("/tutor/edit_activities/",add)            
-            .then(res=>{
-                console.log(res)                
-            })
+            .post("/tutor/edit_activities/",add)                                  
             .catch(error => {
                 console.log(error);
-                this.$message.error("No se pudo agregar la actividad");
+                this.$message.error("No se pudieron guardar los cambios");
                 return;
             }); 
         },
 
         deleteItem(todo){            
-            var actividades = []
-            var to
-            for(to in this.todos){
-                var aux={
-                    id:null,
-                    name:"",
-                    state:"",
-                }   
-                if (this.todos[to].id != todo.id){
-                    aux.id = this.todos[to].id
-                    aux.name = this.todos[to].text
-                    aux.state = this.todos[to].completed
-                    actividades.push(aux)    
-                }                                
-            }     
-            var activities = actividades
-
-            axios
-            
-            .post("/tutor/testing_error/", activities)
-            .then(
-                this.listar()
+            this.$confirm(
+                "¿Esta seguro de que desea eliminar esta actividad?",
+                "Advertencia",
+                {
+                confirmButtonText: "Confirmar",
+                cancelButtonText: "Cancelar",
+                type: "warning"
+                }
             )
-            .catch(error => {
-                console.log(error);
-                this.$message.error("No se pudo borrar la actividad");
-                return;
-            }); 
+            .then(() => {
+                var index = this.todos.findIndex((a)=>a.id===todo.id)
+                this.todos.splice(index,1)   
+                index = this.auxTodos.findIndex((a)=>a.id===todo.id)
+                this.auxTodos[index].is_cancelled = true
+            })            
         },
 
         editTodo(todo) {            
             if (todo.text.trim() == "") todo.text = this.editTodoCache;            
             else {
+                //EDIT DEL CACHE
                 var index = this.todos.findIndex((a)=>a.id===todo.id)
-                this.todos[index].text = todo.text.trim()                               
+                this.todos[index].text = todo.text.trim()            
+                //EDIT DEL ARREGLO REAL                   
+                index = this.auxTodos.findIndex((a)=>a.id===todo.id)
+                this.auxTodos[index].name = todo.text.trim()                               
                 this.editTodoCache = todo.text.trim()
             }            
             todo.editing = false;
@@ -179,10 +162,11 @@ export default {
             todo.text = this.editTodoCache;
             todo.editing = false;            
         },
-        cancelar() {                     
-            this.guardar();                   
-            this.$emit("resetDialog");                                               
-            this.$emit("resetList");
+        cancelar() {    
+            this.last_id=0;                             
+            this.guardar();         
+            bus.$emit("updateAssign",1);                      
+            this.$emit("resetDialog");                                                                            
         }
     },
 

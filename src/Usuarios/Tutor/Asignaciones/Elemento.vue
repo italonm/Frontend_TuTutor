@@ -1,36 +1,43 @@
 <template>
-    <div class="courses-container">
-        <div class="course">
-            <div class="course-preview">
-                <h6>Participantes</h6>
-                <h4>{{name}} {{last_name}}</h4>                  
-                <a href="#">Ver participantes <i class="fas fa-chevron-right"></i></a>
-            </div>
-            <div class="course-info">
-                <div class="progress-container">
-                    <div class="progress"></div>
-                    <span class="progress-text">
-                        6/9 Actividades
-                    </span>
+    <div class="containerBody">
+        <h1>{{components}}</h1>
+        <div v-for="(comp, idx) in components" :key="idx">
+            <div class="courses-container">
+                <div class="course">
+                    <div class="course-preview">
+                        <h6>Participantes</h6>
+                        <h4>{{comp.participants[0].name}} {{comp.participants[0].last_name}}</h4>                  
+                        <a href="#">Ver participantes <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                    <div class="course-info">
+                        <div class="progress-container">
+                                <v-progress-linear :value="(comp.finished_activities/comp.total_activities*100).toString()" color="#2A265F"></v-progress-linear>
+                            <span class="progress-text">
+                                {{comp.finished_activities}}/{{comp.total_activities}} Actividades
+                            </span>
+                        </div>
+                        <h6>{{comp.state}}</h6>
+                        <h2>{{comp.tutoring_type}}</h2>
+                        <button class="btn" v-on:click="verPlan()">
+                            Ver Plan
+                        </button>
+                    </div>
                 </div>
-                <h6>{{state}}</h6>
-                <h2>{{tutoring_type}}</h2>
-                <button class="btn" v-on:click="verPlan()">Ver Plan</button>
-            </div>
+            </div>   
         </div>
-    </div>    
+    </div> 
 </template>
 <script>
 export default {    
     name: "Elemento",    
-    props: ["name" , "tutoring_type", "last_name", "state", "id_alumno", "callMethod", "id_assignment"],     
+    props: ["components", "callMethod"],  
     methods:{
-        verPlan(){                   
-            this.callMethod(this.id_assignment);            
+        verPlan(){                                                      
+            this.callMethod(this.comp.id);            
         },        
-    },    
+    },              
 }
 </script>
 <style>
-    @import "./Asignaciones.css";
+    @import "./Asignaciones.css";    
 </style>

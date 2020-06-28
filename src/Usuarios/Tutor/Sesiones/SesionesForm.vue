@@ -251,8 +251,7 @@ export default {
           });      
     },
 
-    cancelar() {            
-      console.log(this.insert);    
+    cancelar() {                  
       this.$refs.form.reset();
       this.$emit("resetDialog");
     }

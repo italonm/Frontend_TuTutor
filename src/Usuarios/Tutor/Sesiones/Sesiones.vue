@@ -105,11 +105,10 @@ export default {
     listar() {
       var sesion
       var alumno      
-      var aux = 0
+      var aux = 0                          
       axios
         .get("/tutor/show_student_history_for_tutor/" + localStorage.getItem("Id_usuario"))        
-        .then(res => {  
-          console.log(res)
+        .then(res => {            
           this.sesiones = res.data.sessions        
           for (sesion in res.data.sessions){                      
             aux = 0
@@ -142,9 +141,16 @@ export default {
       var program;
       var aux1 = [];
       var aux2 = [];
+      var username = localStorage.getItem("Token")
+      username = username.slice(1,username.length-1)
+      var password = '';
+      var token = new Buffer(username + ':' + password).toString('base64');                  
       this.action = "Registrar nueva sesión";      
       axios
-        .get("tutor/show_programs_from_tutor/" + localStorage.getItem("Id_usuario"))
+        .get("tutor/show_programs_from_tutor/" + localStorage.getItem("Id_usuario"),
+        {headers:{
+          'Authorization': `Basic ${token}`
+        }})
         .then(res =>{
           for(program in res.data.programs){            
             aux1.push(res.data.programs[program].program_name)
