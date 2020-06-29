@@ -108,7 +108,7 @@ export default {
       var aux = 0                          
       axios
         .get("/tutor/show_student_history_for_tutor/" + localStorage.getItem("Id_usuario"))        
-        .then(res => {            
+        .then(res => {                      
           this.sesiones = res.data.sessions        
           for (sesion in res.data.sessions){                      
             aux = 0
@@ -117,18 +117,13 @@ export default {
                 aux = aux + 1                         
             }
             if (aux === 1){              
-              this.sesiones[sesion].students = res.data.sessions[sesion].students[0].last_name + " " + res.data.sessions[sesion].students[0].name
+              this.sesiones[sesion].students = res.data.sessions[sesion].students[0].last_name + "," + " " + res.data.sessions[sesion].students[0].name
             }
             if (this.sesiones[sesion].is_formal)
               this.sesiones[sesion].is_formal = "Formal"
             else
-              this.sesiones[sesion].is_formal = "Informal"
-            
-          }
-          console.log(this.sesiones)
-         /*  console.log(res)                            
-          this.sesiones= res.data.sessions; 
-          console.log(this.sesiones)    */                         
+              this.sesiones[sesion].is_formal = "Informal"            
+          }          
         })
         .catch(error => console.log(error));
     },
