@@ -1,10 +1,10 @@
 <template>            
     <div class="cardAlumno ml-1">
         <div class="additional"></div> 
-        <div class="nombre">{{alumno.participants[0].name}} {{alumno.participants[0].last_name}}</div>
+        <div class="nombre">{{alumno.name}} {{alumno.last_name}}</div>
         <div class="codigo">
             <i class="fas fa-address-card"></i>
-            &nbsp;{{alumno.participants[0].code}}
+            &nbsp;{{alumno.code}}
         </div> 
         <div class="detalles">       
             <v-btn class="ml-2" outlined fab color="#5A4B7B" @click="verDetalles()">
@@ -13,7 +13,7 @@
         </div>
         <div class="programa">
             <i class="fas fa-school"></i>
-            &nbsp;EE.GG.CC
+            &nbsp;{{alumno.program_name}}
         </div>                   
     </div>
 </template>

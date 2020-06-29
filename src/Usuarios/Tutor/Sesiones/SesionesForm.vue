@@ -26,18 +26,21 @@
             </v-chip-group> 
 
 
-            <v-combobox      
-              id = "model_part"
-              v-model="model_participante"
-              :items="alumnos"
-              :search-input.sync="search"
-              hide-selected              
+            <v-select                  
+              v-model="participante"
+              :items="alumnos"   
+              :disabled="show"           
+              hide-selected      
+              item-text="person_full_name"        
               label="Participante"
+              id="comboParticipante"                 
               multiple              
               small-chips
               clearable
+              return-object
+              select
             >              
-            </v-combobox>
+            </v-select>
 
 
             <v-menu
@@ -55,14 +58,13 @@
                     v-model="start"
                     label="Día de realización"
                     readonly
-                    v-on="on"
-                ></v-text-field>
+                    v-on="on"                    
+                ></v-text-field>                
               </template>
               <v-date-picker
                 v-model="start"
                 no-title
-                scrollable
-                :min= "actualidad"
+                scrollable                
                 >
                 <v-spacer></v-spacer>
                 <v-btn
@@ -78,11 +80,28 @@
                     OK
                 </v-btn>
               </v-date-picker>
-            </v-menu>            
-            <v-combobox
-              v-model="model"
-              :items="items"
-              :search-input.sync="search"
+            </v-menu> 
+            <el-time-picker
+              v-model="insert.start_hour"
+              :picker-options="{
+                selectableRange: '00:00:00 - 23:59:59'
+              }"
+              placeholder="Hora Inicio"
+              style="display: inline-block">
+            </el-time-picker>
+            <el-time-picker
+              v-model="insert.end_hour"
+              :picker-options="{
+                selectableRange: '00:00:00 - 23:59:59'
+              }"
+              placeholder="Hora Fin"
+              class="ml-5"
+              style="display: inline-block">
+            </el-time-picker>            
+            <v-text-field v-model="insert.place" label="Lugar" persistent-hint hint="Ingrese el lugar o el medio utilizado" ></v-text-field>
+            <v-select
+              v-model="motivos"
+              :items="items"              
               hide-selected
               hint="Máximo de 2 motivos"
               label="Motivo de la sesión"
@@ -90,16 +109,18 @@
               persistent-hint
               small-chips
               clearable
+              return-object
             >              
-            </v-combobox>
+            </v-select>
             <br>            
             <h5>Resultado de la sesión</h5>        
             <v-container class="grey lighten-5">
                 <v-textarea
                 v-model="insert.result"
                 counter
+                no-resize
                 full-width
-                single-line
+                single-line                
                 height="80px"
                 ></v-textarea>
             </v-container>
@@ -127,17 +148,22 @@ export default {
   props: ["form", "dialog", "action"],  
   data() {
     return {
+      show:true,
+      inicio: "",
+      fin:"",
       insert:{     
-        student_id: 1,
-        tutor_id: 1,
+        student_id: null,
+        tutor_id: null,
         reason1:"",
         reason2:"",
-        place:"Mi casita",
+        place:"",
         result:"", 
-        date:"",       
+        date:"",    
+        start_hour:"",
+        end_hour:""   
       },
-      model: [],
-      model_participante: [],
+      motivos: [],
+      participante: [],
       alumnos:[],
       id_alumnos:[],
       items: [        
@@ -184,38 +210,30 @@ export default {
       nameValidation: nameRules,
       emailValidation: emailRules,
       codeValidation: codeRules,
-      phoneValidation: phoneRules,
-      motivos:[],
+      phoneValidation: phoneRules,      
     };
   },  
   watch: {
-    model (val) {
+    motivos (val) {
       if (val.length > 2) {
-        this.$nextTick(() => this.model.pop())
+        this.$nextTick(() => this.motivos.pop())
       }
     },
-    model_participante (val){
+    participante (val){
       if (val.length > 1 && this.action == "Registrar nueva sesión") {
-        this.$nextTick(() => this.model_participante.pop())
+        this.$nextTick(() => this.participante.pop())
       }
     }
   },
 
   methods: { 
-    cargarAlumnos(item){                  
-      var alumno;
-        var aux1 = [];
-        var aux2 = [];
+    cargarAlumnos(item){   
+      this.show=false    
+      this.participante=[]
       axios
         .get("/coordinator/show_students/" + this.form.id_facultades[this.form.facultades.indexOf(item)])      
-        .then(res =>{
-          
-          for(alumno in res.data.users){
-            aux1.push(res.data.users[alumno].person_full_name)
-            aux2.push(res.data.users[alumno].person_id)
-          }          
-          this.alumnos = aux1;
-          this.id_alumnos = aux2;
+        .then(res =>{                    
+          this.alumnos = res.data.users;          
         })
         .catch(error => {
           console.log(error);
@@ -229,26 +247,25 @@ export default {
     },
 
     insertar() {                    
-      this.insert.tutor_id = localStorage.getItem("Id_usuario");
-      console.log(this.model_participante);
-      this.insert.student_id = this.id_alumnos[this.model_participante.indexOf(this.model_participante[0])]
-      this.insert.date = this.start;    
-      this.insert.reason1 = this.model[0];
-      this.insert.reason2 = this.model[1];                           
-      console.log(this.insert)
-        axios        
-          .post("/tutor/register_informal_session/", this.insert)
-          .then(res => {
-            console.log(res);
-            this.$emit("resetList");
-            this.$message({ message: "Registro exitoso.", type: "success" });
-            this.$emit("resetDialog");
-            this.$refs.form.reset();
-          })
-          .catch(error => {
-            console.log(error);
-            this.$message.error("Datos duplicados");
-          });      
+      this.insert.tutor_id = localStorage.getItem("Id_usuario");      
+      this.insert.student_id = this.participante[0].person_id
+      this.insert.date = this.start            
+      this.insert.reason1 = this.motivos[0];
+      this.insert.reason2 = this.motivos[1];                                             
+
+      axios        
+      .post("/tutor/register_informal_session/", this.insert)
+      .then(res => {        
+        console.log(res)
+        this.$emit("resetList");
+        this.$message({ message: "Registro exitoso.", type: "success" });
+        this.$emit("resetDialog");
+        this.$refs.form.reset();
+      })
+      .catch(error => {
+        console.log(error);
+        this.$message.error("Datos duplicados");
+      });  
     },
 
     cancelar() {                  

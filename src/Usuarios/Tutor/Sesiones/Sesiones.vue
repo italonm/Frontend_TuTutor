@@ -141,6 +141,7 @@ export default {
       var program;
       var aux1 = [];
       var aux2 = [];
+      //TOKEN CODING
       var username = localStorage.getItem("Token")
       username = username.slice(1,username.length-1)
       var password = '';
