@@ -9,14 +9,14 @@
 	font-family: 'Muli', sans-serif;
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 	flex-direction: column;
 	min-height: 100vh;
 	margin: 0;
 }
 
 .courses-container {
-	
+	position: relative;
 }
 
 .course {
