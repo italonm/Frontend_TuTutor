@@ -81,23 +81,27 @@
                 </v-btn>
               </v-date-picker>
             </v-menu> 
-            <el-time-picker
+            <el-time-select
               v-model="insert.start_hour"
               :picker-options="{
-                selectableRange: '00:00:00 - 23:59:59'
+                start:'08:00',
+                step:'00:15',
+                end:'23:00'
               }"
               placeholder="Hora Inicio"
               style="display: inline-block">
-            </el-time-picker>
-            <el-time-picker
+            </el-time-select>
+            <el-time-select
               v-model="insert.end_hour"
               :picker-options="{
-                selectableRange: '00:00:00 - 23:59:59'
+                start:'08:00',
+                step:'00:15',
+                end:'23:00'
               }"
               placeholder="Hora Fin"
               class="ml-5"
               style="display: inline-block">
-            </el-time-picker>            
+            </el-time-select>            
             <v-text-field v-model="insert.place" label="Lugar" persistent-hint hint="Ingrese el lugar o el medio utilizado" ></v-text-field>
             <v-select
               v-model="motivos"
@@ -252,7 +256,7 @@ export default {
       this.insert.date = this.start            
       this.insert.reason1 = this.motivos[0];
       this.insert.reason2 = this.motivos[1];                                             
-
+      console.log(this.insert)
       axios        
       .post("/tutor/register_informal_session/", this.insert)
       .then(res => {        
