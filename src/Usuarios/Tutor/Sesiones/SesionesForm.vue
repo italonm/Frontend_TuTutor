@@ -82,7 +82,7 @@
               </v-date-picker>
             </v-menu> 
             <el-time-picker
-              v-model="inicio"
+              v-model="insert.start_hour"
               :picker-options="{
                 selectableRange: '00:00:00 - 23:59:59'
               }"
@@ -90,7 +90,7 @@
               style="display: inline-block">
             </el-time-picker>
             <el-time-picker
-              v-model="fin"
+              v-model="insert.end_hour"
               :picker-options="{
                 selectableRange: '00:00:00 - 23:59:59'
               }"
@@ -98,7 +98,7 @@
               class="ml-5"
               style="display: inline-block">
             </el-time-picker>            
-            <v-text-field label="Lugar" persistent-hint hint="Ingrese el lugar o el medio utilizado" ></v-text-field>
+            <v-text-field v-model="insert.place" label="Lugar" persistent-hint hint="Ingrese el lugar o el medio utilizado" ></v-text-field>
             <v-select
               v-model="motivos"
               :items="items"              
@@ -156,9 +156,11 @@ export default {
         tutor_id: null,
         reason1:"",
         reason2:"",
-        place:"Mi casita",
+        place:"",
         result:"", 
-        date:"",       
+        date:"",    
+        start_hour:"",
+        end_hour:""   
       },
       motivos: [],
       participante: [],

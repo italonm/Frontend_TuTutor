@@ -3,7 +3,7 @@
         <div class="course">
             <div class="course-preview">
                 <h6>Participantes</h6>
-                <h4>{{namae}}</h4>                  
+                <h4>{{name}}</h4>                  
                 <a href="#">Ver participantes <i class="fas fa-chevron-right"></i></a>
             </div>
             <div class="course-info">
@@ -25,9 +25,10 @@
 <script>
 export default {    
     name: "Elemento",    
-    props: ["comp", "callMethod", "namae"],  
+    props: ["comp", "callMethod", "name"],  
     methods:{
-        verPlan(){                                                      
+        verPlan(){                   
+            console.log("AUXILIO")                                   
             this.callMethod(this.comp.id);            
         },        
     },              

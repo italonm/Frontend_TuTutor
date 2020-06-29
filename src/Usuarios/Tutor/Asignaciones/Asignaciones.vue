@@ -33,7 +33,7 @@
       <el-col :span="12">
         <div class="containerBody">
           <h3 class="mt-10" v-if="show">Seleccione un alumno</h3>
-          <asignaciones v-else v-for="(comp, ind) in asignaciones" :key="ind" :comp="comp" :name="namae"></asignaciones>
+          <asignaciones v-else v-for="(comp, ind) in asignaciones" :key="ind" :comp="comp" :name="namae" :callMethod="parentMethod"></asignaciones>
         </div>
       </el-col>
     </el-row>    
