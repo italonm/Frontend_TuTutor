@@ -46,6 +46,8 @@
       height="288px"
       fixed-header
     >
+    <template #item.full_name="{ item }">{{ item.students.name }} {{ item.students.last_name }}</template>
+
     <template v-slot:item.detalles="{ item }">
         <el-button type="info" icon="el-icon-edit" circle @click="detalles(item)"></el-button>
     </template>
@@ -82,9 +84,12 @@ export default {
       sesiones: [],
       headers: [
         { text: "Fecha", value: "date" },
-        { text: "Alumno",  value:"students" },
-        { text: "Motivo", value: "reason1"},
-        { text: "Solicitud", value: "is_formal" },                
+        { text: "Alumno",  value:"full_name" },
+        { text: "Programa",  value:"students.program_name" },
+        { text: "Motivo principal", value: "reason1"},
+        { text: "Motivo secundario", value: "reason2"},
+        { text: "Asistencia", value: "students.assistance"},
+        { text: "Tipo de Solicitud", value: "is_formal" },                
         { text: "Detalles", value: "detalles", sortable: false },
       ],
       form:{
@@ -117,12 +122,24 @@ export default {
                 aux = aux + 1                         
             }
             if (aux === 1){              
-              this.sesiones[sesion].students = res.data.sessions[sesion].students[0].last_name + "," + " " + res.data.sessions[sesion].students[0].name
+                this.sesiones[sesion].students = res.data.sessions[sesion].students[0]
             }
+            if(this.sesiones[sesion].students.assistance==1)            
+              this.sesiones[sesion].students.assistance = "Asistió"
+            else
+              this.sesiones[sesion].students.assistance = "No asistió"
+
             if (this.sesiones[sesion].is_formal)
               this.sesiones[sesion].is_formal = "Formal"
             else
-              this.sesiones[sesion].is_formal = "Informal"            
+              this.sesiones[sesion].is_formal = "Informal"   
+
+            if (this.sesiones[sesion].reason1 == "" || this.sesiones[sesion].reason1 == null)
+              this.sesiones[sesion].reason1 = "No hay motivo"
+
+            if (this.sesiones[sesion].reason2 == "" || this.sesiones[sesion].reason2 == null)
+              this.sesiones[sesion].reason2 = "No hay motivo"
+      
           }          
         })
         .catch(error => console.log(error));

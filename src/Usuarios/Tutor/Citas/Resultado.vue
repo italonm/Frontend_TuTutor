@@ -7,26 +7,31 @@
       <v-card-text>
         <v-container>
                 <v-card-title>
-                Asistencia
+                  <h5>
+                  Asistencia 
+                  </h5>
                 </v-card-title>
                 <v-data-table
                 v-model="resultado.asistencia"
-                :footer-props="{'items-per-page-options': [5, 10, 15, -1],
+                :footer-props="{'items-per-page-options': [2, 4, 6, -1],
                                 'items-per-page-text': 'Registros por página:',
                                 'items-per-page-all-text': 'Listar todos'}"
                 :headers="headers"
                 :items="listaAlumnos"
-                :items-per-page="5"
+                :items-per-page="2"
                 item-key="codigo"
                 show-select
                 multi-sort
                 class="elevation-1"
                 loading-text="Cargando.."
-                height="200px"
+                height="145px"
                 fixed-header
+                hide-default-footer
                 ></v-data-table>
                 <v-card-title>
+                  <h5>
                 Comentario de la cita
+                  </h5>
                 </v-card-title>
                 <v-container class="grey lighten-5">
                     <v-textarea
@@ -34,9 +39,28 @@
                     counter
                     full-width
                     single-line
-                    height="90px"
+                    height="50px"
                     ></v-textarea>
                 </v-container>
+                <v-card-title>
+                  <h5>
+                Derivación
+                  </h5>
+                </v-card-title>
+                <v-col>
+                <v-select
+                  v-model="unidadApoyo"
+                  :items="listaDerivados"
+                  item-text="name"
+                  item-value="id"
+                  label="Selecciona una unidad de apoyo "
+                  persistent-hint
+                  return-object
+                  single-line
+                  clearable
+                >
+                </v-select>
+                </v-col>
 
         </v-container>
       </v-card-text>
@@ -53,13 +77,15 @@
 <script>
 import axios from "axios";
 export default {
-  props: ["resultado","idSesion","listaAlumnos", "dialog", "action"],
+  props: ["listaDerivados","resultado","idSesion","listaAlumnos", "dialog", "action"],
 
   data() {
     return {
       localDialog: this.dialog,
       localCita: this.cita,
+      unidadApoyo:[],
       headers: [
+        { text: "Código", value: "codigo" },
         { text: "Nombres", value: "nombre" },
         { text: "Apellidos", value: "apellidos" }
       ],
@@ -97,23 +123,29 @@ export default {
       this.$emit("resetDialog", this.newDialog);
       },
       insertar(){
-        this.datosResultado.idsesion = this.idSesion;
-        this.datosResultado.resultado = this.resultado.comentario;
-        this.datosResultado.alumnos = this.resultado.asistencia;
-        console.log(this.datosResultado);
-        axios
-        .post(
-          "http://184.73.231.88:7002/api/tutor/register_result_and_assistance/",this.datosResultado)
-        .then(res => {
-            this.$message({ message: "Registro exitoso.", type: "success" });
-            console.log(res);
-            this.newDialog = false;
-            this.$emit("resetDialog", this.newDialog);
-         })
-         .catch(error => {
-            console.log(error);
-            this.$message.error("No se pudo registrar");
-          });
+
+        if (Object.keys(this.resultado.asistencia).length != 0){
+          this.datosResultado.idsesion = this.idSesion;
+          this.datosResultado.resultado = this.resultado.comentario;
+          this.datosResultado.alumnos = this.resultado.asistencia;
+          console.log(this.datosResultado);
+          axios
+          .post(
+            "http://184.73.231.88:7002/api/tutor/register_result_and_assistance/",this.datosResultado)
+          .then(res => {
+              this.$emit("resetList");
+              this.$message({ message: "Registro exitoso.", type: "success" });
+              console.log(res);
+              this.newDialog = false;
+              this.$emit("resetDialog", this.newDialog);
+          })
+          .catch(error => {
+              console.log(error);
+              this.$message.error("No se pudo registrar");
+            });
+        }
+        else
+          this.$message.error("No ha registrado asistencia");
       },
       editar(){
         this.editarResultado.idsesion = this.idSesion;

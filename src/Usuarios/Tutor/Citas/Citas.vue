@@ -11,43 +11,144 @@
       </el-col>
     </el-row>
 
-    <v-card max-width="1200" class="ml-4" max-height="100">
+
+    <v-card max-width="1200" class="ml-4" >
         <v-card-title class="cardAdd justify-center">
-            Lista de citas pendientes
+            Próximas citas
         </v-card-title>
 
-        <v-list flat subheader>
+        <v-list flat subheader  height="430px" class="scroll">
           <v-list-item-group
               subgroup
               color = "blue"
               multiple
           >
-            <template v-for="(cita, index) in visiblePages">
-              <v-list-item :key="index" >         
+           <template v-if="Object.keys(grupoProximasCitas).length == 0">
+                  <v-list-item-content style="color: gray">
+                  <v-subheader
+                style="border-bottom: 2px solid blue;color:#205BD9;font-weight:bold;">No hay citas agendadas actualmente</v-subheader>
+                  </v-list-item-content>
+          </template>
 
-                <template v-if="fechaTexto > cita.fecha" >
-                  <v-subheader>Estado: Fecha pasada</v-subheader>
+          <template v-for="(prox,i) in grupoProximasCitas">
+            <v-list-item :key="'A'+ i" > 
+
+                <v-list-item-content style="color: gray">
+                  <v-subheader
+                style="border-bottom: 2px solid orange;color:#D97F20;font-weight:bold;"
+                  v-text="i"></v-subheader>
+                </v-list-item-content>
+
+            </v-list-item>
+            <template v-for="(cita, index) in prox">          
+              <v-list-item :key="'B'+cita.id_session" > 
+                
                   <v-list-item-content style="color: gray">
                     <v-col>
-                    <v-list-item-title class="ml-2" >Fecha</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.fecha"></v-list-item-subtitle>
-                    </v-col>
-                    <v-col>
-                    <v-list-item-title >Hora Inicio</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.horaIni"></v-list-item-subtitle>
-                    </v-col>
-                    <v-col>
-                    <v-list-item-title >Hora Fin</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.horaFin"></v-list-item-subtitle>
-                    </v-col>
-                    <v-col>
-                    <v-list-item-title>N.Participantes</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.cant_students"></v-list-item-subtitle>
+                    <v-list-item-title >Horario</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.horaIni +'-'+cita.horaFin"></v-list-item-subtitle>
                     </v-col>
                     <v-col>
                     <v-list-item-title >Ubicación</v-list-item-title>
                     <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
                     </v-col>
+                    <v-col>
+                    <v-list-item-title >Cant.Participantes</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.cant_students"></v-list-item-subtitle>
+                    </v-col>
+                  </v-list-item-content>
+
+                    <v-list-item-action>
+
+                        <v-btn text small @click="cancelar(cita)">
+                          Cancelar Cita
+                          <v-icon>mdi-close</v-icon>
+                        </v-btn>
+
+                    </v-list-item-action>
+
+              </v-list-item>
+
+              <v-list :key="'C'+cita.id_session">
+               <v-list-group
+                    sub-group
+                    no-action
+                >
+
+                <template v-slot:activator>
+                  <v-list-item-content>
+                    <v-list-item-title>Alumnos</v-list-item-title>
+                  </v-list-item-content>
+                </template>
+
+                <v-list-item
+                  v-for="(datosAlumno, i) in cita.alumnos"
+                  :key="'D'+i"
+                  link
+                >
+                  <v-list-item-title v-text="datosAlumno.nombre + ' ' + datosAlumno.apellidos"></v-list-item-title>
+                </v-list-item> 
+                </v-list-group>
+              </v-list>
+              
+              <v-divider
+                  v-if="index + 1 < listaProximasCitas.length"
+                  :key="'E'+cita.id_session"
+              ></v-divider>
+
+            </template>
+          </template>
+          </v-list-item-group>
+        </v-list>
+
+      </v-card>
+
+      <br><br>
+
+      <v-card max-width="1200" class="ml-4 ">
+        <v-card-title class="cardAdd justify-center">
+            Citas pendientes sin resultado
+        </v-card-title>
+
+        <v-list flat subheader height="430px" class="scroll">
+          <v-list-item-group
+              subgroup
+              color = "blue"
+              multiple
+          >
+          <template v-if="Object.keys(grupoCitasSinResultados).length == 0">
+                  <v-list-item-content style="color: gray">
+                  <v-subheader
+                style="border-bottom: 2px solid blue;color:#205BD9;font-weight:bold;">No hay citas pendientes a mostrar</v-subheader>
+                  </v-list-item-content>
+          </template>
+
+          <template v-for="(proxSin,j) in grupoCitasSinResultados">
+            <v-list-item :key="'F'+j" > 
+
+                <v-list-item-content style="color: blue">
+                  <v-subheader
+                    style="border-bottom: 2px solid orange;color:#D97F20;font-weight:bold;"
+                  v-text="j"></v-subheader>
+                </v-list-item-content>
+            </v-list-item>
+
+            <template v-for="(cita, index) in proxSin">
+              <v-list-item :key="'G'+ cita.id_session" >         
+
+                  <v-list-item-content style="color: gray">
+                    <v-col>
+                    <v-list-item-title >Horario</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.horaIni +'-'+cita.horaFin"></v-list-item-subtitle>
+                    </v-col>
+                    <v-col>
+                    <v-list-item-title >Ubicación</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
+                    </v-col>
+                    <v-row>
+                    <v-list-item-title>Cant.Participantes</v-list-item-title>
+                    <v-list-item-subtitle v-text="cita.cant_students"></v-list-item-subtitle>
+                    </v-row>
                     </v-list-item-content>
 
                     <v-list-item-action>
@@ -61,45 +162,11 @@
                           <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </v-list-item-action>
-                </template>     
 
-                <template v-else>
-                  <v-subheader >Estado: Cita pendiente </v-subheader>
-                  <v-list-item-content style="color: gray">
-                    <v-col>
-                    <v-list-item-title >Fecha</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.fecha"></v-list-item-subtitle>
-                    </v-col>
-                    <v-col>
-                    <v-list-item-title >Hora de Inicio</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.horaIni"></v-list-item-subtitle>
-                    </v-col>
-                    <v-col>
-                    <v-list-item-title >Hora fin</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.horaFin"></v-list-item-subtitle>
-                    </v-col>
-                    <v-col>
-                    <v-list-item-title >N.Participantes</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.cant_students"></v-list-item-subtitle>
-                    </v-col>
-                    <v-col>
-                    <v-list-item-title >Ubicación</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
-                    </v-col>
-                    </v-list-item-content>
+              </v-list-item>
 
-                    <v-list-item-action>
-
-                        <v-btn text small @click="cancelar(cita)">
-                          Cancelar Cita
-                          <v-icon>mdi-close</v-icon>
-                        </v-btn>
-
-                    </v-list-item-action>
-
-                </template>   
-
-                <v-list-group
+              <v-list :key="'H'+cita.id_session">
+              <v-list-group
                     sub-group
                     no-action
                 >
@@ -112,35 +179,32 @@
 
                 <v-list-item
                   v-for="(datosAlumno, i) in cita.alumnos"
-                  :key="i"
+                  :key="'I'+i"
                   link
                 >
                   <v-list-item-title v-text="datosAlumno.nombre + ' ' + datosAlumno.apellidos"></v-list-item-title>
                 </v-list-item> 
               </v-list-group>
+              </v-list>
 
-              </v-list-item>
-              
-              
-
+         
               <v-divider
-                  v-if="index + 1 < listaCitas.length"
-                  :key="index"
+                  v-if="index + 1 < listaCitasSinResultados.length"
+                  :key="'J'+cita.id_session"
               ></v-divider>
 
             </template>
+          </template>
           </v-list-item-group>
         </v-list>
 
-        <v-pagination
-                v-model="page"
-                :length= "Math.ceil(listaCitas.length/perPage)"
-        ></v-pagination>
-
       </v-card>
+
+      <br>
 
     <!--Formulario-->
     <resultadoForm
+      :listaDerivados = "listaDerivados"
       :resultado = "resultado"
       :idSesion = "idSesion"
       :listaAlumnos="listaAlumnos"
@@ -157,12 +221,20 @@ import axios from "axios";
 import resultadoF from "./Resultado"
 var now     = new Date(); 
 var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
+var horaActual = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 export default {
   data() {
     return {
         fechaTexto:diaActual,
         listaCitas:[],
         listaAlumnos:[],
+        listaCitasSinResultados:[],
+        listaProximasCitas:[],
+        listaDerivados:[],
+        grupoCitasSinResultados:[],
+        grupoProximasCitas:[],
+        contadorProxCitas:0,
+        contadorSinResultados:0,
         idSesion:"",
         search: "",
         dialog: false,
@@ -171,6 +243,8 @@ export default {
         horasDif:[],
         page:1,
         perPage: 5,
+        pageProx:1,
+        perPageProx: 5,
         resultado:{
         comentario:"",
         asistencia:[],
@@ -184,19 +258,106 @@ export default {
     console.log(JSON.parse(localStorage.getItem("Id_usuario")));
     this.listar();
   },
-  computed: {
-    visiblePages () {
-      return this.listaCitas.slice((this.page - 1)* this.perPage, this.page* this.perPage)
-    }
-  },
   methods: {
     listar() {
       axios
         .get("http://184.73.231.88:7002/api/tutor/show_list_formal_sessions/"+ JSON.parse(localStorage.getItem("Id_usuario")))
         .then(res => {
           this.listaCitas = res.data.data;
+          this.ordenarCitas();
         })
         .catch(error => console.log(error));
+    },
+    ordenarCitas(){
+      this.listaCitasSinResultados=[];
+      this.listaProximasCitas=[];
+      var index = 0;
+      var datodeCita=[];
+      for (index;index < this.listaCitas.length;index++){
+        datodeCita = this.listaCitas[index];
+        if (datodeCita.fecha < diaActual){
+          this.listaCitasSinResultados.push(datodeCita);
+        }
+        else if (datodeCita.fecha == diaActual){
+          if(datodeCita.horafin<horaActual){
+            this.listaProximasCitas.push(datodeCita);
+          }
+          else{
+            this.listaCitasSinResultados.push(datodeCita);
+          }
+        }
+        else{
+            this.listaProximasCitas.push(datodeCita);
+        }
+      }
+      this.listaCitasSinResultados.sort(function (a, b) {
+        if (a.fecha > b.fecha) {
+          return -1;
+        }
+        if (a.fecha < b.fecha) {
+          return 1;
+        }
+        // a must be equal to b
+        return 0;
+      });
+      this.listaProximasCitas.sort(function (a, b) {
+        if (a.fecha > b.fecha) {
+          return -1;
+        }
+        if (a.fecha < b.fecha) {
+          return 1;
+        }
+        // a must be equal to b
+        return 0;
+      });
+
+      var groupsSinResult = {};
+
+      this.listaCitasSinResultados.forEach(function(val) {
+        var options = {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        };
+          var birthday = new Date(val.fecha);
+          birthday.setDate(birthday.getDate() + 1);
+          var date = new Intl.DateTimeFormat("es-PE", options).format(
+          birthday
+        );
+          if (date in groupsSinResult) {
+              groupsSinResult[date].push(val);
+          } else {
+              groupsSinResult[date] = new Array(val);
+          }
+      });
+      this.grupoCitasSinResultados = groupsSinResult;
+
+      var groupsProxCit = {};
+
+      this.listaProximasCitas.forEach(function(val) {
+        var options = {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        };
+          var birthday = new Date(val.fecha);
+          birthday.setDate(birthday.getDate() + 1);
+          var date = new Intl.DateTimeFormat("es-PE", options).format(
+          birthday
+        );
+          if (date in groupsProxCit) {
+              groupsProxCit[date].push(val);
+          } else {
+              groupsProxCit[date] = new Array(val);
+          }
+      });
+      this.grupoProximasCitas = groupsProxCit;
+
+
+      console.log(Object.keys(this.grupoCitasSinResultados).length);
+      console.log(Object.keys(this.grupoProximasCitas).length);
     },
     editar(item) {
       axios
@@ -218,6 +379,13 @@ export default {
                   else 
                     this.action = "Crear resultado de la cita"
                     this.dialog = true;
+                  axios
+                    .get("http://184.73.231.88:5000/api/coordinator/show_support_units/"+ localStorage.getItem("Id_institución"))
+                    .then(res => {
+                      this.listaDerivados = res.data.users;
+                      console.log(this.listaDerivados)
+                    })
+                    .catch(error => console.log(error));  
                 })
             .catch(error => console.log(error));
           })
@@ -259,3 +427,8 @@ export default {
   }
 }
 </script>
+<style> 
+.scroll {
+   overflow-y: scroll
+}
+</style>
