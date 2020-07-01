@@ -14,11 +14,11 @@
 	text-align: center;
   }
   
-  .cardAlumno .additional {
+	.additional {
 	position: absolute;
 	width: 8px;
 	height: 100%;
-	background: linear-gradient(#A9DAC7, #A9DAC7);
+	background-color: #A9DAC7;	
 	transition: width 0.4s;
 	overflow: hidden;
 	z-index: 2;

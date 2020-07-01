@@ -1,6 +1,6 @@
 <template>            
-    <div class="cardAlumno ml-1">
-        <div class="additional"></div> 
+    <div class="cardAlumno ml-1" :style="{'background-color':alumno.left}">
+        <div class="additional" :style="{'background-color':alumno.back}"></div> 
         <div class="nombre">{{alumno.name}} {{alumno.last_name}}</div>
         <div class="codigo">
             <i class="fas fa-address-card"></i>
@@ -20,7 +20,7 @@
 <script>
 import { bus } from "../../../main"
 export default {
-    props:["alumno"],
+    props:["alumno", "back", "left"],
     methods:{
         verDetalles(){            
             bus.$emit("verDetalle", this.alumno);             
