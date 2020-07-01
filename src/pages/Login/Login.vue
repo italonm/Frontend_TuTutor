@@ -127,7 +127,8 @@ export default {
 			logItIn(){              
         var that = this;        
         axios.post('http://184.73.231.88:5000/api/user/log_in/',that.login)
-        .then(response =>{                         
+        .then(response =>{       
+            let Token = response.data.token;            
             let Id_usuario = response.data.id;
             let Id_programa = response.data.program_id;
             let Id_institución = response.data.id_institution;
@@ -139,6 +140,7 @@ export default {
             let EsAlumno = response.data.is_student;
             let EsSoporte = response.data.is_support;
             let EsTutor = response.data.is_tutor;
+            localStorage.setItem('Token', JSON.stringify(Token));            
             localStorage.setItem('Id_usuario',JSON.stringify(Id_usuario));
             localStorage.setItem('Id_facultad',JSON.stringify(Id_programa));
             localStorage.setItem('Id_institución',JSON.stringify(Id_institución));
@@ -149,7 +151,7 @@ export default {
             localStorage.setItem('EsCoordinador',JSON.stringify(EsCoordinador));                   
             localStorage.setItem('EsTutor',JSON.stringify(EsTutor));
             localStorage.setItem('EsAlumno',JSON.stringify(EsAlumno));
-            localStorage.setItem('EsSoporte',JSON.stringify(EsSoporte));   
+            localStorage.setItem('EsSoporte',JSON.stringify(EsSoporte));               
             if (EsAdministrador){
                 that.$router.push('/Administrador/Bienvenido')  
             }

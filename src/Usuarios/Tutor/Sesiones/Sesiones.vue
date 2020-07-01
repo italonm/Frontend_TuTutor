@@ -46,6 +46,8 @@
       height="288px"
       fixed-header
     >
+    <template #item.full_name="{ item }">{{ item.students.name }} {{ item.students.last_name }}</template>
+
     <template v-slot:item.detalles="{ item }">
         <el-button type="info" icon="el-icon-edit" circle @click="detalles(item)"></el-button>
     </template>
@@ -63,9 +65,11 @@
     </el-col>
     <!--Formulario-->
     <sesionesForm
+      :option="option"
+      :facultades="facultades"
       :form="form"
       :dialog="dialog"
-      :action="action"
+      :action="action"      
       v-on:resetDialog="dialog=false"
       v-on:resetList="listar()"
     ></sesionesForm>
@@ -82,18 +86,23 @@ export default {
       sesiones: [],
       headers: [
         { text: "Fecha", value: "date" },
-        { text: "Alumno",  value:"students" },
-        { text: "Motivo", value: "reason1"},
-        { text: "Solicitud", value: "is_formal" },                
-        { text: "Detalles", value: "detalles", sortable: false },
+        { text: "Alumno",  value:"full_name" },
+        { text: "Programa",  value:"students.program_name" },
+        { text: "Motivo principal", value: "reason1"},
+        { text: "Motivo secundario", value: "reason2"},
+        { text: "Asistencia", value: "students.assistance"},
+        { text: "Tipo de Solicitud", value: "is_formal" },                
+        { text: "Resultado", value: "detalles", sortable: false },
       ],
+      facultades:[],
       form:{
-        facultades:[],
-        id_facultades:[],
+        resultado:"",
+        id:null
       },
       search: "",
       dialog: false,
-      action: ""
+      action: "",
+      option: true
     };
   },
 
@@ -105,11 +114,28 @@ export default {
     listar() {
       var sesion
       var alumno      
-      var aux = 0
+      var aux = 0 
+      //TOKEN CODING
+      var username = localStorage.getItem("Token")
+      username = username.slice(1,username.length-1)
+      var password = '';
+      var token = new Buffer(username + ':' + password).toString('base64');                  
+      this.action = "Registrar nueva sesión";      
+      axios
+        .get("tutor/show_programs_from_tutor/" + localStorage.getItem("Id_usuario"),
+        {headers:{
+          'Authorization': `Basic ${token}`
+        }})
+        .then(res =>{
+          this.facultades = res.data.programs               
+        })
+        .catch(error => {
+          console.log(error);
+          this.$message.error("No tiene programas registrados");
+        });                         
       axios
         .get("/tutor/show_student_history_for_tutor/" + localStorage.getItem("Id_usuario"))        
-        .then(res => {  
-          console.log(res)
+        .then(res => {                           
           this.sesiones = res.data.sessions        
           for (sesion in res.data.sessions){                      
             aux = 0
@@ -118,45 +144,39 @@ export default {
                 aux = aux + 1                         
             }
             if (aux === 1){              
-              this.sesiones[sesion].students = res.data.sessions[sesion].students[0].last_name + " " + res.data.sessions[sesion].students[0].name
+                this.sesiones[sesion].students = res.data.sessions[sesion].students[0]
             }
+            if(this.sesiones[sesion].students.assistance==1)            
+              this.sesiones[sesion].students.assistance = "Asistió"
+            else
+              this.sesiones[sesion].students.assistance = "No asistió"
+
             if (this.sesiones[sesion].is_formal)
               this.sesiones[sesion].is_formal = "Formal"
             else
-              this.sesiones[sesion].is_formal = "Informal"
-            
-          }
-          console.log(this.sesiones)
-         /*  console.log(res)                            
-          this.sesiones= res.data.sessions; 
-          console.log(this.sesiones)    */                         
+              this.sesiones[sesion].is_formal = "Informal"   
+
+            if (this.sesiones[sesion].reason1 == "" || this.sesiones[sesion].reason1 == null)
+              this.sesiones[sesion].reason1 = "No hay motivo"
+
+            if (this.sesiones[sesion].reason2 == "" || this.sesiones[sesion].reason2 == null)
+              this.sesiones[sesion].reason2 = "No hay motivo"
+      
+          }          
         })
         .catch(error => console.log(error));
     },
-    detalles(item){
-        this.action = "Detalles de la sesión"   
-        this.form = Object.assign({},item);
+    detalles(item){                
+        this.action = "Detalles de la sesión"        
+        this.option = false
+        console.log(item)
+        this.form.resultado = item.result       
+        this.form.id = item.id 
         this.dialog = true;
     },
-    insertar() {
-      var program;
-      var aux1 = [];
-      var aux2 = [];
-      this.action = "Registrar nueva sesión";      
-      axios
-        .get("tutor/show_programs_from_tutor/" + localStorage.getItem("Id_usuario"))
-        .then(res =>{
-          for(program in res.data.programs){            
-            aux1.push(res.data.programs[program].program_name)
-            aux2.push(res.data.programs[program].program_id)
-          }
-          this.form.facultades = aux1;
-          this.form.id_facultades = aux2;               
-        })
-        .catch(error => {
-          console.log(error);
-          this.$message.error("No tiene programas registrados");
-        });      
+    insertar() {  
+      this.option = true;
+      this.action = "Registrar nueva sesión";              
       this.dialog = true;
     },
   },

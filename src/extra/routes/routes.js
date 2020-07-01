@@ -44,29 +44,52 @@ import RegPass from "../../pages/Login/RegistrarContraseña.vue";
 import Reestablecer from "../../pages/Login/Reestablecer.vue";
 import Registrar from "../../pages/Login/Registro.vue";
 export const routes = [
-    { path: "", redirect: "Login" },
-    { path: "/Login", component: Login },
-    { path: "/PassSet", component: PassSet },
-    { path: "/RegPass", component: RegPass },    
-    { path: "/Reestablecer", component: Reestablecer }, 
-    { path: "/Registrar", component: Registrar },        
+    { path: "", redirect: "Login", name:'main' },
+    { path: "/Login", component: Login, name:"login"},
+    { path: "/PassSet", component: PassSet, name:'passSet'},
+    { path: "/RegPass", component: RegPass, name:'regPass' },    
+    { path: "/Reestablecer", component: Reestablecer, name:'reestablecer' }, 
+    { path: "/Registrar", component: Registrar, name:'registrar'},        
     {
         path: "/Administrador",
         component: MainAdmin,
+        name: "administrador",
+        beforeEnter(to, from, next){
+            if(from.name==='login') next()
+            else{                
+                if(localStorage.getItem("EsAdministrador") === true)next()
+                else {                                            
+                    next()
+                    /* localStorage.clear(); 
+                    next({name:'login'}) */
+                }
+            }                        
+        },
         children: [
             //Administrador
-            { path: "Bienvenido", component: Welcome }, //Luiggi
-            { path: "Configuración", component: Configuración }, //Luiggi
-            { path: "Unidades académicas", component: Académicas }, //italo
-            { path: "Coordinadores", component: Coordinadores }, //italo
-            { path: "Usuarios", component: Usuarios }, //italo
-            { path: "Auditoría", component: Welcome },
-            { path: "Errores", component: Welcome },
+            { path: "Bienvenido", component: Welcome, name:"bienvenido" }, //Luiggi
+            { path: "Configuración", component: Configuración, name:"configuración" }, //Luiggi
+            { path: "Unidades académicas", component: Académicas, name:"unidades" }, //italo
+            { path: "Coordinadores", component: Coordinadores, name: "coordinadores" }, //italo
+            { path: "Usuarios", component: Usuarios, name:"usuarios"}, //italo
+            { path: "Auditoría", component: Welcome, name:"auditoría" },
+            { path: "Errores", component: Welcome, name:"errores" },
         ],
     },
     {
         path: "/Coordinador",
         component: MainCoordi,
+        beforeEnter(to, from, next){ 
+            if(from.name==='login') next()
+            else{                
+                if(localStorage.getItem("EsCoordinador") === true)next()
+                else {        
+                    next()
+                    /* localStorage.clear(); 
+                    next({name:'login'}) */
+                }
+            }                       
+        },
         children: [
             //Coordinador
             { path: "Bienvenido", component: Welcome }, //Luiggi
@@ -83,6 +106,17 @@ export const routes = [
     {
         path: "/Alumno",
         component: MainAlumno,
+        beforeEnter(to, from, next){ 
+            if(from.name==='login') next()
+            else{           
+                if(localStorage.getItem("EsAlumno") === true)next()
+                else {  
+                    next()              
+                    /* localStorage.clear(); 
+                    next({name:'login'}) */
+                }
+            }
+        },
         children: [
             //Alumno
             { path: "Bienvenido", component: Welcome }, //italo / Herbert
@@ -97,6 +131,17 @@ export const routes = [
     {
         path: "/Tutor",
         component: MainTutor,
+        beforeEnter(to, from, next){            
+            if(from.name==='login') next()
+            else{                
+                if(localStorage.getItem("EsTutor") === true)next()
+                else {                                           
+                    next()
+                    /* localStorage.clear();            
+                    next({name:'login'}) */
+                }
+            }
+        },
         children: [
             //Alumno
             { path: "Bienvenido", component: WelcomeTutor }, //luiggi / valeria / melvin
@@ -105,13 +150,20 @@ export const routes = [
             { path: "Sesiones", component: Sesiones }, //luiggi / valeria / melvin
             { path: "Solicitudes", component: SolicitudesTutor }, //luiggi / valeria / melvin
             { path: "Alumnos", component: AlumnosTutor }, //luiggi / valeria / melvin
-        ],
+        ],        
     },
 ];
 
 
 Vue.use(Router);
-export default new Router({
+const router =  new Router({
     mode: "history", // https://router.vuejs.org/api/#mode
     routes: routes,
-});
+}); 
+
+router.beforeEach((to ,from, next)=>{    
+    if (to.name !== 'login' && (localStorage.getItem("Token")===null)) next({ name: 'login' })
+    else next()
+})
+
+export default router
