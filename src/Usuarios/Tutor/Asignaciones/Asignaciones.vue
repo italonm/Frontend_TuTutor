@@ -2,7 +2,7 @@
   <el-container direction="vertical">
     <!-- Titulo-->
     <el-row>
-      <el-col :span="12">
+      <el-col :span="11">
         <div class="grid-content">
           <h1 style="text-align: left; font-family: 'Basic', sans-serif;font-weight:600;">
             Alumnos
@@ -27,8 +27,8 @@
     </el-row>  
 
     <el-row>
-      <el-col :span="12">
-        <alumnos v-for="(alumno, idx) in alumnos" :key="idx" :alumno="alumno" ></alumnos>  
+      <el-col :span="11">
+        <alumnos v-for="(alumno, idx) in alumnosFiltrados" :key="idx" :alumno="alumno" :back="backAlumnos[idx]" :left="leftAlumnos[idx]"></alumnos>  
       </el-col>
       <el-col :span="12">
         <div class="containerBody">
@@ -44,9 +44,10 @@
       :dialog="dialog"  
       :id_assignment="id_assign" 
       :todos="todos"
-      :auxTodos="auxTodos"
+      :auxTodos="auxTodos" 
+      :auxData="auxData"     
       v-on:resetDialog="dialog=false"
-      v-on:resetList="listar()"
+      v-on:resetList="listarAsignaciones(auxData)"
       v-on:rerender="rerender()"
     ></plan>
   </el-container> 
@@ -62,28 +63,35 @@ import Asignaciones from "./Elemento.vue"
   export default {
     data(){
       return{
+        search:"",
         components:[],
         namae:"",                     
         dialog: false,
         id_assign:1,
         show: true,
+        ind: 0,
         form:{                    
         },         
         todos:[],
         auxTodos:[],
-        alumnos:[],
+        alumnos:[],        
+        leftAlumnos:["#E5F8F8","#FCD1CB","#E5E3F9","#FDE9D0"],
+        backAlumnos:["#A9DAC7","#FC6D5D","#293B61","#FC9A1F"],
+        auxData:[],
+        programas:[]
       }    	
     },     
     computed:{
       asignaciones(){        
         return this.components
+      },
+      alumnosFiltrados(){
+        return this.alumnos.filter(post=>{
+          return post.name.toLowerCase().includes(this.search.toLowerCase())
+        })
       }
     },
-    created(){
-      bus.$on("updateAssign",data=>{
-        console.log(data)
-        this.listar()
-      }) 
+    created(){     
       bus.$on("verDetalle", data=>{        
         this.namae = data.name + " " + data.last_name                        
         this.listarAsignaciones(data)        
@@ -93,8 +101,15 @@ import Asignaciones from "./Elemento.vue"
     },    
     methods:{     
       listarAsignaciones(data){
+        this.auxData=data
+        var username = localStorage.getItem("Token")
+        username = username.slice(1,username.length-1)
+        var password = '';
+        var token = new Buffer(username + ':' + password).toString('base64');
         axios
-        .get("/tutor/show_assignments_from_student/" + localStorage.getItem("Id_usuario") + "/" + data.id)
+        .get("/tutor/show_assignments_from_student/" + localStorage.getItem("Id_usuario") + "/" + data.id,{headers:{
+          'Authorization': `Basic ${token}`
+        }})
         .then(response=>{
           this.components = response.data.assignments
         })
@@ -136,10 +151,48 @@ import Asignaciones from "./Elemento.vue"
       },              
       listar(){         
         this.alumnos=[];                
-        console.log(localStorage.getItem("Id_usuario"))
-        axios.get("/tutor/show_students_from_tutor/" + localStorage.getItem("Id_usuario"))
-        .then(response=>{       
-          this.alumnos = response.data.students                                                                               
+        //TOKEN CODING
+        var username = localStorage.getItem("Token")
+        username = username.slice(1,username.length-1)
+        var password = '';
+        var token = new Buffer(username + ':' + password).toString('base64');
+        axios.get("/tutor/show_students_from_tutor/" + localStorage.getItem("Id_usuario"),{headers:{
+          'Authorization': `Basic ${token}`
+        }})
+        .then(response=>{                 
+          var alumno                              
+          for(alumno in response.data.students){
+            var aux={
+              name:"",
+              last_name:"",
+              code:null,
+              program_name:"",
+              id:null,
+              back:"",
+              left:""
+            }
+            aux.name = response.data.students[alumno].name
+            aux.id = response.data.students[alumno].id
+            aux.code = response.data.students[alumno].code
+            aux.last_name = response.data.students[alumno].last_name
+            aux.program_name = response.data.students[alumno].program_name            
+            var index = this.programas.findIndex((a)=>a.program_name===aux.program_name)                        
+            if (index>=0){
+              aux.back = this.programas[index].back
+              aux.left = this.programas[index].left
+            }
+            else{              
+              var program ={
+                program_name:aux.program_name,
+                back:this.backAlumnos[this.ind],
+                left:this.leftAlumnos[this.ind++]
+              }
+              aux.back = program.back
+              aux.left = program.left
+              this.programas.push(program)
+            }                
+            this.alumnos.push(aux)        
+          }                                                                                
         })
       }
     },

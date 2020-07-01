@@ -65,9 +65,11 @@
     </el-col>
     <!--Formulario-->
     <sesionesForm
+      :option="option"
+      :facultades="facultades"
       :form="form"
       :dialog="dialog"
-      :action="action"
+      :action="action"      
       v-on:resetDialog="dialog=false"
       v-on:resetList="listar()"
     ></sesionesForm>
@@ -92,13 +94,14 @@ export default {
         { text: "Tipo de Solicitud", value: "is_formal" },                
         { text: "Detalles", value: "detalles", sortable: false },
       ],
+      facultades:[],
       form:{
-        facultades:[],
-        id_facultades:[],
+        resultado:""
       },
       search: "",
       dialog: false,
-      action: ""
+      action: "",
+      option: true
     };
   },
 
@@ -110,10 +113,29 @@ export default {
     listar() {
       var sesion
       var alumno      
-      var aux = 0                          
+      var aux = 0 
+      //TOKEN CODING
+      var username = localStorage.getItem("Token")
+      username = username.slice(1,username.length-1)
+      var password = '';
+      var token = new Buffer(username + ':' + password).toString('base64');                  
+      this.action = "Registrar nueva sesión";      
+      axios
+        .get("tutor/show_programs_from_tutor/" + localStorage.getItem("Id_usuario"),
+        {headers:{
+          'Authorization': `Basic ${token}`
+        }})
+        .then(res =>{
+          this.facultades = res.data.programs               
+        })
+        .catch(error => {
+          console.log(error);
+          this.$message.error("No tiene programas registrados");
+        });                         
       axios
         .get("/tutor/show_student_history_for_tutor/" + localStorage.getItem("Id_usuario"))        
-        .then(res => {                      
+        .then(res => {
+          console.log(res)                      
           this.sesiones = res.data.sessions        
           for (sesion in res.data.sessions){                      
             aux = 0
@@ -144,38 +166,15 @@ export default {
         })
         .catch(error => console.log(error));
     },
-    detalles(item){
-        this.action = "Detalles de la sesión"   
-        this.form = Object.assign({},item);
+    detalles(item){                
+        this.action = "Detalles de la sesión"        
+        this.option = false
+        this.form.resultado = item.result        
         this.dialog = true;
     },
-    insertar() {
-      var program;
-      var aux1 = [];
-      var aux2 = [];
-      //TOKEN CODING
-      var username = localStorage.getItem("Token")
-      username = username.slice(1,username.length-1)
-      var password = '';
-      var token = new Buffer(username + ':' + password).toString('base64');                  
-      this.action = "Registrar nueva sesión";      
-      axios
-        .get("tutor/show_programs_from_tutor/" + localStorage.getItem("Id_usuario"),
-        {headers:{
-          'Authorization': `Basic ${token}`
-        }})
-        .then(res =>{
-          for(program in res.data.programs){            
-            aux1.push(res.data.programs[program].program_name)
-            aux2.push(res.data.programs[program].program_id)
-          }
-          this.form.facultades = aux1;
-          this.form.id_facultades = aux2;               
-        })
-        .catch(error => {
-          console.log(error);
-          this.$message.error("No tiene programas registrados");
-        });      
+    insertar() {  
+      this.option = true;
+      this.action = "Registrar nueva sesión";              
       this.dialog = true;
     },
   },

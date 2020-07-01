@@ -63,7 +63,7 @@
 import axios from "axios"
 import {bus} from "../../../main"
 export default {
-    props:["form", "dialog", "id_assignment", "todos", "auxTodos"],       
+    props:["form", "dialog", "id_assignment", "todos", "auxTodos", "auxData"],       
     data() {
         return {
             last_id: 0,
@@ -165,7 +165,8 @@ export default {
         cancelar() {    
             this.last_id=0;                             
             this.guardar();         
-            bus.$emit("updateAssign",1);                      
+            bus.$emit("verDetalle",this.auxData);     
+            this.$emit("resetList")                 
             this.$emit("resetDialog");                                                                            
         }
     },
