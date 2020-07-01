@@ -55,7 +55,7 @@ html {
   .todo-list {
     padding: 8px 0;  
     padding-left: 10%;  
-    max-width: 90%;
+    max-width: 90%;        
   }
   
   .todo-list .list:hover  {
@@ -82,6 +82,13 @@ html {
   
   .todo-list .list .text.completed {
     text-decoration: line-through;
+  }
+  .list{
+    display: flex;
+    justify-content: flex-start;
+  }
+  .justify-end{
+    margin-left: auto;
   }
   
   .input__div {
@@ -279,18 +286,10 @@ html {
   }
   
   .TodoItem__delete {  
-    opacity: 0;
-    left: 64%;
-    position: fixed;
+    opacity: 0;    
+    position: relative;
     color: #d96465;
     border-radius: 100%;
     
   }
-  .inner{
-    position: relative;
-    top: -10px;
-    width: 40%;
-    
-  }
-  
-  
+ 
