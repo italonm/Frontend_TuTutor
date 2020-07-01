@@ -125,17 +125,17 @@
               >              
               </v-select>
               <br>            
-              <h5>Resultado de la sesión</h5>        
-              <v-container class="grey lighten-5">
-                  <v-textarea
-                  v-model="form.resultado"
-                  counter
-                  no-resize
-                  full-width
-                  single-line                
-                  height="80px"
-                  ></v-textarea>
-              </v-container>
+              <h5>Resultado de la sesión</h5>                      
+              <v-textarea
+              v-model="form.resultado"
+              background-color="#E5F8F8"
+              color="#6B9486"
+              counter
+              no-resize
+              full-width
+              single-line                
+              height="80px"
+              ></v-textarea>              
           </v-form>
         </v-container>
       </v-card-text>
@@ -286,7 +286,22 @@ export default {
     },
 
     editar(){
-
+      var edit = {
+        idsesion:this.form.id,
+        resultado:this.form.resultado
+      }      
+      axios
+      .post("/tutor/edit_result/",edit)
+      .then(res=>{
+        if(res!==null)
+          this.$message.success("Resultado actualizado")        
+        this.$emit("resetList")
+      })
+      .catch(error=>{
+        console.log(error)
+        this.$message.error("No se pudo actualizar el resultado")
+      })      
+      this.$emit("resetDialog")
     },
 
     cancelar() {                  
