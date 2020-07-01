@@ -6,7 +6,7 @@
       </v-card-title>
       <v-card-text>
         <v-container>
-          <v-form ref="formPrograma" v-model="valid" :lazy-validation="lazy">
+          <v-form ref="form" v-model="valid" :lazy-validation="lazy">
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
@@ -21,9 +21,11 @@
                 <v-select
                   v-model="formPrograma.program_id_coordinator"
                   :items="coordinadores"
+                  :rules="[v => !!v || 'Seleccione un coordinador']"
                   item-text="person_full_name"
                   item-value="person_id"
                   label="Coordinador"
+                  required
                 ></v-select>
               </v-col>
             </v-row>
@@ -72,7 +74,7 @@ export default {
   methods: {
     insertar() {
       this.formPrograma.program_id_faculty = this.faculty_id;
-      this.$refs.formPrograma.validate();
+      this.$refs.form.validate();
       if (this.valid) {
         axios
           .post("/admin/add_program/", this.formPrograma)
@@ -81,7 +83,7 @@ export default {
             this.$emit("resetList");
             this.$message({ message: "Registro exitoso.", type: "success" });
             this.$emit("resetDialog");
-            this.reset();
+            this.$refs.form.reset();
           })
           .catch(error => {
             console.log(error);
@@ -90,13 +92,8 @@ export default {
       } else this.$message.error("Datos incorrectos");
     },
 
-    reset() {
-      this.formPrograma.program_name = "";
-      this.formPrograma.program_id_faculty = this.faculty_id;
-      this.formPrograma.program_id_coordinator = 0;
-    },
     cancelar() {
-      this.reset();
+      this.$refs.form.reset();
       this.$emit("resetDialog");
     }
   }
