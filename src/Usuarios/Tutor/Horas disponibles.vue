@@ -93,6 +93,7 @@
                   placeholder="Hora inicio"
                   style="width: 100%;"
                   v-model="startTime"
+                  @change="limpiarCampoHoraFin"
                   :picker-options="{
                     start: '06:00',
                     step: '00:30',
@@ -140,6 +141,7 @@
                     :color="color"
                     :events="events"
                     :event-color="getEventColor"
+                    :short-intervals = "shortIntervals"
                     @click:event="showEvent"
                     >
                     </v-calendar>
@@ -211,6 +213,7 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       startMenu: false,
       startMenuTime:false,
       endMenuTime:false,
+      shortIntervals: false,
       start: diaActual,
       actualidad: diaActual,
       startTime: "",
@@ -263,6 +266,9 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
     this.listar();
     },
     methods: {
+      limpiarCampoHoraFin(){
+        this.endTime =""
+      },
       listar() {
       axios
         .get("/tutor/show_schedule/"+JSON.parse(localStorage.getItem("Id_usuario")))
@@ -275,6 +281,8 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
         return event.color
       },
       cancelar() {
+      this.startTime =""
+      this.endTime =""
       this.newDialog = false;
       this.$emit("resetDialog", this.newDialog);
       this.listar();
