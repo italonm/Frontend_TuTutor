@@ -92,11 +92,12 @@ export default {
         { text: "Motivo secundario", value: "reason2"},
         { text: "Asistencia", value: "students.assistance"},
         { text: "Tipo de Solicitud", value: "is_formal" },                
-        { text: "Detalles", value: "detalles", sortable: false },
+        { text: "Resultado", value: "detalles", sortable: false },
       ],
       facultades:[],
       form:{
-        resultado:""
+        resultado:"",
+        id:null
       },
       search: "",
       dialog: false,
@@ -134,8 +135,7 @@ export default {
         });                         
       axios
         .get("/tutor/show_student_history_for_tutor/" + localStorage.getItem("Id_usuario"))        
-        .then(res => {
-          console.log(res)                      
+        .then(res => {                           
           this.sesiones = res.data.sessions        
           for (sesion in res.data.sessions){                      
             aux = 0
@@ -169,7 +169,9 @@ export default {
     detalles(item){                
         this.action = "Detalles de la sesión"        
         this.option = false
-        this.form.resultado = item.result        
+        console.log(item)
+        this.form.resultado = item.result       
+        this.form.id = item.id 
         this.dialog = true;
     },
     insertar() {  
