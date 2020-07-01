@@ -255,7 +255,6 @@ export default {
     }
   },
   created() {
-    console.log(JSON.parse(localStorage.getItem("Id_usuario")));
     this.listar();
   },
   methods: {
@@ -354,10 +353,6 @@ export default {
           }
       });
       this.grupoProximasCitas = groupsProxCit;
-
-
-      console.log(Object.keys(this.grupoCitasSinResultados).length);
-      console.log(Object.keys(this.grupoProximasCitas).length);
     },
     editar(item) {
       axios

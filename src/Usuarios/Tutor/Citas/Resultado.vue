@@ -8,7 +8,7 @@
         <v-container>
                 <v-card-title>
                   <h5>
-                  Asistencia 
+                  Asistencia
                   </h5>
                 </v-card-title>
                 <v-data-table
@@ -30,7 +30,7 @@
                 ></v-data-table>
                 <v-card-title>
                   <h5>
-                Comentario de la cita
+                Comentario de la cita (*)
                   </h5>
                 </v-card-title>
                 <v-container class="grey lighten-5">
@@ -42,11 +42,14 @@
                     height="50px"
                     ></v-textarea>
                 </v-container>
-                <v-card-title>
-                  <h5>
+                <v-col>
+                <h5>
                 Derivación
-                  </h5>
-                </v-card-title>
+                </h5>
+                <h6>
+                En caso el alumno necesite una ayuda especializada. Si no lo necesita, puede dejar este campo vacío.
+                </h6>
+                </v-col>
                 <v-col>
                 <v-select
                   v-model="unidadApoyo"
@@ -58,6 +61,7 @@
                   return-object
                   single-line
                   clearable
+                  height=20px
                 >
                 </v-select>
                 </v-col>
@@ -94,7 +98,8 @@ export default {
       datosResultado:{
         idsesion:"",
         resultado:"",
-        alumnos:[]
+        alumnos:[],
+        idderivacion:""
       },
       editarResultado:{
         idsesion:"",
@@ -123,12 +128,16 @@ export default {
       this.$emit("resetDialog", this.newDialog);
       },
       insertar(){
-
         if (Object.keys(this.resultado.asistencia).length != 0){
+          if (this.unidadApoyo.id == undefined){
+            this.unidadApoyo.id = 0
+          }
           this.datosResultado.idsesion = this.idSesion;
           this.datosResultado.resultado = this.resultado.comentario;
           this.datosResultado.alumnos = this.resultado.asistencia;
+          this.datosResultado.idderivacion=this.unidadApoyo.id
           console.log(this.datosResultado);
+          console.log(this.unidadApoyo.id)
           axios
           .post(
             "http://184.73.231.88:7002/api/tutor/register_result_and_assistance/",this.datosResultado)
@@ -141,7 +150,7 @@ export default {
           })
           .catch(error => {
               console.log(error);
-              this.$message.error("No se pudo registrar");
+              this.$message.error("Error al momento de registrar el resultado");
             });
         }
         else
