@@ -14,7 +14,7 @@
       <v-card>
         <v-card-text>
           <v-container>
-              <embed src="https://form.typeform.com/to/RGn9ztac" width="850" height="570"/>
+              <embed src="https://form.typeform.com/to/RGn9ztac" width="850" height="560"/>              
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -30,27 +30,41 @@
         </v-card-title> -->
 
         <v-list two-line style="max-height:600px">
+          
+          <div v-if="asignaciones.length > 0">
+            <v-list-item
+              v-for="asignacion in asignaciones"
+              :key="asignacion.id"
+            >
+              
+              <v-list-item-content>
+                <v-list-item-title v-text="asignacion.tutor_full_name"></v-list-item-title>
+                <v-list-item-title v-text="asignacion.tutoring_type"></v-list-item-title>
+              </v-list-item-content>
 
-          <v-list-item
-            v-for="notificacion in notificaciones"
-            :key="notificacion.id"
-          >
-            
-            <v-list-item-content>
-              <v-list-item-title v-text="notificacion.tutor_full_name"></v-list-item-title>
-              <v-list-item-title v-text="notificacion.tutoring_type"></v-list-item-title>
-            </v-list-item-content>
+              <v-list-item-action>
+                <v-spacer></v-spacer>
+                  <v-btn color="gray" @click="mostrarCuestionario(asignacion.id)">Responder</v-btn>
+              </v-list-item-action>
+            </v-list-item>
+            <v-divider
+              v-if="1 < asignaciones.length"
+              :key="id"
+            ></v-divider>
+          </div>
 
-            <v-list-item-action>
-              <v-spacer></v-spacer>
-                <v-btn color="gray" @click="mostrarCuestionario">Responder</v-btn>
-            </v-list-item-action>
-          </v-list-item>
-
-          <v-divider
-              v-if="index + 1 < notificaciones.length"
-              :key="index"
-          ></v-divider>
+          <div v-else>
+            <v-list-item
+              v-for="predeterminado in predeterminados"
+              :key="predeterminado.texto"
+            >
+              
+              <v-list-item-content>
+                <v-list-item-title v-text="predeterminado.texto"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </div>
+          
           
         </v-list>
 
@@ -62,21 +76,39 @@
 <script> 
 import axios from 'axios';
 //const form_id = "RGn9ztac"
-// const response_id = ""
 //const PERSONAL_TOKEN = "6Q7Q6NRPQFjNJFTyM2zGmVUtrFJ4kB9tK4Rc1aEvZPcV"
 export default {
   data() {
     return {
-      notificaciones: [],
+      asignaciones: [],
       dialog: false,
-      respuestas: [],
+      asignacion_id: "",
+      predeterminados: [{ "texto" : "No existen encuestas pendientes"}],
     }
   },
   methods: { 
 
     aceptar() {
-      this.dialog=false;
-      this.listarCuestionarios();
+      this.$confirm(
+        "¿Está seguro que desea finalizar la encuesta? Si no ha terminado de responder no podrá volverla a tomar luego.",
+        "Advertencia",
+        {
+          confirmButtonText: "Confirmar",
+          cancelButtonText: "Cancelar",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          axios
+          .post("http://184.73.231.88:5000/api/student/fill_poll/", {"id" : this.asignacion_id })
+          .then(res => {            
+            console.log(res);
+            this.listarCuestionarios();
+          })
+          .catch(error => console.log(error));
+          this.listarCuestionarios();          
+          this.dialog = false;          
+        }) 
     },
 
     listarCuestionarios() {
@@ -84,44 +116,25 @@ export default {
       axios
       .get("http://184.73.231.88:5000/api/student/show_finished_assignments/" + localStorage.getItem("Id_usuario"))
       .then(res => {
-          //console.log(res.data);
-          this.notificaciones = res.data.assignments; 
-          //console.log(this.notificaciones);              
+          this.asignaciones = res.data.assignments;             
       })
       .catch(error => console.log(error));
     },
 
-    mostrarCuestionario(){
+    mostrarCuestionario(select_asignacion_id){
+      this.asignacion_id = select_asignacion_id;
+      console.log(this.asignacion_id);
       this.dialog=true;
     },
 
-    /*
-    solicitarRespuestaTF(){
-      axios
-      .get("https://api.typeform.com/forms/" + form_id + "/responses", { headers: { Authorization: 'Bearer ' +  PERSONAL_TOKEN} })
-      .then(res => {
-          console.log(res.data);
-          //this.respuestas = res.data.assignments; 
-          //console.log(this.respuestas);              
-      })
-      .catch(error => console.log(error));
+    onSubmit(args) {
+      console.log('onSubmit', args);
     },
     
-    enviarRespuestaBD(){
-      axios
-      .post("", {"id" : localStorage.getItem("Id_usuario"), "answers" : this.respuestas })
-      .then(res => {
-          //console.log(localStorage.getItem("Id_usuario")); 
-          //console.log(this.respuestas);              
-      })
-      .catch(error => console.log(error));
-    }
-  */
   },
   
   created() {
     this.listarCuestionarios();
-    //this.solicitarRespuestaTF();
   },
 }
 
