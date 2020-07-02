@@ -1,16 +1,16 @@
 <template>
   <el-container direction="vertical">
-    <el-row>
+    <el-row :gutter="20">
       <!--Unidades académicas-->
-      <el-col :span="11">
+      <el-col :md="24" :lg="12">
         <el-row>
           <div class="grid-content">
-            <h1 style="text-align: center;">
+            <h1 style="text-align: center;" class="zzz">
               <i class="fas fa-university"></i>&nbsp;Unidades Académicas
             </h1>
           </div>
         </el-row>
-        <el-row>
+        <el-row type="flex" :gutter="20" justify="space-around">
           <el-col :span="4">
             <div class="grid-content"></div>
           </el-col>
@@ -19,22 +19,54 @@
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
           </el-col>
-          <el-col :span="1">
-            <div class="grid-content"></div>
-          </el-col>
-          <el-col :span="3">
+          <el-col :span="4">
             <div class="grid-content">
               <el-button type="success" icon="el-icon-plus" circle @click="dialogUnidad = true"></el-button>
             </div>
           </el-col>
         </el-row>
-      </el-col>
-      <el-col :span="2">
-        <div class="grid-content"></div>
+        <el-row style="margin-bottom:15px;">
+          <!-- Tabla unidades-->
+          <el-col>
+            <v-data-table
+              :footer-props="footerProps"
+              :headers="headersUnidades"
+              :items="unidades"
+              :search="searchUnidad"
+              :items-per-page="5"
+              multi-sort
+              class="elevation-3"
+              loading-text="Cargando.."
+              height="288px"
+              fixed-header
+            >
+              <template v-slot:item.watch="{ item }">
+                <el-button type="info" icon="fas fa-school" circle @click="listarProgramaAux(item)"></el-button>
+              </template>
+              <template v-slot:item.faculty_required_tutorship="{ item }">
+                <i v-if="item.faculty_required_tutorship == true" class="el-icon-check"></i>
+                <i v-if="item.faculty_required_tutorship == false" class="el-icon-close"></i>
+              </template>
+              <template v-slot:item.faculty_unique_faculty="{ item }">
+                <i v-if="item.faculty_unique_faculty == true" class="el-icon-check"></i>
+                <i v-if="item.faculty_unique_faculty == false" class="el-icon-close"></i>
+              </template>
+              <template v-slot:item.add="{ item }">
+                <el-button
+                  v-if="item.faculty_unique_faculty == false"
+                  type="success"
+                  icon="el-icon-plus"
+                  circle
+                  @click="insertarPrograma(item)"
+                ></el-button>
+              </template>
+            </v-data-table>
+          </el-col>
+        </el-row>
       </el-col>
 
       <!--Programas-->
-      <el-col :span="11">
+      <el-col :md="24" :lg="12">
         <el-row>
           <div class="grid-content">
             <h1 style="text-align: center;">
@@ -43,7 +75,7 @@
             </h1>
           </div>
         </el-row>
-        <el-row>
+        <el-row type="flex" :gutter="20" justify="space-around">
           <el-col :span="4">
             <div class="grid-content"></div>
           </el-col>
@@ -56,68 +88,26 @@
             <div class="grid-content"></div>
           </el-col>
         </el-row>
-      </el-col>
-    </el-row>
-
-    <!--Tablas-->
-    <el-row>
-      <!-- Tabla unidades-->
-      <el-col :span="11">
-        <v-data-table
-          :footer-props="footerProps"
-          :headers="headersUnidades"
-          :items="unidades"
-          :search="searchUnidad"
-          :items-per-page="5"
-          multi-sort
-          class="elevation-3"
-          loading-text="Cargando.."
-          height="288px"
-          fixed-header
-        >
-          <template v-slot:item.watch="{ item }">
-            <el-button type="info" icon="fas fa-school" circle @click="listarProgramaAux(item)"></el-button>
-          </template>
-          <template v-slot:item.faculty_required_tutorship="{ item }">
-            <i v-if="item.faculty_required_tutorship == true" class="el-icon-check"></i>
-            <i v-if="item.faculty_required_tutorship == false" class="el-icon-close"></i>
-          </template>
-          <template v-slot:item.faculty_unique_faculty="{ item }">
-            <i v-if="item.faculty_unique_faculty == true" class="el-icon-check"></i>
-            <i v-if="item.faculty_unique_faculty == false" class="el-icon-close"></i>
-          </template>
-          <template v-slot:item.add="{ item }">
-            <el-button
-              v-if="item.faculty_unique_faculty == false"
-              type="success"
-              icon="el-icon-plus"
-              circle
-              @click="insertarPrograma(item)"
-            ></el-button>
-          </template>
-        </v-data-table>
-      </el-col>
-      <el-col :span="2">
-        <div class="grid-content"></div>
-      </el-col>
-
-      <!-- Tabla programas-->
-      <el-col :span="11">
-        <v-data-table
-          :footer-props="footerProps"
-          :headers="headersProgramas"
-          :items="programas"
-          :search="searchPrograma"
-          :items-per-page="5"
-          multi-sort
-          class="elevation-3"
-          height="288px"
-          fixed-header
-        >
-          <template slot="no-data">
-            <label>Seleccione una unidad académica</label>
-          </template>
-        </v-data-table>
+        <el-row>
+          <!-- Tabla programas-->
+          <el-col :span="24">
+            <v-data-table
+              :footer-props="footerProps"
+              :headers="headersProgramas"
+              :items="programas"
+              :search="searchPrograma"
+              :items-per-page="5"
+              multi-sort
+              class="elevation-3"
+              height="288px"
+              fixed-header
+            >
+              <template slot="no-data">
+                <label>Seleccione una unidad académica</label>
+              </template>
+            </v-data-table>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
 
@@ -226,3 +216,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+.zzz {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+</style>
