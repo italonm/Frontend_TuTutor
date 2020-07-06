@@ -34,6 +34,7 @@ import {
     cilCloudDownload,
     cilChartPie,
     cilCheck,
+    cilBug,
     cilChevronBottom,
     cilChevronTop,
     cilCheckCircle,
@@ -76,6 +77,7 @@ import { logo } from "./logo";
 export const iconsSet = Object.assign({}, { logo }, {
     cilArrowRight,
     cilBan,
+    cilBug,
     cilBasket,
     cilBell,
     cilCalculator,
