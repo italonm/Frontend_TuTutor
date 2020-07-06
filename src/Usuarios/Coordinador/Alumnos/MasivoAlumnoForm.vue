@@ -1,24 +1,23 @@
 <template>
   <v-dialog v-model="dialog2" persistent max-width="500px">
     <v-card>
-        <v-card-title class="cardAdd">
-            <h2 class="headline">Registro Masivo Alumnos</h2>
-        </v-card-title>
-        <v-card-text>
-            <v-container>
-                <CCard>
+      <v-card-title class="cardAdd">
+        <h2 class="headline">Registro Masivo Alumnos</h2>
+      </v-card-title>
+      <v-card-text>
+        <v-container>
+          <CCard>
             <CCardHeader>
-                <strong>Adjunte un archivo Excel</strong>
+              <strong>Adjunte un archivo Excel</strong>
             </CCardHeader>
             <CCardBody>
-            <div>
-              <img id="img" :src="previewImage" class="uploading-image img-thumbnail" />
-              <CCol>
-                <input ref="file" type="file" accept="xlsx" @change="uploadImage" />
-              </CCol>
-            </div>
-          </CCardBody>
-        </CCard>
+              <div>
+                <CCol>
+                  <input ref="file" type="file" accept="xlsx" @change="uploadImage" />
+                </CCol>
+              </div>
+            </CCardBody>
+          </CCard>
         </v-container>
       </v-card-text>
       <v-card-actions>
@@ -31,7 +30,6 @@
 </template>
 
 <script>
-
 import axios from "axios";
 var formData = new FormData();
 export default {
@@ -40,34 +38,41 @@ export default {
   data() {
     return {
       localDialog: this.dialog2,
-      documentExcel:''
+      documentExcel: ""
     };
   },
 
   methods: {
     funcion() {
-        console.log(this.documentExcel);
-        console.log(localStorage.getItem("Id_facultad"));
-          axios
-            .post(
-              "/coordinator/add_student_excel/"+localStorage.getItem("Id_facultad"),this.documentExcel)
-            .then(this.$message({ message: "Subiendo archivo, por favor espere", type: "success" }))
-            .catch(e => {
-              console.log(e);
-            });
-             this.$emit("resetDialog");
+      console.log(this.documentExcel);
+      console.log(localStorage.getItem("Id_facultad"));
+      axios
+        .post(
+          "/coordinator/add_student_excel/" +
+            localStorage.getItem("Id_facultad"),
+          this.documentExcel
+        )
+        .then(
+          this.$message({
+            message: "Subiendo archivo, por favor espere",
+            type: "success"
+          })
+        )
+        .catch(e => {
+          console.log(e);
+        });
+      this.$emit("resetDialog");
     },
 
     cancelar() {
-        this.$emit("resetDialog");
-        
+      this.$emit("resetDialog");
     },
-    uploadImage(e){
-      if (e!=null){
-      const image = e.target.files[0];
-      formData.append("file", image);
-      this.documentExcel=formData;
-      console.log(this.documentExcel);
+    uploadImage(e) {
+      if (e != null) {
+        const image = e.target.files[0];
+        formData.append("file", image);
+        this.documentExcel = formData;
+        console.log(this.documentExcel);
       }
     }
   }

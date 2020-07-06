@@ -16,28 +16,38 @@
           </el-input>
         </div>
       </el-col>
-      <el-col :span="4">
-        <div class="grid-content">
-          <el-button
-            type="success"
-            icon="fas fa-user-plus"
-            @click="insertar()"
-            class="buttonAdd"
-          >&nbsp;Agregar</el-button>
+      <el-col :span="8">
+        <div class="text-center">
+          <v-menu open-on-hover bottom offset-y transition="slide-x-transition">
+            <template v-slot:activator="{ on: menu, attrs }">
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on: tooltip }">
+                  <v-btn
+                    color="success"
+                    dark
+                    v-bind="attrs"
+                    v-on="{ ...tooltip, ...menu }"
+                  >Registrar</v-btn>
+                </template>
+                <span>Registro desplegable</span>
+              </v-tooltip>
+            </template>
+            <v-list color="success">
+              <v-list-item @click="insertar" dark>
+                <v-list-item-title>Registrar alumno</v-list-item-title>
+              </v-list-item>
+              <v-divider></v-divider>
+              <v-list-item @click="dialog2 = true;" dark>
+                <v-list-item-title>Registrar masivamente</v-list-item-title>
+              </v-list-item>
+              <v-divider></v-divider>
+              <v-list-item @click="dialogGraduados = true;" dark>
+                <v-list-item-title>Registrar graduados</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </div>
       </el-col>
-      <!-------->
-      <el-col :span="4">
-        <div class="grid-content">
-          <el-button
-            type="success"
-            icon="fas fa-user-plus"
-            @click="agregarMasivamente()"
-            class="buttonAdd"
-          >&nbsp;Masivamente</el-button>
-        </div>
-      </el-col>
-      <!-------------->
     </el-row>
 
     <!-- Tabla-->
@@ -76,18 +86,16 @@
     ></alumnoForm>
 
     <!---Formulario Masivo-->
-    <alumnoMasivoForm
-      :dialog2="dialog2"
-      v-on:resetDialog="dialog2=$event"
-    ></alumnoMasivoForm>
-
+    <alumnoMasivoForm :dialog2="dialog2" v-on:resetDialog="dialog2=$event"></alumnoMasivoForm>
+    <graduadosForm :dialogGraduados="dialogGraduados" v-on:resetDialog="dialogGraduados=$event"></graduadosForm>
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
 import AlumnoForm from "./AlumnoForm";
-import AlumnoMasivoForm from "./MasivoAlumnoForm"
+import AlumnoMasivoForm from "./MasivoAlumnoForm";
+import GraduadosForm from "./GraduadosForm";
 export default {
   data() {
     return {
@@ -108,11 +116,13 @@ export default {
         person_code: "",
         person_id: "",
         program_id: localStorage.getItem("Id_facultad"),
+        person_scores: null
       },
 
       search: "",
       dialog: false,
-      dialog2:false,
+      dialog2: false,
+      dialogGraduados: false,
       action: ""
     };
   },
@@ -123,9 +133,11 @@ export default {
 
   methods: {
     listar() {
-      console.log(localStorage.getItem("Id_facultad"))
+      console.log(localStorage.getItem("Id_facultad"));
       axios
-        .get("/coordinator/show_students/"+localStorage.getItem("Id_facultad"))
+        .get(
+          "/coordinator/show_students/" + localStorage.getItem("Id_facultad")
+        )
         .then(res => {
           this.alumnos = res.data.users;
         })
@@ -140,14 +152,11 @@ export default {
     editar(item) {
       this.action = "Editar alumno";
       this.form = Object.assign({}, item);
+
       this.dialog = true;
     },
-    agregarMasivamente(){
-      console.log("this is the masivamente")
-      this.dialog2=true;
-    },
+
     eliminar(item) {
-      
       this.$confirm(
         "Esta seguro de eliminar: " + item.name + "?",
         "Advertencia",
@@ -179,7 +188,8 @@ export default {
 
   components: {
     alumnoForm: AlumnoForm,
-    alumnoMasivoForm:AlumnoMasivoForm
+    alumnoMasivoForm: AlumnoMasivoForm,
+    graduadosForm: GraduadosForm
   }
 };
 </script>

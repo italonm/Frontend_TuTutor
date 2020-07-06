@@ -56,6 +56,16 @@
                   required
                 ></v-text-field>
               </v-col>
+              <v-col cols="12" md="6">
+                <v-file-input
+                  ref="pdf"
+                  chips
+                  accept=".pdf"
+                  show-size
+                  label="Notas en pdf"
+                  @change="uploadpdf"
+                ></v-file-input>
+              </v-col>
             </v-row>
           </v-form>
         </v-container>
@@ -72,7 +82,7 @@
 <script>
 import { nameRules, emailRules, codeRules, phoneRules } from "../../Validation";
 import axios from "axios";
-
+var formData = new FormData();
 export default {
   props: ["form", "dialog", "action"],
 
@@ -85,7 +95,8 @@ export default {
       nameValidation: nameRules,
       emailValidation: emailRules,
       codeValidation: codeRules,
-      phoneValidation: phoneRules
+      phoneValidation: phoneRules,
+      notas: ""
     };
   },
 
@@ -101,23 +112,20 @@ export default {
         axios
           .post("/coordinator/add_student/", this.form)
           .then(res => {
-              console.log(res)
-              this.$emit("resetList");
-              this.$message({ message: "Registro exitoso.", type: "success" });
-              this.$emit("resetDialog");
-              this.$refs.form.reset();
-            })
+            console.log(res);
+            this.$emit("resetList");
+            this.$message({ message: "Registro exitoso.", type: "success" });
+            this.$emit("resetDialog");
+            this.$refs.form.reset();
+          })
           .catch(error => {
-            console.log(error)
+            console.log(error);
             this.$message.error("Datos Duplicados");
           });
-
       } else this.$message.error("Datos incorrectos");
     },
 
     editar() {
-      //servicio
-
       this.$refs.form.validate();
       if (this.valid) {
         console.log(this.form);
@@ -140,6 +148,14 @@ export default {
       } else this.$message.error("Datos incorrectos");
     },
 
+    uploadpdf(e) {
+      if (e != null) {
+        const pdf = e.File;
+        formData.append("file", pdf);
+        this.notas = formData;
+        console.log(this.notas);
+      }
+    },
     cancelar() {
       this.$refs.form.reset();
       this.$emit("resetDialog");

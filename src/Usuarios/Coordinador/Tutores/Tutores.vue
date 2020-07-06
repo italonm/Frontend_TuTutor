@@ -16,28 +16,38 @@
           </el-input>
         </div>
       </el-col>
-      <el-col :span="4">
-        <div class="grid-content">
-          <el-button
-            type="success"
-            icon="fas fa-user-plus"
-            @click="insertar()"
-            class="buttonAdd"
-          >&nbsp;Agregar</el-button>
+      <el-col :span="8">
+        <div class="text-center">
+          <v-menu open-on-hover bottom offset-y transition="slide-x-transition">
+            <template v-slot:activator="{ on: menu, attrs }">
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on: tooltip }">
+                  <v-btn
+                    color="success"
+                    dark
+                    v-bind="attrs"
+                    v-on="{ ...tooltip, ...menu }"
+                  >Registrar</v-btn>
+                </template>
+                <span>Registro desplegable</span>
+              </v-tooltip>
+            </template>
+            <v-list color="success">
+              <v-list-item @click="insertar" dark>
+                <v-list-item-title>Registrar tutor</v-list-item-title>
+              </v-list-item>
+              <v-divider></v-divider>
+              <v-list-item @click="dialog2 = true;" dark>
+                <v-list-item-title>Registrar masivamente</v-list-item-title>
+              </v-list-item>
+              <v-divider></v-divider>
+              <v-list-item @click="dialogGraduados = true;" dark>
+                <v-list-item-title>Registrar Tutorías</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </div>
       </el-col>
-       <!-------->
-      <el-col :span="4">
-        <div class="grid-content">
-          <el-button
-            type="success"
-            icon="fas fa-user-plus"
-            @click="agregarMasivamente()"
-            class="buttonAdd"
-          >&nbsp;Masivamente</el-button>
-        </div>
-      </el-col>
-      <!-------------->
     </el-row>
 
     <!-- Tabla-->
@@ -75,12 +85,8 @@
       v-on:resetList="listar()"
     ></tutorForm>
 
-        <!---Formulario Masivo-->
-    <tutorMasivoForm
-      :dialog2="dialog2"
-      v-on:resetDialog="dialog2=$event"
-    ></tutorMasivoForm>
-
+    <!---Formulario Masivo-->
+    <tutorMasivoForm :dialog2="dialog2" v-on:resetDialog="dialog2=$event"></tutorMasivoForm>
   </el-container>
 </template>
 
@@ -107,11 +113,11 @@ export default {
         person_phone_number: "",
         person_code: "",
         person_id: "",
-        program_id: localStorage.getItem("Id_facultad"),
+        program_id: localStorage.getItem("Id_facultad")
       },
       search: "",
       dialog: false,
-      dialog2:false,
+      dialog2: false,
       action: ""
     };
   },
@@ -123,7 +129,7 @@ export default {
   methods: {
     listar() {
       axios
-        .get("/coordinator/show_tutors/"+ localStorage.getItem("Id_facultad"))
+        .get("/coordinator/show_tutors/" + localStorage.getItem("Id_facultad"))
         .then(res => {
           this.tutores = res.data.users;
         })
@@ -140,10 +146,10 @@ export default {
       this.form = Object.assign({}, item);
       this.dialog = true;
     },
-    
-    agregarMasivamente(){
-      console.log("this is the masivamente")
-      this.dialog2=true;
+
+    agregarMasivamente() {
+      console.log("this is the masivamente");
+      this.dialog2 = true;
     },
     eliminar(item) {
       this.$confirm(
@@ -156,7 +162,6 @@ export default {
         }
       )
         .then(() => {
-          
           console.log(item.person_id);
           console.log(item);
           //servicio
@@ -178,7 +183,7 @@ export default {
 
   components: {
     tutorForm: TutorForm,
-    tutorMasivoForm:TutorMasivoForm
+    tutorMasivoForm: TutorMasivoForm
   }
 };
 </script>
