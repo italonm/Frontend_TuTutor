@@ -20,6 +20,7 @@
                     <v-list-item-title v-text="notificacion.asunto"></v-list-item-title>
                     <v-list-item-subtitle class="text--primary" v-text="notificacion.fecha"></v-list-item-subtitle>
                     <v-list-item-subtitle v-text="notificacion.lugar"></v-list-item-subtitle>
+                    <a href="notificacion.link"  target="_blank">Link de la reunión</a>
                 </v-list-item-content>
 
                 <v-list-item-action>

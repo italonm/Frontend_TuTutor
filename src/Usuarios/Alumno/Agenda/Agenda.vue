@@ -143,6 +143,7 @@
                   <v-list-item-title v-text="notificacion.tutor"></v-list-item-title>
                   <v-list-item-subtitle class="text--primary" v-text="notificacion.tutoring_type"></v-list-item-subtitle>
                   <v-list-item-subtitle v-text="notificacion.place"></v-list-item-subtitle>
+                  <a href="notificacion.link"  target="_blank">Link de la reunión</a>
               </v-list-item-content>
             </v-list-item>
 
