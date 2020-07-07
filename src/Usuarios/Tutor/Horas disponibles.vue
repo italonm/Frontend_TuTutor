@@ -32,6 +32,16 @@
                 </v-btn>
                 <br><br><br>
                 <v-select
+                    v-model="programa"
+                    :items="facultades"
+                    label="Selecciona una facultad"
+                    item-text="program_name"
+                    item-value="program_id"
+                    @change="listar()"
+                >
+                </v-select>
+
+                <v-select
                     v-model="weekdays"
                     :items="weekdaysOptions"
                     label="Rango de días"
@@ -188,7 +198,7 @@
             </v-layout>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue" @click="cancelar">Repetir horario pasado</v-btn>
+                <v-btn color="blue" @click="repetirSemana">Repetir horario pasado</v-btn>
                 <v-btn color="error" @click="cancelar">Cerrar</v-btn>
             </v-card-actions>
       </v-card>
@@ -209,6 +219,8 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
   export default {
     props: ["dialog"],
     data: () => ({
+      facultades:[],
+      programa:null,
       dark: false,
       startMenu: false,
       startMenuTime:false,
@@ -241,9 +253,14 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       maxDays: 7,
       color: 'blue',
       events:[],
+      tutor:{
+        tutor_id:JSON.parse(localStorage.getItem("Id_usuario")),
+        program_id:""
+      },
       schedule:{
         tutor_id:JSON.parse(localStorage.getItem("Id_usuario")),
-        events: []
+        events: [],
+        program_id:""
       },
       eventosAgregados:[],
       borrarEvento:{
@@ -263,7 +280,25 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       }
     },
     created() {
-    this.listar();
+    //TOKEN CODING
+    var username = localStorage.getItem("Token")
+    username = username.slice(1,username.length-1)
+    var password = '';
+    var token = new Buffer(username + ':' + password).toString('base64');               
+    axios
+          .get("tutor/show_programs_from_tutor/" + localStorage.getItem("Id_usuario"),
+          {headers:{
+            'Authorization': `Basic ${token}`
+          }})
+          .then(res =>{
+            this.facultades = res.data.programs
+            this.programa = this.facultades[0].program_id;       
+            this.listar(); 
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message.error("No tiene programas registrados");
+          });    
     },
     methods: {
       limpiarCampoHoraFin(){
@@ -271,7 +306,7 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       },
       listar() {
       axios
-        .get("/tutor/show_schedule/"+JSON.parse(localStorage.getItem("Id_usuario")))
+        .get("/tutor/show_schedule/"+JSON.parse(localStorage.getItem("Id_usuario"))+"/"+this.programa)
         .then(res => {
           this.events = res.data.schedules;
         })
@@ -310,18 +345,18 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
         this.eventosAgregados.push({id:null , name: nombreDia,
                           start: this.start +" "+ this.startTime,
                           end: this.start +" "+ this.endTime, color:"green"}) 
+        this.schedule.program_id = this.programa;
         this.schedule.events = this.eventosAgregados;
-        console.log(this.schedule);
         axios
           .post("/tutor/add_schedule/", this.schedule)
           .then(res => {
             console.log(res);
-            this.$message({ message: "Registro exitoso.", type: "success" });
+            this.$message({ message: "Registro de evento exitoso.", type: "success" });
             this.listar();
           })
           .catch(error => {
             console.log(error);
-            this.$message.error("Error al registrar datos");
+            this.$message.error("Error al registrar evento");
           });
         this.eventosAgregados=[];
       },
@@ -343,14 +378,12 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       },
       deleteEvent(selectedEventID){
         this.borrarEvento.schedule_id = selectedEventID;
-        console.log(this.borrarEvento.schedule_id);
         axios
           .post("/tutor/delete_schedule/", this.borrarEvento)
           .then(res => {
             console.log(res);
             this.$message({ message: "Eliminación exitosa.", type: "success" });
             this.selectedOpen = false
-            console.log(this.events);
             this.listar();
           })
           .catch(error => {
@@ -358,22 +391,21 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
             this.$message.error("No se pudo eliminar");
           });
       },
-      insertar() {
-        console.log(this.events);
-        this.schedule.events = this.eventosAgregados;
-        console.log(this.schedule);
+      repetirSemana() {
+        this.tutor.program_id = this.programa;
+        console.log(this.tutor);
         axios
-          .post("/tutor/add_schedule/", this.schedule)
+          .post("/tutor/repeat_schedule/", this.tutor)
           .then(res => {
             console.log(res);
-            this.$message({ message: "Registro exitoso.", type: "success" });
+            this.$message({ message: "Registro de eventos exitoso.", type: "success" });
             this.newDialog = false;
             this.$emit("resetDialog", this.newDialog);
             this.listar();
           })
           .catch(error => {
             console.log(error);
-            this.$message.error("Error al registrar datos");
+            this.$message.error("Error al repetir los eventos");
           });
       }
     }
