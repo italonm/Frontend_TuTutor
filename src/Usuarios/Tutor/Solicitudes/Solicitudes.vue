@@ -59,8 +59,23 @@
           <v-card-text>Esta acción no se podrá revertir</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
+            <div v-if="action === 'rechazar'">
+              <v-row align="start" justify="start">
+              <v-col cols="auto">
+                <v-card-text>Por favor, seleccione un motivo de rechazo</v-card-text>
+                <v-overflow-btn
+                  v-model="motivos"
+                  class="my-2"
+                  :items="rechazos"
+                  label="Motivos de rechazo"
+                  target="#dropdown-example"
+                ></v-overflow-btn>
+              </v-col>
+              </v-row>
+            </div>
+            <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="cancelar">cancelar</v-btn>
-            <v-btn color="green darken-1" text @click="guardar">{{ action }}</v-btn>
+            <v-btn color="green darken-1" text @click="guardar()">{{ action }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -76,6 +91,8 @@ export default {
     return {
       solicitudes: [],
       selected: [],
+      rechazos: [],
+      motivos: null,
       headers: [
         { text: "Fecha", value: "date" },
         { text: "Tipo de tutoría", value: "tipotutoria" },
@@ -92,17 +109,26 @@ export default {
   created() {
     axios;
     this.listar();
+    this.listarRechazos();
   },
 
   methods: {
     
     listar() {      
-      console.log(localStorage.getItem("Id_usuario"));
+      //console.log(localStorage.getItem("Id_usuario"));
       axios
         .get( "http://184.73.231.88:5000/api/tutor/show_assignment_requests/" + localStorage.getItem("Id_usuario") )
         .then(res => {
           console.log(res.data);
           this.solicitudes = res.data.tableData;
+        })
+        .catch(error => console.log(error));
+    },
+    listarRechazos() {      
+      axios
+        .get("http://184.73.231.88:7002/api/tutor/show_reasons_rejection/")
+        .then(res => {
+          this.rechazos = res.data.reasons;
         })
         .catch(error => console.log(error));
     },
@@ -141,15 +167,14 @@ export default {
     cancelar() {
       this.dialog = false;
       this.$emit("resetDialog");
-      //this.$refs.dialog.reset();
       this.listar();
     },
 
     aceptar() {
       console.log(this.selected);
       axios
-        .post( "http://184.73.231.88:5000/api/tutor/accept_list_assignment_requests/",
-            { obj_list: this.selected } )
+        .post( "http://184.73.231.88:7002/api/tutor/accept_list_assignment_requests/",
+            { "obj_list": this.selected } )
         .then(res => {
           console.log(res);
           this.selected = [];
@@ -163,20 +188,31 @@ export default {
     },
 
     rechazar() {
-      console.log(this.selected);
-      axios
-        .post("http://184.73.231.88:5000/api/tutor/reject_list_assignment_requests/",
-            { obj_list: this.selected } )
+      //console.log(this.selected); 
+      if (this.motivos == null) {
+        this.$message({
+          message: "Por favor, seleccione un motivo de rechazo",
+          type: "info"
+        });
+      } else {
+        axios
+        .post(
+          "http://184.73.231.88:7002/api/tutor/reject_list_assignment_requests/",
+          { obj_list: this.selected , "motivo": this.motivos}
+        )
         .then(res => {
           console.log(res);
           this.selected = [];
           this.listar();
+          this.listarRechazos();
           this.dialog = false;
           this.$message({
             message: "Rechazo exitoso",
             type: "success"
           });
-        });
+        });        
+      }     
+      
     }
   }
 };

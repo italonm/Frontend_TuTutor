@@ -1,7 +1,7 @@
 //COMPONENTES DE ADMINISTRADOR
 import Configuración from "../../Usuarios/Administrador/Configuración/Configuración";
 /* import Auditoría from '../../Usuarios/Administrador/Auditoría' */
-/* import Errores from '../../Usuarios/Administrador/Errores' */
+import Errores from '../../Usuarios/Administrador/Errores/Errores'
 import Académicas from "../../Usuarios/Administrador/Unidades académicas/Unidades académicas";
 import Usuarios from "../../Usuarios/Administrador/Usuarios/Usuarios";
 import Coordinadores from "../../Usuarios/Administrador/Coordinadores/Coordinadores.vue";
@@ -73,7 +73,7 @@ export const routes = [
             { path: "Coordinadores", component: Coordinadores, name: "coordinadores" }, //italo
             { path: "Usuarios", component: Usuarios, name:"usuarios"}, //italo
             { path: "Auditoría", component: Welcome, name:"auditoría" },
-            { path: "Errores", component: Welcome, name:"errores" },
+            { path: "Errores", component: Errores, name:"errores" },            
         ],
     },
     {

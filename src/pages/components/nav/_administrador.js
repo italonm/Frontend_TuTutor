@@ -36,11 +36,11 @@ export default [
           to: '/Auditoría',
           icon: 'cil-task'
         },    */
-        /* {
+        {
           _name: 'CSidebarNavItem',
           name: 'Errores',
-          to: '/Errores',
-          icon: 'cil-pencil'
-        }, */
+          to: '/Administrador/Errores',
+          icon: 'cil-bug'
+        },
     ]
 }]

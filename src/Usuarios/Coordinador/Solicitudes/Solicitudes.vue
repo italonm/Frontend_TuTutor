@@ -50,17 +50,33 @@
 
     <!-- Confirmación o rechazo-->
     <v-row justify="center">
-      <v-dialog v-model="dialog" persistent max-width="650">
+      <v-dialog v-model="dialog" persistent max-width="750">
         <v-card>
           <v-card-title class="headline">
-            {{
-            "¿Está seguro que desea " + action + " la(s) solicitud(es)?" }}
+            {{  "¿Está seguro que desea " + action + " la(s) solicitud(es)?" }}
           </v-card-title>
           <v-card-text>Esta acción no se podrá revertir</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
+            <div v-if="action === 'rechazar'">
+              <v-row align="start" justify="start">
+              <v-col cols="auto">
+                <v-card-text>Por favor, seleccione un motivo de rechazo</v-card-text>
+                <v-overflow-btn
+                  v-model="motivos"
+                  class="my-2"
+                  :items="rechazos"
+                  label="Motivos de rechazo"
+                  target="#dropdown-example"
+                ></v-overflow-btn>
+              </v-col>
+              </v-row>
+            </div>
+            <v-spacer></v-spacer>
+            <v-row align="start" justify="start">
             <v-btn color="blue darken-1" text @click="cancelar">cancelar</v-btn>
             <v-btn color="green darken-1" text @click="guardar">{{ action }}</v-btn>
+          </v-row>         
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -76,6 +92,8 @@ export default {
     return {
       solicitudes: [],
       selected: [],
+      rechazos: [],
+      motivos: null,
       headers: [
         { text: "Fecha", value: "date" },
         { text: "Tipo de tutoría", value: "tipotutoria" },
@@ -92,16 +110,23 @@ export default {
   created() {
     axios;
     this.listar();
+    this.listarRechazos();
   },
 
   methods: {
     listar() {
       axios
-        .get(
-          "http://184.73.231.88:5000/api/coordinator/show_assignment_requests/" + localStorage.getItem("Id_usuario")
-        )
+        .get( "http://184.73.231.88:5000/api/coordinator/show_assignment_requests/" + localStorage.getItem("Id_usuario") )
         .then(res => {
           this.solicitudes = res.data.tableData;
+        })
+        .catch(error => console.log(error));
+    },
+    listarRechazos() {      
+      axios
+        .get("http://184.73.231.88:7002/api/coordinator/show_reasons_rejection/")
+        .then(res => {
+          this.rechazos = res.data.reasons;
         })
         .catch(error => console.log(error));
     },
@@ -140,7 +165,6 @@ export default {
     cancelar() {
       this.dialog = false;
       this.$emit("resetDialog");
-      //this.$refs.dialog.reset();
       this.listar();
     },
 
@@ -164,22 +188,31 @@ export default {
     },
 
     rechazar() {
-      console.log(this.selected);
-      axios
+      //console.log(this.selected);
+      if (this.motivos == null) {
+        this.$message({
+          message: "Por favor, seleccione un motivo de rechazo",
+          type: "info"
+        });
+      } else {
+        axios
         .post(
-          "http://184.73.231.88:5000/api/coordinator/reject_list_assignment_requests/",
-          { obj_list: this.selected }
+          "http://184.73.231.88:7002/api/coordinator/reject_list_assignment_requests/",
+          { obj_list: this.selected , "motivo": this.motivos}
         )
         .then(res => {
           console.log(res);
           this.selected = [];
           this.listar();
+          this.listarRechazos();
           this.dialog = false;
           this.$message({
             message: "Rechazo exitoso",
             type: "success"
           });
-        });
+        });        
+      }
+      
     }
   }
 };
