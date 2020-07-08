@@ -28,11 +28,33 @@
                 fixed-header
                 hide-default-footer
                 ></v-data-table>
+                <br>
+                <v-col>
+                <h5>
+                Motivos de la cita
+                </h5>
+                <h6>
+                Seleccione los temas propósitos de la cita.
+                </h6>
+                </v-col>
+                <v-col>
+                <v-select
+                v-model="motivos"
+                :items="items"                                    
+                label="Motivo de la sesión (Máx. 2 motivos)"
+                multiple                
+                small-chips
+                clearable
+                return-object
+              >              
+              </v-select>
+              </v-col>
                 <v-card-title>
                   <h5>
-                Comentario de la cita (*)
+                Comentario de la cita
                   </h5>
                 </v-card-title>
+                <v-col>
                 <v-container class="grey lighten-5">
                     <v-textarea
                     v-model="resultado.comentario"
@@ -42,6 +64,7 @@
                     height="50px"
                     ></v-textarea>
                 </v-container>
+                </v-col>
                 <v-col>
                 <h5>
                 Derivación
@@ -93,13 +116,26 @@ export default {
         { text: "Nombres", value: "nombre" },
         { text: "Apellidos", value: "apellidos" }
       ],
+      items: [        
+        'Académico',
+        'Académico-administrativo',
+        'Vocacional',
+        'Personal', 
+        'Familiar', 
+        'Individual', 
+        'Ecónomico', 
+        'Psicológico', 
+      ],  
       valid: true,
       lazy: false,
+      motivos: [],
       datosResultado:{
         idsesion:"",
         resultado:"",
         alumnos:[],
-        idderivacion:""
+        idderivacion:"",
+        reason1:"",
+        reason2:"",
       },
       editarResultado:{
         idsesion:"",
@@ -129,32 +165,42 @@ export default {
       },
       insertar(){
         if (Object.keys(this.resultado.asistencia).length != 0){
-          if (this.unidadApoyo.id == undefined){
-            this.unidadApoyo.id = 0
+          this.datosResultado.reason1=this.motivos[0];
+          if(this.motivos[1]==undefined){
+            this.datosResultado.reason2="";
           }
-          this.datosResultado.idsesion = this.idSesion;
-          this.datosResultado.resultado = this.resultado.comentario;
-          this.datosResultado.alumnos = this.resultado.asistencia;
-          this.datosResultado.idderivacion=this.unidadApoyo.id
-          console.log(this.datosResultado);
-          console.log(this.unidadApoyo.id)
-          axios
-          .post(
-            "http://184.73.231.88:7002/api/tutor/register_result_and_assistance/",this.datosResultado)
-          .then(res => {
-              this.$emit("resetList");
-              this.$message({ message: "Registro exitoso.", type: "success" });
-              console.log(res);
-              this.newDialog = false;
-              this.$emit("resetDialog", this.newDialog);
-          })
-          .catch(error => {
-              console.log(error);
-              this.$message.error("Error al momento de registrar el resultado");
-            });
-        }
-        else
-          this.$message.error("No ha registrado asistencia");
+          else {
+            this.datosResultado.reason2=this.motivos[1];
+          }
+            if (this.datosResultado.reason1!=undefined) { 
+                if (this.unidadApoyo.id == undefined){
+                  this.unidadApoyo.id = 0
+                }
+                this.datosResultado.idsesion = this.idSesion;
+                this.datosResultado.resultado = this.resultado.comentario;
+                this.datosResultado.alumnos = this.resultado.asistencia;
+                this.datosResultado.idderivacion=this.unidadApoyo.id
+                console.log(this.datosResultado);
+                console.log(this.unidadApoyo.id)
+                axios
+                .post(
+                  "http://184.73.231.88:7002/api/tutor/register_result_and_assistance/",this.datosResultado)
+                .then(res => {
+                    this.$emit("resetList");
+                    this.$message({ message: "Registro exitoso.", type: "success" });
+                    console.log(res);
+                    this.newDialog = false;
+                    this.$emit("resetDialog", this.newDialog);
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.$message.error("Error al momento de registrar el resultado");
+                  });
+            }
+            else this.$message.error("No hay motivos seleccionados. Selecciona al menos un motivo");
+          }
+          else
+            this.$message.error("No ha registrado asistencia");
       },
       editar(){
         this.editarResultado.idsesion = this.idSesion;

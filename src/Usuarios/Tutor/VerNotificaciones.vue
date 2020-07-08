@@ -19,7 +19,7 @@
                 <v-list-item-content style="color: blue">
                     <v-list-item-title v-text="notificacion.asunto"></v-list-item-title>
                     <v-list-item-subtitle class="text--primary" v-text="notificacion.fecha"></v-list-item-subtitle>
-                    <v-list-item-subtitle v-text="notificacion.lugar"></v-list-item-subtitle>
+                    <v-list-item-subtitle v-text="notificacion.lugar"></v-list-item-subtitle>                    
                 </v-list-item-content>
 
                 <v-list-item-action>
@@ -128,7 +128,8 @@ export default {
       this.newDialog = false;
       this.$emit("resetDialog", this.newDialog);
       this.listar();
-      },
+    },
+
   },
 
   created() {

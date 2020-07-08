@@ -13,102 +13,144 @@
 
 
     <v-card max-width="1200" class="ml-4" >
-        <v-card-title class="cardAdd justify-center">
+      <v-row>
+        <v-card-title class="cardAdd layout justify-center ml-3">
             Próximas citas
         </v-card-title>
+        <v-card-actions class="cardAdd mr-3">
+            <v-btn color='white'
+            icon
+            @click="show = !show"
+            >
+            <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+            </v-btn>
+        </v-card-actions>
+      </v-row>
 
-        <v-list flat subheader  height="430px" class="scroll">
-          <v-list-item-group
-              subgroup
-              color = "blue"
-              multiple
-          >
-           <template v-if="Object.keys(grupoProximasCitas).length == 0">
+        <v-expand-transition>
+          <div v-show = "show">
+            <v-divider></v-divider>
+
+
+          <v-list flat subheader  height="430px" class="scroll">
+            <v-list-item-group
+                subgroup
+                color = "blue"
+                multiple
+            >
+            <template v-if="Object.keys(grupoProximasCitas).length == 0">
+                    <v-list-item-content style="color: gray">
+                    <v-subheader
+                  style="border-bottom: 2px solid blue;color:#205BD9;font-weight:bold;">No hay citas agendadas actualmente</v-subheader>
+                    </v-list-item-content>
+            </template>
+
+            <template v-for="(prox,i) in grupoProximasCitas">
+              <v-list-item :key="'A'+ i" > 
+
                   <v-list-item-content style="color: gray">
-                  <v-subheader
-                style="border-bottom: 2px solid blue;color:#205BD9;font-weight:bold;">No hay citas agendadas actualmente</v-subheader>
+                    <v-subheader
+                  style="border-bottom: 2px solid orange;color:#D97F20;font-weight:bold;"
+                    v-text="i"></v-subheader>
                   </v-list-item-content>
-          </template>
-
-          <template v-for="(prox,i) in grupoProximasCitas">
-            <v-list-item :key="'A'+ i" > 
-
-                <v-list-item-content style="color: gray">
-                  <v-subheader
-                style="border-bottom: 2px solid orange;color:#D97F20;font-weight:bold;"
-                  v-text="i"></v-subheader>
-                </v-list-item-content>
-
-            </v-list-item>
-            <template v-for="(cita, index) in prox">          
-              <v-list-item :key="'B'+cita.id_session" > 
-                
-                  <v-list-item-content style="color: gray">
-                    <v-col>
-                    <v-list-item-title >Horario</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.horaIni +'-'+cita.horaFin"></v-list-item-subtitle>
-                    </v-col>
-                    <v-col>
-                    <v-list-item-title >Ubicación</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
-                    </v-col>
-                    <v-col>
-                    <v-list-item-title >Cant.Participantes</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.cant_students"></v-list-item-subtitle>
-                    </v-col>
-                  </v-list-item-content>
-
-                    <v-list-item-action>
-
-                        <v-btn text small @click="cancelar(cita)">
-                          Cancelar Cita
-                          <v-icon>mdi-close</v-icon>
-                        </v-btn>
-
-                    </v-list-item-action>
 
               </v-list-item>
+              <template v-for="(cita, index) in prox">          
+                <v-list-item :key="'B'+cita.id_session" > 
+                  
+                    <v-list-item-content style="color: gray">
+                      <v-col>
+                      <v-list-item-title >Horario</v-list-item-title>
+                      <v-list-item-subtitle v-text="cita.horaIni +'-'+cita.horaFin"></v-list-item-subtitle>
+                      </v-col>
+                      <template v-if="cita.ubicacion === 'Sin ubicacion'">
+                        <v-col>
+                        <v-list-item-title >Sesión Virtual</v-list-item-title>
+                        <a :href="cita.link" target="_blank">Enlace de la reunión</a>
+                        </v-col>
+                      </template>
 
-              <v-list :key="'C'+cita.id_session">
-               <v-list-group
-                    sub-group
-                    no-action
-                >
+                      <template v-else>
+                        <v-col>
+                        <v-list-item-title >Ubicación</v-list-item-title>
+                        <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
+                        </v-col>
+                      </template>
 
-                <template v-slot:activator>
-                  <v-list-item-content>
-                    <v-list-item-title>Alumnos</v-list-item-title>
-                  </v-list-item-content>
-                </template>
+                      <v-col>
+                      <v-list-item-title >Cant.Participantes</v-list-item-title>
+                      <v-list-item-subtitle v-text="cita.cant_students"></v-list-item-subtitle>
+                      </v-col>
+                    </v-list-item-content>
 
-                <v-list-item
-                  v-for="(datosAlumno, i) in cita.alumnos"
-                  :key="'D'+i"
-                  link
-                >
-                  <v-list-item-title v-text="datosAlumno.nombre + ' ' + datosAlumno.apellidos"></v-list-item-title>
-                </v-list-item> 
-                </v-list-group>
-              </v-list>
-              
-              <v-divider
-                  v-if="index + 1 < listaProximasCitas.length"
-                  :key="'E'+cita.id_session"
-              ></v-divider>
+                      <v-list-item-action>
 
+                          <v-btn text small @click="cancelar(cita)">
+                            Cancelar Cita
+                            <v-icon>mdi-close</v-icon>
+                          </v-btn>
+
+                      </v-list-item-action>
+
+                </v-list-item>
+
+                <v-list :key="'C'+cita.id_session">
+                <v-list-group
+                      sub-group
+                      no-action
+                  >
+
+                  <template v-slot:activator>
+                    <v-list-item-content>
+                      <v-list-item-title>Alumnos</v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+
+                  <v-list-item
+                    v-for="(datosAlumno, i) in cita.alumnos"
+                    :key="'D'+i"
+                    link
+                  >
+                    <v-list-item-title v-text="datosAlumno.nombre + ' ' + datosAlumno.apellidos"></v-list-item-title>
+                  </v-list-item> 
+                  </v-list-group>
+                </v-list>
+                
+                <v-divider
+                    v-if="index + 1 < listaProximasCitas.length"
+                    :key="'E'+cita.id_session"
+                ></v-divider>
+
+              </template>
             </template>
-          </template>
-          </v-list-item-group>
-        </v-list>
+            </v-list-item-group>
+          </v-list>
+
+          </div>
+          </v-expand-transition>
 
       </v-card>
 
       <br><br>
 
       <v-card max-width="1200" class="ml-4 ">
-        <v-card-title class="cardAdd justify-center">
-            Citas pendientes sin resultado
+        <v-row>
+        <v-card-title class="cardAdd layout justify-center ml-3">
+            Citas pasadas sin resultado
         </v-card-title>
+        <v-card-actions class="cardAdd mr-3">
+            <v-btn color='white'
+            icon
+            @click="show2 = !show2"
+            >
+            <v-icon>{{ show2 ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+            </v-btn>
+        </v-card-actions>
+      </v-row>
+
+        <v-expand-transition>
+          <div v-show = "show2">
+            <v-divider></v-divider>
 
         <v-list flat subheader height="430px" class="scroll">
           <v-list-item-group
@@ -141,10 +183,19 @@
                     <v-list-item-title >Horario</v-list-item-title>
                     <v-list-item-subtitle v-text="cita.horaIni +'-'+cita.horaFin"></v-list-item-subtitle>
                     </v-col>
-                    <v-col>
-                    <v-list-item-title >Ubicación</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
-                    </v-col>
+                    <template v-if="cita.ubicacion === 'Sin ubicacion'">
+                        <v-col>
+                        <v-list-item-title >Sesión Virtual</v-list-item-title>
+                        <a :href="cita.link" target="_blank">Enlace de la reunión</a>
+                        </v-col>
+                      </template>
+
+                      <template v-else>
+                        <v-col>
+                        <v-list-item-title >Ubicación</v-list-item-title>
+                        <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
+                        </v-col>
+                      </template>
                     <v-row>
                     <v-list-item-title>Cant.Participantes</v-list-item-title>
                     <v-list-item-subtitle v-text="cita.cant_students"></v-list-item-subtitle>
@@ -197,6 +248,8 @@
           </template>
           </v-list-item-group>
         </v-list>
+      </div>
+      </v-expand-transition>
 
       </v-card>
 
@@ -225,6 +278,8 @@ var horaActual = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(
 export default {
   data() {
     return {
+        show:true,
+        show2:true,
         fechaTexto:diaActual,
         listaCitas:[],
         listaAlumnos:[],
@@ -363,12 +418,10 @@ export default {
             axios
                 .get("http://184.73.231.88:7002/api/tutor/show_result/"+ item.id_session)
                 .then(res => {
-                  console.log(item.id_session)
                   this.resultado.comentario = res.data.resultado;
                   this.resultado.asistencia = res.data.alumnos;
                   if (this.resultado.comentario !== null){
                     this.action = "Editar resultado de la cita"
-                    console.log(this.resultado.comentario);
                     this.dialog = true;
                   }
                   else 
@@ -378,7 +431,6 @@ export default {
                     .get("http://184.73.231.88:5000/api/coordinator/show_support_units/"+ localStorage.getItem("Id_institución"))
                     .then(res => {
                       this.listaDerivados = res.data.users;
-                      console.log(this.listaDerivados)
                     })
                     .catch(error => console.log(error));  
                 })
@@ -399,7 +451,6 @@ export default {
       )
       .then(() => {
         this.cancelarCita.idsesion = item.id_session
-        console.log(item.id_session)
         axios
             .post("http://184.73.231.88:7002/api/tutor/cancel_session/", this.cancelarCita)
             .then(res => {

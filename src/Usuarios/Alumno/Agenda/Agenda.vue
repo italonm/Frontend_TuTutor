@@ -98,18 +98,10 @@
           reactive
           scrollable
         >
-          <v-btn
-            text
-            color="primary"
-            @click="startMenu = false"
-          >
+          <v-btn text color="primary" @click="startMenu = false">
             Cancelar
           </v-btn>
-          <v-btn
-            text
-            color="primary"
-            @click="$refs.startMenu.save(start); changeDay(start);"
-          >
+          <v-btn text color="primary" @click="changeDay(startMenu, start)">
             Aceptar
           </v-btn>
         </v-date-picker>
@@ -123,36 +115,35 @@
         </el-col>
       </el-row>
 
-      <v-card max-width="600" class="ml-10" max-height="100">
+      <v-card max-width="600" class="ml-10" max-height="600">
         <v-card-title class="cardAdd justify-center">
-            Sesiones futuras
+            Sesiones
         </v-card-title>
 
         <v-list two-line style="max-height:600px">
-        <v-list-item-group 
-            style="pointer-events:none"
-            color = "blue"
-            multiple
-        >
-          <template v-for="(notificacion, index) in notificaciones">
-            <v-list-item :key="notificacion.id">              
+          <v-list-item 
+          v-for="notificacion in notificaciones" 
+          :key="notificacion.id">              
 
-              <v-list-item-content style="color: gray">
-                  <v-list-item-title v-text="notificacion.date"></v-list-item-title>
-                  <v-list-item-title v-text="notificacion.hours"></v-list-item-title>
-                  <v-list-item-title v-text="notificacion.tutor"></v-list-item-title>
-                  <v-list-item-subtitle class="text--primary" v-text="notificacion.tutoring_type"></v-list-item-subtitle>
+            <v-list-item-content style="color: gray">
+                <v-list-item-title v-text="notificacion.date"></v-list-item-title>
+                <v-list-item-title v-text="notificacion.hours"></v-list-item-title>
+                <v-list-item-title v-text="notificacion.tutor"></v-list-item-title>
+                <v-list-item-subtitle class="text--primary" v-text="notificacion.tutoring_type"></v-list-item-subtitle>                              
+                <div v-if="notificacion.place == 'Sin Ubicacion'">                    
+                  <a :href="notificacion.link" target="_blank">Enlace de la reunión</a>
+                </div>
+                <div v-else>
                   <v-list-item-subtitle v-text="notificacion.place"></v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
+                </div>
+            </v-list-item-content>
+          </v-list-item>
 
-            <v-divider
-                v-if="index + 1 < notificaciones.length"
-                :key="index"
-            ></v-divider>
+          <v-divider
+              v-if=" 3 < notificaciones.length"
+              :key="id"
+          ></v-divider>
 
-          </template>
-        </v-list-item-group>
         </v-list>
 
       </v-card>
@@ -193,9 +184,10 @@
       this.$refs.calendar.checkChange()
     },
     methods: {
-        changeDay({ date }){
-          this.start = date;
-          this.fechaSesiones = date;
+        changeDay(startMenu,start){
+          this.$refs.startMenu.save(start);
+          this.start = start;
+          this.fechaSesiones = start;
           this.listarSesiones();
         },
 
@@ -221,9 +213,9 @@
             this.$refs.calendar.next()
         },
         getEvents() {
-            //console.log(localStorage.getItem("Id_usuario"));
-        axios
-            .get("http://184.73.231.88:5000/api/student/show_student_history/" + localStorage.getItem("Id_usuario"))
+          //console.log(localStorage.getItem("Id_usuario"));
+          axios
+            .get("http://184.73.231.88:5000/api/student/show_student_history/" + localStorage.getItem("Id_usuario") )
             .then(res => {
             this.events = res.data.sessions;
             //console.log(this.events);
@@ -235,14 +227,18 @@
           //console.log(localStorage.getItem("Id_usuario")); 
           //console.log(this.fechaSesiones);
           axios
-          .post("http://184.73.231.88:5000/api/student/show_sessions_with_date/", {"student_id" : localStorage.getItem("Id_usuario"), "date" : this.fechaSesiones})
+          .post("http://184.73.231.88:7002/api/student/show_sessions_with_date/", {"student_id" : localStorage.getItem("Id_usuario"), "date" : this.fechaSesiones})
           .then(res => {
-              console.log(res.data);
+              //console.log(res.data);
               this.notificaciones = res.data.sessions; 
               //console.log(this.notificaciones);              
           })
           .catch(error => console.log(error));
         },
+        
+        openURL(url) {
+          window.open(url);
+        }
     },
 
     created() {
