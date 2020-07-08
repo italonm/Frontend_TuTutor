@@ -7,8 +7,8 @@
         >
           <div class="Iniciar">Regístrate</div>
           <div class="social-container">
-            <a href="#" class="social icon" style="color:#333;">
-              <i class="fab fa-google-plus-g"></i>
+            <a class="social icon" style="color:#333;">
+              <i v-google-signin-button="clientId" class="fab fa-google-plus-g"></i>
             </a>
             <a href="#" class="social icon" style="color:#333;">
               <i class="fab fa-linkedin-in"></i>
@@ -97,7 +97,8 @@ export default {
 				login:{
 					user_name:"",
 					password:""
-				}
+        },
+        clientId: "829453480197-kqbrfh0qngf6mrneclddc0s0e15ochlk.apps.googleusercontent.com"
 			}
     },     
     mounted(){      
@@ -110,6 +111,13 @@ export default {
       });     
     },      
 		methods:{      
+      OnGoogleAuthSuccess (idToken) {
+        console.log(idToken)
+        // Receive the idToken and make your magic with the backend
+      },
+      OnGoogleAuthFail (error) {
+        console.log(error)
+      },
       register(){
         this.$router.push("/PassSet")
       },

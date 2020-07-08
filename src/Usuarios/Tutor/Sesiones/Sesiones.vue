@@ -97,7 +97,8 @@ export default {
       facultades:[],
       form:{
         resultado:"",
-        id:null
+        id:null,
+        last_modified:""
       },
       search: "",
       dialog: false,
@@ -134,8 +135,8 @@ export default {
           this.$message.error("No tiene programas registrados");
         });                         
       axios
-        .get("/tutor/show_student_history_for_tutor/" + localStorage.getItem("Id_usuario"))        
-        .then(res => {                           
+        .get("http://184.73.231.88:7002/api/tutor/show_student_history_for_tutor/" + localStorage.getItem("Id_usuario"))        
+        .then(res => {                         
           this.sesiones = res.data.sessions        
           for (sesion in res.data.sessions){                      
             aux = 0
@@ -168,10 +169,10 @@ export default {
     },
     detalles(item){                
         this.action = "Detalles de la sesión"        
-        this.option = false
-        console.log(item)
+        this.option = false        
         this.form.resultado = item.result       
-        this.form.id = item.id 
+        this.form.last_modified = item.last_modified
+        this.form.id = item.id         
         this.dialog = true;
     },
     insertar() {  
