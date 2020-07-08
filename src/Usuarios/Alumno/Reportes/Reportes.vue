@@ -21,13 +21,10 @@
           <v-spacer></v-spacer>
           <v-btn color="gray" @click="aceptar">Terminar cuestionario</v-btn>
         </v-card-actions>      
-        </v-card>
+      </v-card>
       </v-dialog>
 
       <v-card max-width="700" class="mx-auto">
-        <!-- <v-card-title class="cardAdd justify-center">
-            Sesiones futuras
-        </v-card-title> -->
 
         <v-list two-line style="max-height:600px">
           
@@ -48,7 +45,7 @@
               </v-list-item-action>
             </v-list-item>
             <v-divider
-              v-if="1 < asignaciones.length"
+              v-if="3 < asignaciones.length"
               :key="id"
             ></v-divider>
           </div>
@@ -63,13 +60,9 @@
                 <v-list-item-title v-text="predeterminado.texto"></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-          </div>
-          
-          
+          </div> 
         </v-list>
-
       </v-card>
-
   </div>
 </template>
 
