@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="500px">
+  <v-dialog v-model="dialogForm" persistent max-width="500px">
     <v-card>
       <v-card-title class="cardAdd">
         <h2 class="headline">{{action}}</h2>
@@ -62,8 +62,9 @@
                   chips
                   accept=".pdf"
                   show-size
-                  label="Notas en pdf"
-                  @change="uploadpdf"
+                  label="Notas"
+                  v-model="form.person_scores"
+                  :rules="fileValidation"
                 ></v-file-input>
               </v-col>
             </v-row>
@@ -80,23 +81,26 @@
 </template>
 
 <script>
-import { nameRules, emailRules, codeRules, phoneRules } from "../../Validation";
+import {
+  nameRules,
+  emailRules,
+  codeRules,
+  phoneRules,
+  pdfRules
+} from "../../Validation";
 import axios from "axios";
-var formData = new FormData();
 export default {
-  props: ["form", "dialog", "action"],
+  props: ["form", "dialogForm", "action"],
 
   data() {
     return {
-      localDialog: this.dialog,
-      localForm: this.form,
       valid: true,
       lazy: false,
       nameValidation: nameRules,
       emailValidation: emailRules,
       codeValidation: codeRules,
       phoneValidation: phoneRules,
-      notas: ""
+      fileValidation: pdfRules
     };
   },
 
@@ -115,8 +119,7 @@ export default {
             console.log(res);
             this.$emit("resetList");
             this.$message({ message: "Registro exitoso.", type: "success" });
-            this.$emit("resetDialog");
-            this.$refs.form.reset();
+            this.insertarNotas();
           })
           .catch(error => {
             console.log(error);
@@ -128,7 +131,6 @@ export default {
     editar() {
       this.$refs.form.validate();
       if (this.valid) {
-        console.log(this.form);
         axios
           .post("/user/update_person/", this.form)
           .then(res => {
@@ -138,8 +140,7 @@ export default {
               message: "Modificación exitosa.",
               type: "success"
             });
-            this.$emit("resetDialog");
-            this.$refs.form.reset();
+            this.insertarNotas();
           })
           .catch(error => {
             console.log(error);
@@ -148,14 +149,27 @@ export default {
       } else this.$message.error("Datos incorrectos");
     },
 
-    uploadpdf(e) {
-      if (e != null) {
-        const pdf = e.File;
-        formData.append("file", pdf);
-        this.notas = formData;
-        console.log(this.notas);
+    insertarNotas() {
+      var formData = new FormData();
+      if (this.form.person_scores) {
+        formData.append("file", this.form.person_scores);
+        axios
+          .post("/coordinator/add_scores/" + this.form.person_code, formData)
+          .then(res => {
+            console.log(res);
+            this.$message({
+              message: "Archivo cargado exitosamente",
+              type: "success"
+            });
+            this.cancelar();
+          })
+          .catch(e => {
+            console.log(e);
+            this.$message.error("Archivo con formato incorrecto");
+          });
       }
     },
+
     cancelar() {
       this.$refs.form.reset();
       this.$emit("resetDialog");

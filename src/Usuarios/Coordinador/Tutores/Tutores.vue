@@ -37,11 +37,11 @@
                 <v-list-item-title>Registrar tutor</v-list-item-title>
               </v-list-item>
               <v-divider></v-divider>
-              <v-list-item @click="dialog2 = true;" dark>
+              <v-list-item @click="dialogMasivo = true;" dark>
                 <v-list-item-title>Registrar masivamente</v-list-item-title>
               </v-list-item>
               <v-divider></v-divider>
-              <v-list-item @click="dialogGraduados = true;" dark>
+              <v-list-item @click="dialogTutoriasForm = true;" dark>
                 <v-list-item-title>Registrar Tutorías</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -76,17 +76,23 @@
       </template>
     </v-data-table>
 
-    <!--Formulario-->
+    <!--Formularios-->
     <tutorForm
       :form="form"
-      :dialog="dialog"
+      :dialogForm="dialogForm"
       :action="action"
-      v-on:resetDialog="dialog=$event"
+      v-on:resetDialog="dialogForm=false"
       v-on:resetList="listar()"
     ></tutorForm>
-
-    <!---Formulario Masivo-->
-    <tutorMasivoForm :dialog2="dialog2" v-on:resetDialog="dialog2=$event"></tutorMasivoForm>
+    <tutorMasivoForm
+      :dialogMasivo="dialogMasivo"
+      v-on:resetDialog="dialogMasivo=false"
+      v-on:resetList="listar()"
+    ></tutorMasivoForm>
+    <masivoTutoriasForm
+      :dialogTutoriasForm="dialogTutoriasForm"
+      v-on:resetDialog="dialogTutoriasForm=false"
+    ></masivoTutoriasForm>
   </el-container>
 </template>
 
@@ -94,6 +100,7 @@
 import axios from "axios";
 import TutorForm from "./TutorForm";
 import TutorMasivoForm from "./MasivoTutorForm";
+import MasivoTutoriasForm from "./MasivoTutoriasForm";
 export default {
   data() {
     return {
@@ -116,8 +123,9 @@ export default {
         program_id: localStorage.getItem("Id_facultad")
       },
       search: "",
-      dialog: false,
-      dialog2: false,
+      dialogForm: false,
+      dialogMasivo: false,
+      dialogTutoriasForm: false,
       action: ""
     };
   },
@@ -128,8 +136,9 @@ export default {
 
   methods: {
     listar() {
+      var Id_facultad = localStorage.getItem("Id_facultad");
       axios
-        .get("/coordinator/show_tutors/" + localStorage.getItem("Id_facultad"))
+        .get("/coordinator/show_tutors/" + Id_facultad)
         .then(res => {
           this.tutores = res.data.users;
         })
@@ -147,10 +156,6 @@ export default {
       this.dialog = true;
     },
 
-    agregarMasivamente() {
-      console.log("this is the masivamente");
-      this.dialog2 = true;
-    },
     eliminar(item) {
       this.$confirm(
         "Esta seguro de eliminar: " + item.name + "?",
@@ -162,9 +167,6 @@ export default {
         }
       )
         .then(() => {
-          console.log(item.person_id);
-          console.log(item);
-          //servicio
           axios
             .post("/user/delete_person/", { person_id: item.person_id })
             .then(res => {
@@ -172,7 +174,6 @@ export default {
               this.listar();
             })
             .catch(error => console.log(error));
-          this.$emit("resetList");
           this.$message({ type: "success", message: "Registro eliminado" });
         })
         .catch(() => {
@@ -183,7 +184,8 @@ export default {
 
   components: {
     tutorForm: TutorForm,
-    tutorMasivoForm: TutorMasivoForm
+    tutorMasivoForm: TutorMasivoForm,
+    masivoTutoriasForm: MasivoTutoriasForm
   }
 };
 </script>

@@ -1,8 +1,8 @@
 <template>
-  <v-dialog v-model="dialogGraduados" persistent max-width="500px">
+  <v-dialog v-model="dialogTutoriasForm" persistent max-width="500px">
     <v-card>
       <v-card-title class="cardAdd">
-        <h2 class="headline">Registro de alumno graduados</h2>
+        <h2 class="headline">Registro de tutorías masivo</h2>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -14,7 +14,7 @@
                   chips
                   accept=".xlsx"
                   show-size
-                  label="Alumno graduados"
+                  label="Tutorías"
                   v-model="documentExcel"
                   :rules="fileValidation"
                   required
@@ -37,7 +37,7 @@
 import axios from "axios";
 import { excelRules } from "../../Validation";
 export default {
-  props: ["dialogGraduados"],
+  props: ["dialogTutoriasForm"],
 
   data() {
     return {
@@ -52,17 +52,20 @@ export default {
     insertar() {
       var formData = new FormData();
       formData.append("file", this.documentExcel);
+      console.log(this.documentExcel);
       this.$refs.form.validate();
       if (this.valid) {
+        var Id_facultad = localStorage.getItem("Id_facultad");
         axios
           .post(
-            "http://184.73.231.88:7002/api/coordinator/add_graduated_student_excel/",
+            "/coordinator/add_tutors_to_student/" + Id_facultad + "/15",
             formData
           )
           .then(res => {
             console.log(res);
+            this.$emit("resetList");
             this.$message({
-              message: "Registro de alumnos graduados exitoso",
+              message: "Subiendo archivo, por favor espere",
               type: "success"
             });
             this.cancelar();
