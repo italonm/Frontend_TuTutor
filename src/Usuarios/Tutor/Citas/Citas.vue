@@ -63,10 +63,20 @@
                       <v-list-item-title >Horario</v-list-item-title>
                       <v-list-item-subtitle v-text="cita.horaIni +'-'+cita.horaFin"></v-list-item-subtitle>
                       </v-col>
-                      <v-col>
-                      <v-list-item-title >Ubicación</v-list-item-title>
-                      <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
-                      </v-col>
+                      <template v-if="cita.ubicacion === 'Sin ubicacion'">
+                        <v-col>
+                        <v-list-item-title >Sesión Virtual</v-list-item-title>
+                        <a :href="cita.link" target="_blank">Enlace de la reunión</a>
+                        </v-col>
+                      </template>
+
+                      <template v-else>
+                        <v-col>
+                        <v-list-item-title >Ubicación</v-list-item-title>
+                        <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
+                        </v-col>
+                      </template>
+
                       <v-col>
                       <v-list-item-title >Cant.Participantes</v-list-item-title>
                       <v-list-item-subtitle v-text="cita.cant_students"></v-list-item-subtitle>
@@ -126,7 +136,7 @@
       <v-card max-width="1200" class="ml-4 ">
         <v-row>
         <v-card-title class="cardAdd layout justify-center ml-3">
-            Próximas citas
+            Citas pasadas sin resultado
         </v-card-title>
         <v-card-actions class="cardAdd mr-3">
             <v-btn color='white'
@@ -173,10 +183,19 @@
                     <v-list-item-title >Horario</v-list-item-title>
                     <v-list-item-subtitle v-text="cita.horaIni +'-'+cita.horaFin"></v-list-item-subtitle>
                     </v-col>
-                    <v-col>
-                    <v-list-item-title >Ubicación</v-list-item-title>
-                    <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
-                    </v-col>
+                    <template v-if="cita.ubicacion === 'Sin ubicacion'">
+                        <v-col>
+                        <v-list-item-title >Sesión Virtual</v-list-item-title>
+                        <a :href="cita.link" target="_blank">Enlace de la reunión</a>
+                        </v-col>
+                      </template>
+
+                      <template v-else>
+                        <v-col>
+                        <v-list-item-title >Ubicación</v-list-item-title>
+                        <v-list-item-subtitle v-text="cita.ubicacion"></v-list-item-subtitle>
+                        </v-col>
+                      </template>
                     <v-row>
                     <v-list-item-title>Cant.Participantes</v-list-item-title>
                     <v-list-item-subtitle v-text="cita.cant_students"></v-list-item-subtitle>
@@ -399,12 +418,10 @@ export default {
             axios
                 .get("http://184.73.231.88:7002/api/tutor/show_result/"+ item.id_session)
                 .then(res => {
-                  console.log(item.id_session)
                   this.resultado.comentario = res.data.resultado;
                   this.resultado.asistencia = res.data.alumnos;
                   if (this.resultado.comentario !== null){
                     this.action = "Editar resultado de la cita"
-                    console.log(this.resultado.comentario);
                     this.dialog = true;
                   }
                   else 
@@ -414,7 +431,6 @@ export default {
                     .get("http://184.73.231.88:5000/api/coordinator/show_support_units/"+ localStorage.getItem("Id_institución"))
                     .then(res => {
                       this.listaDerivados = res.data.users;
-                      console.log(this.listaDerivados)
                     })
                     .catch(error => console.log(error));  
                 })
@@ -435,7 +451,6 @@ export default {
       )
       .then(() => {
         this.cancelarCita.idsesion = item.id_session
-        console.log(item.id_session)
         axios
             .post("http://184.73.231.88:7002/api/tutor/cancel_session/", this.cancelarCita)
             .then(res => {
