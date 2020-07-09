@@ -35,12 +35,6 @@ export default [
           name: 'Solicitudes',
           to: '/Tutor/Solicitudes',
           icon: 'cil-pencil'
-        }, 
-        {
-          _name: 'CSidebarNavItem',
-          name: 'Alumnos',
-          to: '/Tutor/Alumnos',
-          icon: 'cil-user'
-        },   
+        },         
     ]
 }]

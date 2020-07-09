@@ -7,102 +7,135 @@
       <v-card-text>
         <v-container>            
             <v-form ref="form" v-model="valid" :lazy-validation="lazy">
-            <h5>Selecciona tu facultad</h5> 
-            <v-chip-group
-              column
-              active-class="primary--text"
-            >     
-              <v-chip filter v-for="facultad in form.facultades" :key="facultad"
-                class="ma-2"
-                color="primary"
-                outlined    
-                @click="cargarAlumnos(facultad)"
+              <h5 v-if="option">Selecciona tu facultad</h5>               
+
+              <v-chip-group
+                column
+                active-class="primary--text"                                
+                v-if="option"
+              >     
+                <v-chip filter v-for="facultad in facultades" :key="facultad.program_name" :value="facultad.program_name"                                                              
+                  class="ma-2"
+                  color="primary"
+                  outlined    
+                  @click="cargarAlumnos(facultad.program_id)"
+                >
+                  <v-avatar left>
+                    <v-icon>mdi-account-circle</v-icon>
+                  </v-avatar>
+                  {{facultad.program_name}}
+                </v-chip>
+              </v-chip-group> 
+            
+              <v-select     
+                v-if = "option"    
+                v-model="participante"                         
+                :items="alumnos"     
+                :disabled="show"              
+                :rules="[v => !!v || 'Seleccione un participante']"
+                required         
+                hide-selected      
+                item-text="person_full_name"
+                item-value="person_full_name"        
+                label="Participante"              
+                small-chips
+                clearable
+                return-object              
+              >              
+              </v-select>
+
+              <v-menu
+                  v-if="option"
+                  ref="startMenu"
+                  v-model="startMenu"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="start"
+                  transition="scale-transition"
+                  min-width="290px"
+                  offset-y
               >
-                <v-avatar left>
-                  <v-icon>mdi-account-circle</v-icon>
-                </v-avatar>
-                {{facultad}}
-              </v-chip>
-            </v-chip-group> 
-
-
-            <v-combobox      
-              id = "model_part"
-              v-model="model_participante"
-              :items="alumnos"
-              :search-input.sync="search"
-              hide-selected              
-              label="Participante"
-              multiple              
-              small-chips
-              clearable
-            >              
-            </v-combobox>
-
-
-            <v-menu
-                ref="startMenu"
-                v-model="startMenu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                :return-value.sync="start"
-                transition="scale-transition"
-                min-width="290px"
-                offset-y
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                    v-model="start"
-                    label="Día de realización"
-                    readonly
-                    v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="start"
-                no-title
-                scrollable
-                :min= "actualidad"
-                >
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="primary"
-                    @click="startMenu = false"
-                >
-                    Cancel
-                </v-btn>
-                <v-btn
-                    color="primary"
-                    @click="$refs.startMenu.save(start)"
-                >
-                    OK
-                </v-btn>
-              </v-date-picker>
-            </v-menu>            
-            <v-combobox
-              v-model="model"
-              :items="items"
-              :search-input.sync="search"
-              hide-selected
-              hint="Máximo de 2 motivos"
-              label="Motivo de la sesión"
-              multiple
-              persistent-hint
-              small-chips
-              clearable
-            >              
-            </v-combobox>
-            <br>            
-            <h5>Resultado de la sesión</h5>        
-            <v-container class="grey lighten-5">
-                <v-textarea
-                v-model="insert.result"
-                counter
-                full-width
-                single-line
-                height="80px"
-                ></v-textarea>
-            </v-container>
+                <template v-slot:activator="{ on }">
+                  <v-text-field
+                      v-model="start"
+                      label="Día de realización"
+                      readonly
+                      v-on="on"                    
+                      :rules="nameValidation" 
+                      required       
+                  ></v-text-field>                
+                </template>
+                <v-date-picker
+                  v-model="start"
+                  no-title
+                  scrollable                
+                  >
+                  <v-spacer></v-spacer>
+                  <v-btn
+                      color="primary"
+                      @click="startMenu = false"
+                  >
+                      Cancel
+                  </v-btn>
+                  <v-btn
+                      color="primary"
+                      @click="$refs.startMenu.save(start)"
+                  >
+                      OK
+                  </v-btn>
+                </v-date-picker>
+              </v-menu> 
+              <el-time-select
+                v-if="option"
+                v-model="insert.start_hour"
+                :rules="[v => !!v || 'Seleccione una hora de inicio']"
+                required       
+                :picker-options="{
+                  start:'08:00',
+                  step:'00:15',
+                  end:'23:00'
+                }"
+                placeholder="Hora Inicio"
+                style="display: inline-block">
+              </el-time-select>
+              <el-time-select
+                v-if="option"
+                v-model="insert.end_hour"
+                :rules="[v => !!v || 'Seleccione una hora de fin']"
+                :picker-options="{
+                  start:'08:00',
+                  step:'00:15',
+                  end:'23:00'
+                }"
+                placeholder="Hora Fin"
+                class="ml-5"
+                style="display: inline-block">
+              </el-time-select>            
+              <v-text-field v-if="option" v-model="insert.place" label="Lugar o medio utilizado (Links)" ></v-text-field>
+              <v-select
+                v-if="option"
+                v-model="motivos"
+                :items="items"   
+                :rules="[v => !!v || 'Seleccione al menos 1 motivo']"                                       
+                label="Motivo de la sesión (Máx. 2 motivos)"
+                multiple                
+                small-chips
+                clearable
+                return-object
+              >              
+              </v-select>
+              <br>            
+              <h5>Resultado de la sesión <small style="padding-left:26%;">Última modificación {{form.last_modified}}</small></h5>                      
+              <v-textarea
+              v-model="form.resultado"
+              background-color="#E5F8F8"
+              color="#6B9486"
+              counter
+              no-resize
+              full-width
+              single-line                
+              height="80px"
+              ></v-textarea>              
           </v-form>
         </v-container>
       </v-card-text>
@@ -124,20 +157,25 @@ var now = new Date();
 var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
 
 export default {
-  props: ["form", "dialog", "action"],  
+  props: ["facultades", "dialog", "action", "form", "option"],  
   data() {
     return {
+      show:true,
+      inicio: "",
+      fin:"",
       insert:{     
-        student_id: 1,
-        tutor_id: 1,
+        student_id: null,
+        tutor_id: null,
         reason1:"",
         reason2:"",
-        place:"Mi casita",
+        place:"",
         result:"", 
-        date:"",       
+        date:"",    
+        start_hour:"",
+        end_hour:""   
       },
-      model: [],
-      model_participante: [],
+      motivos: [],
+      participante: [],
       alumnos:[],
       id_alumnos:[],
       items: [        
@@ -184,38 +222,31 @@ export default {
       nameValidation: nameRules,
       emailValidation: emailRules,
       codeValidation: codeRules,
-      phoneValidation: phoneRules,
-      motivos:[],
+      phoneValidation: phoneRules,      
     };
   },  
   watch: {
-    model (val) {
+    motivos (val) {
       if (val.length > 2) {
-        this.$nextTick(() => this.model.pop())
+        this.$nextTick(() => this.motivos.pop())
       }
     },
-    model_participante (val){
+    participante (val){
       if (val.length > 1 && this.action == "Registrar nueva sesión") {
-        this.$nextTick(() => this.model_participante.pop())
+        this.$nextTick(() => this.participante.pop())
       }
     }
   },
 
   methods: { 
-    cargarAlumnos(item){                  
-      var alumno;
-        var aux1 = [];
-        var aux2 = [];
+    cargarAlumnos(item){   
+      this.show=false    
+      this.participante=[]
       axios
-        .get("/coordinator/show_students/" + this.form.id_facultades[this.form.facultades.indexOf(item)])      
-        .then(res =>{
-          
-          for(alumno in res.data.users){
-            aux1.push(res.data.users[alumno].person_full_name)
-            aux2.push(res.data.users[alumno].person_id)
-          }          
-          this.alumnos = aux1;
-          this.id_alumnos = aux2;
+        .get("/coordinator/show_students/" + item)      
+        .then(res =>{         
+          console.log(res)           
+          this.alumnos = res.data.users;          
         })
         .catch(error => {
           console.log(error);
@@ -225,34 +256,55 @@ export default {
 
     guardar() {
       if (this.action == "Registrar nueva sesión") this.insertar();
-      else if (this.action == "Detalles de la sesión") this.cancelar();
+      else if (this.action == "Detalles de la sesión") this.editar();
     },
 
-    insertar() {                    
-      this.insert.tutor_id = localStorage.getItem("Id_usuario");
-      console.log(this.model_participante);
-      this.insert.student_id = this.id_alumnos[this.model_participante.indexOf(this.model_participante[0])]
-      this.insert.date = this.start;    
-      this.insert.reason1 = this.model[0];
-      this.insert.reason2 = this.model[1];                           
-      console.log(this.insert)
+    insertar() {  
+      this.$refs.form.validate();
+      if (this.valid) {                  
+        this.insert.tutor_id = localStorage.getItem("Id_usuario");      
+        this.insert.student_id = this.participante[0].person_id
+        this.insert.date = this.start            
+        this.insert.reason1 = this.motivos[0];
+        this.insert.reason2 = this.motivos[1]; 
+        this.insert.result = this.form.resultado                                                  
         axios        
-          .post("/tutor/register_informal_session/", this.insert)
-          .then(res => {
-            console.log(res);
-            this.$emit("resetList");
-            this.$message({ message: "Registro exitoso.", type: "success" });
-            this.$emit("resetDialog");
-            this.$refs.form.reset();
-          })
-          .catch(error => {
-            console.log(error);
-            this.$message.error("Datos duplicados");
-          });      
+        .post("/tutor/register_informal_session/", this.insert)
+        .then(res => {        
+          console.log(res)
+          this.$emit("resetList");
+          this.$message({ message: "Registro exitoso.", type: "success" });
+          this.$emit("resetDialog");
+          this.$refs.form.reset();
+        })
+        .catch(error => {
+          console.log(error);
+          this.$message.error("Datos duplicados");
+        });  
+      }
+      else this.$message.error("Datos incorrectos");
     },
 
-    cancelar() {            
-      console.log(this.insert);    
+    editar(){
+      var edit = {
+        idsesion:this.form.id,
+        resultado:this.form.resultado
+      }      
+      axios
+      .post("http://184.73.231.88:7002/api/tutor/edit_result/",edit)
+      .then(res=>{
+        if(res!==null)
+          this.$message.success("Resultado actualizado")        
+        this.$emit("resetList")
+      })
+      .catch(error=>{
+        console.log(error)
+        this.$message.error("No se pudo actualizar el resultado")
+      })      
+      this.$emit("resetDialog")
+      },
+
+    cancelar() {                  
       this.$refs.form.reset();
       this.$emit("resetDialog");
     }

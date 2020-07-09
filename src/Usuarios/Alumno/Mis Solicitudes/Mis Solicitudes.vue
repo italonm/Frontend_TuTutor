@@ -5,7 +5,7 @@
       <el-col :span="9">
         <div class="grid-content">
           <h1 style="text-align: center;">
-            <i class="fas fa-chalkboard-teacher"></i>&nbsp;Mis Solicitudes
+            <i class="far fa-envelope-open"></i>&nbsp;Mis Solicitudes
           </h1>
         </div>
       </el-col>
@@ -36,16 +36,7 @@
       height="288px"
       fixed-header
     >
-      <template v-slot:item.t_schedule="{ item }">
-        <li
-          class="list-group-item"
-          v-for="hor in item.t_schedule"
-          v-bind:key="hor"
-        >{{ hor.start +" - "+ hor.end }}</li>
-      </template>
-      <template v-slot:item.agendar="{ item }">
-        <el-button type="info" icon="fas fa-calendar-times" circle @click="agendar(item)"></el-button>
-      </template>
+
     </v-data-table>
   </el-container>
 </template>
@@ -61,17 +52,10 @@ export default {
         { text: "Fecha", value: "date" },
         { text: "Tutor", value: "tutor" },
         { text: "Tipo Tutoría", value: "tipotutoria" },
-        { text: "estado", value: "estado" }
+        { text: "Estado", value: "estado" },
+        { text: "Motivo", value: "motivo" }
       ],
-      form: {
-        person_name: "",
-        person_last_name: "",
-        person_email: "",
-        person_phone_number: "",
-        person_code: ""
-      },
       search: "",
-      action: ""
     };
   },
 
@@ -81,28 +65,16 @@ export default {
 
   methods: {
     listar() {
+      console.log(localStorage.getItem("Id_usuario"));
       axios
         .get(
-          "/student/show_assignment_request_student/" +
-            localStorage.getItem("Id_usuario")
-        )
+          "http://184.73.231.88:7002/api/student/show_assignment_request_student/" + localStorage.getItem("Id_usuario") )
         .then(res => {
           this.tutorias = res.data.tableData;
           console.log(this.tutorias);
         })
         .catch(error => console.log(error));
     },
-
-    insertar() {
-      this.action = "Registrar coordinador";
-      this.dialog = true;
-    },
-
-    editar(item) {
-      this.action = "Editar coordinador";
-      this.form = Object.assign({}, item);
-      this.dialog = true;
-    }
   }
 };
 </script>

@@ -32,7 +32,7 @@ export default [
         }, 
         {
           _name: 'CSidebarNavItem',
-          name: 'Mis Reportes',
+          name: 'Mis Encuestas',
           to: '/Alumno/Mis Reportes',
           icon: 'cil-chartPie'
         }   

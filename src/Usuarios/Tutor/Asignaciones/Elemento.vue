@@ -1,37 +1,38 @@
-<template>
+<template>    
     <div class="courses-container">
         <div class="course">
             <div class="course-preview">
-                <h6>Participantes</h6>
-                <h4>{{name}} {{last_name}}</h4>                  
-                <a href="#">Ver participantes <i class="fas fa-chevron-right"></i></a>
+                <h6 style="color:#FFFFFF;">Participantes</h6>
+                <h4>{{name}}</h4>                  
+                <a style="color:#FFFFFF; font-size:13px;">Ver participantes <i class="fas fa-chevron-right"></i></a>
             </div>
             <div class="course-info">
                 <div class="progress-container">
-                    <div class="progress"></div>
-                    <span class="progress-text">
-                        6/9 Actividades
+                        <v-progress-linear :value="(comp.finished_activities/comp.total_activities*100).toString()" color="#76998c"></v-progress-linear>
+                    <span class="progress-text" style="font-size:12px">
+                        {{comp.finished_activities}}/{{comp.total_activities}} Actividades
                     </span>
                 </div>
-                <h6>{{state}}</h6>
-                <h2>{{tutoring_type}}</h2>
-                <button class="btn" v-on:click="verPlan()">Ver Plan</button>
+                <h6>{{comp.state}}</h6>
+                <h2>{{comp.tutoring_type}}</h2>
+                <button class="btn" v-on:click="verPlan()">
+                    Ver Plan
+                </button>
             </div>
         </div>
-    </div>    
+    </div>                
 </template>
 <script>
 export default {    
     name: "Elemento",    
-    props: ["name" , "tutoring_type", "last_name", "state", "id_alumno", "callMethod"],     
+    props: ["comp", "callMethod", "name"],  
     methods:{
-        verPlan(){       
-            this.callMethod();
-            console.log("AUXILIO")
+        verPlan(){                                                             
+            this.callMethod(this.comp.id);            
         },        
-    },    
+    },              
 }
 </script>
 <style>
-    @import "./Asignaciones.css";
+    @import "./Asignaciones.css";    
 </style>

@@ -10,6 +10,7 @@ import CoreuiVue from "@coreui/vue";
 import { iconsSet as icons } from "./pages/components/nav/icons";
 import locale from "element-ui/lib/locale/lang/es";
 import axios from "axios";
+import GoogleSignInButton from 'vue-google-signin-button-directive';
 
 axios.defaults.baseURL = "http://184.73.231.88:5000/api";
 Vue.use(CoreuiVue);
@@ -29,6 +30,7 @@ Vue.config.warnHandler = (message, vm, componentTrace) => {
 
 export const bus = new Vue();
 new Vue({
+    GoogleSignInButton,
     vuetify,
     router,
     store,

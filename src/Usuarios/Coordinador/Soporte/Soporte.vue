@@ -5,7 +5,7 @@
       <el-col :span="8">
         <div class="grid-content">
           <h1 style="text-align: center;">
-            <i class="fas fa-users"></i>&nbsp;Personal Soporte
+            <i class="fas fa-users"></i>&nbsp;Usuarios de soporte
           </h1>
         </div>
       </el-col>

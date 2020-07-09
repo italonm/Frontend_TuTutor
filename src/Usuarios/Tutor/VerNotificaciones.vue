@@ -1,5 +1,5 @@
 <template>
-<v-dialog v-model="dialog" persistent max-width="700px" max-height="500" color="color">
+<v-dialog v-model="dialog" persistent max-width="700px" max-height="900" color="color">
       
       <v-card max-width="700" class="mx-auto" >
         <v-card-title class="cardAdd justify-center">
@@ -19,7 +19,7 @@
                 <v-list-item-content style="color: blue">
                     <v-list-item-title v-text="notificacion.asunto"></v-list-item-title>
                     <v-list-item-subtitle class="text--primary" v-text="notificacion.fecha"></v-list-item-subtitle>
-                    <v-list-item-subtitle v-text="notificacion.lugar"></v-list-item-subtitle>
+                    <v-list-item-subtitle v-text="notificacion.lugar"></v-list-item-subtitle>                    
                 </v-list-item-content>
 
                 <v-list-item-action>
@@ -70,7 +70,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green" @click="aceptar">Aceptar</v-btn>
+          <v-btn color="grey" @click="aceptar">Aceptar</v-btn>
         </v-card-actions>
     </v-card>
   </v-dialog>
@@ -128,7 +128,8 @@ export default {
       this.newDialog = false;
       this.$emit("resetDialog", this.newDialog);
       this.listar();
-      },
+    },
+
   },
 
   created() {
