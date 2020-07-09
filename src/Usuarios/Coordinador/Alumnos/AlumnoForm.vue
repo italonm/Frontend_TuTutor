@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialogForm" persistent max-width="500px">
+  <v-dialog v-model="dialogForm" persistent max-width="700px">
     <v-card>
       <v-card-title class="cardAdd">
         <h2 class="headline">{{action}}</h2>
