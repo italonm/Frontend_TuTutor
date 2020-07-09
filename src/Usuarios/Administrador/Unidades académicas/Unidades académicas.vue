@@ -5,7 +5,7 @@
       <el-col :md="24" :lg="12">
         <el-row>
           <div class="grid-content">
-            <h1 style="text-align: center;" class="zzz">
+            <h1 style="text-align: center;">
               <i class="fas fa-university"></i>&nbsp;Unidades Académicas
             </h1>
           </div>
@@ -216,8 +216,3 @@ export default {
   }
 };
 </script>
-<style scoped>
-.zzz {
-  font-family: "Helvetica Neue", Arial, sans-serif;
-}
-</style>

@@ -118,6 +118,7 @@ export default {
 
   methods: {
     listar() {
+      console.log(this.tutoria);
       axios
         .post(
           "http://184.73.231.88:7002/api/student/show_sesion_with_actionplan_student/",

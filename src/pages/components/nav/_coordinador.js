@@ -58,6 +58,12 @@ export default [{
         name: 'Reportes',
         to: '/Coordinador/Reportes',
         icon: 'cil-chartPie'
-      },      
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'Encuestas',
+        to: '/Coordinador/ReporteEncuestas',
+        icon: 'cil-chartPie'
+      }      
     ]
 }]

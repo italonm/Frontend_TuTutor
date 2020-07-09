@@ -1,5 +1,5 @@
 <template>
-  <CHeader fixed with-subheader light style="background: #0BB783">
+  <CHeader fixed with-subheader light style="background: #3A80BE">
     <CToggler in-header class="ml-3 d-lg-none" @click="$store.commit('toggleSidebarMobile')" />
     <CToggler in-header class="ml-3 d-md-down-none" @click="$store.commit('toggleSidebarDesktop')" />
     <CHeaderBrand class="mx-auto d-lg-none" to="/">
@@ -8,7 +8,7 @@
     <CHeaderNav class="d-md-down-none mr-auto">
       <CHeaderNavItem class="px-3">
         <div id="nombrecito" style="font-size:17px; font-weight:500; color:#ffffff"></div>
-        <span style="font-size:13.5px; color:#FFFFFF" id="sesión"></span>
+        <span style="font-size:13.5px; color:#ffffff" id="sesión"></span>
       </CHeaderNavItem>
     </CHeaderNav>
     <CCol class="col-sm-2">
@@ -17,6 +17,7 @@
         class="uploading-image img-fluid"
         height="50"
         contain
+        
         max-width="1000"
         max-height="1000"
         alt="Responsive Image"

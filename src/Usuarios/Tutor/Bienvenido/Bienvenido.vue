@@ -121,7 +121,7 @@ export default {
         dialogN: false,
         action: "",
         notificaciones: 0,
-        show: false,
+        show: false
     }
   },
   mounted() {
@@ -130,7 +130,7 @@ export default {
       JSON.parse(localStorage.getItem("Apellidos"));  
   },
   methods: {
-      editar() {
+      editar() {   
         this.action = "Editar disponibilidad";
         this.dialog = true;
       },
