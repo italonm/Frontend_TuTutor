@@ -22,3 +22,6 @@ export const cantRules = [
     (v) => !!v || "La cantidad es obligatorio",
     (v) => !isNaN(v) || "La cantidad debe ser numérica",
 ];
+
+export const excelRules = [(v) => !!v || "Adjunte un archivo excel"];
+export const pdfRules = [(v) => !!v || "Adjunte un archivo pdf"];

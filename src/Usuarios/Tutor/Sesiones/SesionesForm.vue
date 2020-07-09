@@ -125,7 +125,7 @@
               >              
               </v-select>
               <br>            
-              <h5>Resultado de la sesión</h5>                      
+              <h5>Resultado de la sesión <small style="padding-left:26%;">Última modificación {{form.last_modified}}</small></h5>                      
               <v-textarea
               v-model="form.resultado"
               background-color="#E5F8F8"
@@ -291,7 +291,7 @@ export default {
         resultado:this.form.resultado
       }      
       axios
-      .post("/tutor/edit_result/",edit)
+      .post("http://184.73.231.88:7002/api/tutor/edit_result/",edit)
       .then(res=>{
         if(res!==null)
           this.$message.success("Resultado actualizado")        
@@ -302,7 +302,7 @@ export default {
         this.$message.error("No se pudo actualizar el resultado")
       })      
       this.$emit("resetDialog")
-    },
+      },
 
     cancelar() {                  
       this.$refs.form.reset();

@@ -198,7 +198,7 @@
             </v-layout>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue" @click="repetirSemana">Repetir horario pasado</v-btn>
+                <v-btn color="success" @click="repetirSemana">Repetir semana pasada</v-btn>
                 <v-btn color="error" @click="cancelar">Cerrar</v-btn>
             </v-card-actions>
       </v-card>
@@ -399,8 +399,6 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
           .then(res => {
             console.log(res);
             this.$message({ message: "Registro de eventos exitoso.", type: "success" });
-            this.newDialog = false;
-            this.$emit("resetDialog", this.newDialog);
             this.listar();
           })
           .catch(error => {
