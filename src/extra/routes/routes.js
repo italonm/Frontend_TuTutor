@@ -164,9 +164,9 @@ const router =  new Router({
     routes: routes,
 }); 
 
-router.beforeEach((to ,from, next)=>{    
+/* router.beforeEach((to ,from, next)=>{    
     if (to.name !== 'login' && (localStorage.getItem("Token")===null)) next({ name: 'login' })
     else next()
-})
+}) */
 
 export default router
