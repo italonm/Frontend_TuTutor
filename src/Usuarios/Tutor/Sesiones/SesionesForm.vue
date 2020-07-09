@@ -125,7 +125,7 @@
               >              
               </v-select>
               <br>            
-              <h5>Resultado de la sesión <small style="padding-left:30%;">Última modificación {{form.last_modified}}</small></h5>                      
+              <h5>Resultado de la sesión <small style="padding-left:26%;">Última modificación {{form.last_modified}}</small></h5>                      
               <v-textarea
               v-model="form.resultado"
               background-color="#E5F8F8"

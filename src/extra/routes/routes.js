@@ -10,6 +10,7 @@ import Alumnos from "../../Usuarios/Coordinador/Alumnos/Alumnos";
 import Tutores from "../../Usuarios/Coordinador/Tutores/Tutores";
 import TipoTutoria from "../../Usuarios/Coordinador/Tipos de tutoría/TipoTutoria";
 import Reportes from "../../Usuarios/Coordinador/Reportes/Reportes";
+import ReporteEncuesta from "../../Usuarios/Coordinador/Reportes/ReporteEncuestas";
 /* import Tutorías from '../../Usuarios/Coordinador/Tutorías/Tutorías' */
 import Solicitudes from "../../Usuarios/Coordinador/Solicitudes/Solicitudes";
 import Soporte from "../../Usuarios/Coordinador/Soporte/Soporte";
@@ -99,8 +100,10 @@ export const routes = [
             { path: "Tipos de tutoría", component: TipoTutoria }, //luiggi
             { path: "Reportes", component: Reportes },
             { path: "Solicitudes", component: Solicitudes }, //valeria
+            { path: "ReporteEncuestas", component: ReporteEncuesta }, //valeria
             { path: "/Coordinador/Miembros/Unidades de apoyo", component: Apoyo }, //valeria
             { path: "/Coordinador/Miembros/Soporte", component: Soporte }, //herbert
+
         ],
     },
     {
