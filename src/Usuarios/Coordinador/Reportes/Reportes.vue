@@ -48,6 +48,7 @@
                         <v-flex>
                           <v-card :width="180" elevation="0">
                             <apexchart
+                            ref="radarSolicitud"
                               type="radialBar"
                               height="220px"
                               :options="chartOptions"
@@ -81,7 +82,7 @@
                           <v-list-item-content>
                             <v-list-item-title
                               style="font-size:40px"
-                            >{{datosRecibidos['Num_Estudiantes']}}</v-list-item-title>
+                            >{{datosRecibidos['students']}}</v-list-item-title>
                             <v-list-item-subtitle>ESTUDIANTES</v-list-item-subtitle>
                           </v-list-item-content>
                         </v-list-item>
@@ -101,7 +102,7 @@
                           <v-list-item-content>
                             <v-list-item-title
                               style="font-size:40px"
-                            >{{datosRecibidos['Num_Tutores']}}</v-list-item-title>
+                            >{{datosRecibidos['tutors']}}</v-list-item-title>
                             <v-list-item-subtitle>TUTORES</v-list-item-subtitle>
                           </v-list-item-content>
                         </v-list-item>
@@ -121,7 +122,7 @@
                           <v-list-item-content>
                             <v-list-item-title
                               style="font-size:40px"
-                            >{{datosRecibidos['Num_TiposTutorias']}}</v-list-item-title>
+                            >{{datosRecibidos['tutoring_types']}}</v-list-item-title>
                             <v-list-item-subtitle>TIPOS TUTORIAS</v-list-item-subtitle>
                           </v-list-item-content>
                         </v-list-item>
@@ -139,6 +140,7 @@
             <v-container fluid grid-list-lg>
               <v-layout wrap justify-space-around>
                 <v-flex>
+                  <!----------
                   <v-card class="mx-auto" max-width="380" height="460" style="border-radius:20px;">
                     <el-row :gutter="20">
                       <el-col :span="16">
@@ -174,6 +176,56 @@
                       </v-list-item>
                     </v-list>
                   </v-card>
+
+                  ----------->
+
+
+                  <v-card height="460px">
+        <v-card-title class="blue white--text">
+          <span class="headline">Notificaciones</span>
+
+          <v-spacer></v-spacer>
+
+          <v-menu bottom left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                dark
+                icon
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item @click="clickear()">
+                <v-list-item-title> Leidos</v-list-item-title>
+              
+              </v-list-item >
+              <v-list-item  @click="clickear()">
+                <v-list-item-title>No Leidos</v-list-item-title>
+              
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-card-title>
+
+         <v-list>
+                      <v-list-item v-for="item in items" :key="item.avatar">
+                        <v-list-item-avatar>
+                          <img :src="item.avatar" />
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                          <v-list-item-title v-html="item.title"></v-list-item-title>
+                          <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+      </v-card>
+
+
+
                 </v-flex>
               </v-layout>
             </v-container>
@@ -233,14 +285,7 @@ export default {
         JSON.parse(localStorage.getItem("Nombre")).split(" ", 1)[0] +
         " " +
         JSON.parse(localStorage.getItem("Apellidos")).split(" ", 1)[0],
-      datosRecibidos: {
-        Num_Estudiantes: "15",
-        Num_Tutores: "20",
-        Num_TiposTutorias: "14",
-
-        horasInstruidas: [78, 75, 80, 81, 76, 85, 70],
-        horasTotales: [92, 90, 90, 55, 96, 95, 84]
-      },
+      datosRecibidos:'',
       nombreFacultad: localStorage.getItem("Nombre_programa"),
 
       options: {
@@ -254,7 +299,7 @@ export default {
         }
       },
       series: "",
-      series2: [67],
+      series2: [53],
       chartOptions: {
         chart: {
           type: "radialBar",
@@ -338,6 +383,32 @@ export default {
       var that = this;
       that.$router.push("/Coordinador/Miembros/Tutores");
     },
+      
+      
+    DatosReporteGeneral(){
+
+    
+      localStorage.getItem("Id_facultad");
+     axios
+        .get("/coordinator/show_general_program_report/"+ localStorage.getItem("Id_facultad"))
+        .then(res => {
+         
+          console.log(res.data);
+          this.datosRecibidos=res.data;
+   console.log("imfornmacion de los DATOS REPORTE FENERAL");
+            console.log(this.series2)
+        
+          this.series2[0]=this.datosRecibidos['pcj_requests']*100;
+          this.$refs.radarSolicitud.updateOptions({
+            colors: ["#814AD6"]
+          });
+          console.log(this.series2)
+        })
+        .catch(error => console.log(error));
+
+  },
+
+
     filterTutor: function(tutores) {
       console.log(localStorage.getItem("Id_facultad"));
       return tutores.filter(tutor => {
@@ -354,7 +425,9 @@ export default {
     //ejecuta por defecto las tutorias Generales en ambos
 
     ////////////////////////////////////
+    this.DatosReporteGeneral();
     this.ReporteGeneralTipoTutoria();
+    
     this.completarDonus();
     this.listarTutores();
     this.listarTipoTutoria();

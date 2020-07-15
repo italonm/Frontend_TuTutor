@@ -235,7 +235,7 @@
 ----->
                   <br>
                   <br>
-<!-------------Reporte Tpo 5 mejores Tutores-------------------------->
+<!-------------Reporte Tpo 5 mejores Tutores
                   <div id="chartMix" v-show="showTable">
                     <apexchart
                       ref="demoChartMix"
@@ -245,8 +245,8 @@
                       :series="serieMixTutorAlto"
                     ></apexchart>
                   </div>
-
-<!-------------Reporte Tpo 5 peores Tutores-------------------------->
+----------------------->
+<!-------------Reporte Tpo 5 peores Tutores
                   <div id="chartMix" v-show="showTable">
                     <apexchart
                       ref="demoChartMix"
@@ -256,8 +256,11 @@
                       :series="serieMixTutorBajo"
                     ></apexchart>
                   </div>
+                  ------------------------>
 <!---------------------->
-
+ <div id="chartMotivosRechazo">
+        <apexchart  v-show="!showTable" ref="pieMotivoRechazo" type="pie" width="380" :options="chartOptionsMotivosRechazo" :series="seriesMotivosRechazo"></apexchart>
+      </div>
                 </div>
                 <div v-show="!mostrarReporte">
                       <v-alert
@@ -276,16 +279,14 @@
 
  </div>  
 </template>
-
 <script>
 import axios from "axios";
-
 export default {
   data() {
     return {
       /*FECHA INICIO REPORTE TUTOR */
-       startMenu: false,
-        endMenu: false,
+      startMenu: false,
+      endMenu: false,
       startTutor: '',
       endTutor: '',
       enviarDatosReporteTutor:{
@@ -294,6 +295,18 @@ export default {
         end_date:''
       },
       enviarDatosMotivoRechazo:{
+        id_program:'',
+        start_date:'',
+        end_date:'',
+        id_tutor:'',
+      },
+      enviarDatosReporteFormalInformal:{
+        id_program:'',
+        start_date:'',
+        end_date:'',
+        id_tutor:'',
+      },
+       enviarDatosReporteHorasInstruidas:{
         id_program:'',
         start_date:'',
         end_date:'',
@@ -310,9 +323,10 @@ export default {
           value: "code"
         },
         { text: "Tutor", value: "name" },
-        { text: "#Sesiones", value: "total" },
-        { text: "#Sesiones Informales", value: "informals" },
-        { text: "# Tutorias Rechazadas", value: "cancelled" }
+        { text: "% Ses. Formal", value: "pcj_formals" },
+        { text: "% Ses. Cancelada", value: "pcj_cancelled" },
+        { text: "Total Sesiones", value: "total" },
+        { text: "# Asignaciones Cancelada", value: "req_cancelled" }
       ],
 /*MIX TUTOR  */
 
@@ -508,14 +522,46 @@ serieMixTutorBajo:
       ///////////////////////////////
 
 
+/*  MOTIVOS DE RECHAZO */
+seriesMotivosRechazo: '',
+          chartOptionsMotivosRechazo: {
+            chart: {
+              width: 380,
+              type: 'pie',
+            },
+            labels: '',
+            responsive: [{
+              breakpoint: 480,
+              options: {
+                chart: {
+                  width: 200
+                },
+                legend: {
+                  position: 'bottom'
+                }
+              }
+            }]
+          },
+
+
+////////////////////
+
       serieAreaTutor: [
         {
-          name: "Sesiones Formales",
-          data: [0, 0, 0, 0, 0, 0, 0]
+          name: "Sesiones Formales Finalizadas",
+          data: ''
         },
         {
+          name: "Sesiones Formales Progreso",
+          data: ''
+        },
+                {
           name: "Sesiones Informales",
-          data: [0, 0, 0, 0, 0, 0, 0]
+          data: ''
+        },
+        {
+          name: "Sesiones Derivadas",
+          data: ''
         }
       ],
       OptionsAreaTutor: {
@@ -653,65 +699,85 @@ serieMixTutorBajo:
       this.ReporteGeneralHorasInstruidasTotales(tutor.person_id);
       this.reporteMotivosDeRechazo(tutor);
     },
+
 ////////////////////////////////////////////////
 /*TIPOS DE REPORTE EN EL CARDS */
+  //Datos del #tutores, #alumnos, # tipo tutoria
+
 
  generarReportetablaTutores(){
       this.enviarDatosReporteTutor['id_program']=localStorage.getItem("Id_facultad");
       this.enviarDatosReporteTutor['start_date']=this.startTutor;
-      this.enviarDatosReporteTutor['end_date']=this.endTutor;
-      console.log(this.enviarDatosReporteTutor)
+
        axios
         .post("/coordinator/show_general_information/", this.enviarDatosReporteTutor)
         .then(res => {
           this.dataTableTutores=res.data.tutors;
+    
         })
         .catch(error => console.log(error));
     }, 
 
 ReporteGeneralFormalInformal(TutorOGeneral) {
+  this.enviarDatosReporteFormalInformal['id_program']=localStorage.getItem("Id_facultad");
+  this.enviarDatosReporteFormalInformal['start_date']=this.startTutor;
+  this.enviarDatosReporteFormalInformal['end_date']=this.endTutor;
+  this.enviarDatosReporteFormalInformal['id_tutor']=TutorOGeneral;
    axios
-        .get(
-          "coordinator/shows_formals_and_informals/" +
-            localStorage.getItem("Id_facultad") +
-            "/" +
-            TutorOGeneral
-        )
+        .post(
+          "coordinator/shows_formals_and_informals/"
+        ,this.enviarDatosReporteFormalInformal)
         .then(res => {
           this.ReporteFormalInformal = res.data;
+          
           this.serieAreaTutor[0]["data"] = this.ReporteFormalInformal[
-            "cantidadSesionesFormales"
+            "cantidadSesionesFormalesTerminadas"
           ];
+          
           this.serieAreaTutor[1]["data"] = this.ReporteFormalInformal[
+            "cantidadSesionesFormalesEnProceso"
+          ];
+
+          this.serieAreaTutor[2]["data"] = this.ReporteFormalInformal[
             "cantidadSesionesInformales"
           ];
-         
+          this.serieAreaTutor[3]["data"] = this.ReporteFormalInformal[
+            "cantidadSesionesFormalesDerivadas"
+          ];
+          
+          this.$refs.demoChartArea.updateOptions({
+            xaxis:{categories:res.data["labels_tiempo"]}
+          });
           //(Actualizamos el color)Para que se actualice los graficos
           this.$refs.demoChartArea.updateOptions({
-            colors: ["#008FFB", "#00E396"], xaxis:{categories:this.ReporteFormalInformal["labels_tiempo"]}
+            colors: ["#008FFB", "#00E396","#FFB000", "#FF1752"], xaxis:{categories:this.ReporteFormalInformal["labels_tiempo"]}
           });
 
         })
         .catch(error => console.log(error));
     },
+
+
 ReporteGeneralHorasInstruidasTotales(TutorOGeneral){
-  
+  //enviarDatosReporteHorasInstruidas
+  this.enviarDatosReporteHorasInstruidas['id_program']=localStorage.getItem("Id_facultad");
+  this.enviarDatosReporteHorasInstruidas['start_date']=this.startTutor;
+  this.enviarDatosReporteHorasInstruidas['end_date']=this.endTutor;
+  this.enviarDatosReporteHorasInstruidas['id_tutor']=TutorOGeneral;
+ 
+ 
+ // this.enviarDatosReporteFormalInformal['id_tutor']=TutorOGeneral;
+
   axios
-        .get(
-          "coordinator/show_report_hours/" +
-            localStorage.getItem("Id_facultad") +
-            "/" +
-            TutorOGeneral
+        .post(
+          "coordinator/show_report_hours/",this.enviarDatosReporteHorasInstruidas
         )
         .then(res => {
-          this.SerieBarraTutor[0]['data'] = res.data['horasInstruidas'];
-          this.SerieBarraTutor[1]["data"] = res.data['horasTotales'];
+          this.SerieBarraTutor[0]['data'] = res.data['horasTotales'];
+          this.SerieBarraTutor[1]["data"] = res.data['horasInstruidas'];
 
-          this.OptionsBarraTutor["xaxis"]["categories"] = res.data["labels_tiempo"];
-          console.log("imprime barras")
-          console.log(this.OptionsBarraTutor);
-          console.log(this.SerieBarraTutor);
-          console.log(res.data);
+          //this.OptionsBarraTutor["xaxis"]["categories"] = res.data["labels_tiempo"];
+        
           //(Actualizamos el color)Para que se actualice los graficos
           this.$refs.demoChartBarra.updateOptions({
             colors: ["#008FFB", "#00E396"],xaxis:{categories:res.data["labels_tiempo"]}
@@ -720,28 +786,41 @@ ReporteGeneralHorasInstruidasTotales(TutorOGeneral){
         .catch(error => console.log(error));
 },
 
-
-
   reporteMotivosDeRechazo(Tutor){
      this.enviarDatosMotivoRechazo['id_program']=localStorage.getItem("Id_facultad");
       this.enviarDatosMotivoRechazo['start_date']=this.startTutor;
       this.enviarDatosMotivoRechazo['end_date']=this.endTutor;
       this.enviarDatosMotivoRechazo['id_tutor']=Tutor.person_id;
+       console.log("mostrar motivos rechazo");
      axios
-        .get(
-          "coordinator/show_reason_rejection_report/",this.enviarDatosMotivoRechazo
-        )
+        .post(
+          "coordinator/show_reason_rejection_report/",this.enviarDatosMotivoRechazo)
         .then(res => {
-          console.log(this.enviarDatosMotivoRechazo);
-          console.log("motivos de rechazo");
+          console.log("mostrar motivos rechazoOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
           console.log(res.data);
+         
+          //this.chartOptionsMotivosRechazo['labels']=(Object.keys(res.data));
+          this.seriesMotivosRechazo=(Object.values(res.data));
+          console.log(this.chartOptionsMotivosRechazo);
+          console.log(this.seriesMotivosRechazo);
+          console.log(res.data);
+          this.$refs.pieMotivoRechazo.updateOptions({
+            labels:Object.keys(res.data)
+          });
+
         })
         .catch(error => console.log(error));
         console.log(this.enviarDatosMotivoRechazo);
   },
 /*IMPRIMIR REPORTE TUTOR*/
 imprimirReporteTutor(){
-  
+  const doc= new jsPDF();
+  const contentHtml=this.$refs.content.innerHTML;
+  doc.fromHTML(contentHtml,15,15,{
+    width:170,
+  });
+  doc.save("ReporteTutores.pdf");
+ 
 },
 
 
