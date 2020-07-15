@@ -41,13 +41,8 @@
         >
           <div class="Iniciar">Inicia Sesión</div>
           <div class="social-container">
-            <GoogleLogin :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
-            <a v-google-signin-button="clientId" class="social" style="color:#333; font-size: 14px; margin-bottom: 5px;">
-              <i class="fab fa-google-plus-g"></i>
-            </a>
-            <a href="#" class="social" style="color:#333; font-size: 14px; margin-bottom: 5px; ">
-              <i class="fab fa-linkedin-in"></i>
-            </a>
+            <GoogleLogin class="social"  :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
+          
           </div>
           <span style="font-size: 12px; padding: 0 50">o inicia a través de</span>
           <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;" type="text" placeholder="Usuario" v-model="login.user_name" @keyup.enter="logItIn"/>          
@@ -109,8 +104,8 @@ export default {
                     client_id: "829453480197-kqbrfh0qngf6mrneclddc0s0e15ochlk.apps.googleusercontent.com"
                 },
         renderParams: {
-                    width: 250,
-                    height: 50,
+                    width: 225,
+                    height: 40,
                     longtitle: true
                 },
         clientId: "829453480197-kqbrfh0qngf6mrneclddc0s0e15ochlk.apps.googleusercontent.com"
