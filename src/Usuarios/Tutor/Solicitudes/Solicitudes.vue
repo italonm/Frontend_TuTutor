@@ -50,7 +50,7 @@
 
     <!-- Confirmación o rechazo-->
     <v-row justify="center">
-      <v-dialog v-model="dialog" persistent max-width="650">
+      <v-dialog v-model="dialog" persistent max-width="750">
         <v-card>
           <v-card-title class="headline">
             {{
