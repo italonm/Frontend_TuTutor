@@ -1,8 +1,8 @@
 <template>   
     <div class="nav containerPrincipal">
         <div class='column'>
-            <h1 class='header'>Bienvenido</h1>
-            <p class='subheader'>Clickee y complete para continuar</p>            
+            <h1 class='header'>Reestablecer</h1>
+            <p class='subheader'>Parece que olvidaste algo, clickea y completa para continuar</p>            
             <div class='search'>
                 <div class='search_bar'>
                 <input id='searchOne' type='checkbox'>
@@ -11,7 +11,7 @@
                     <i class='last icon far fa-paper-plane' @click="validar"></i>
                     <p>|</p>
                 </label>
-                <input placeholder='Ingrese el código...' type='text' v-model="setCode.code">
+                <input placeholder='Ingresa tu correo electrónico...' type='text' v-model="setCode.email">
                 </div>
             </div>
         </div>        
@@ -24,23 +24,26 @@ export default {
     data(){
         return{
             setCode:{
-                code:""
+                email:""
             }
         }        
     },
     methods:{        
         validar(){
-            var that = this                      
-            axios.post('user/authenticate_mail/',that.setCode)
+            var that = this       
+            console.log("Auxilio")       
+            console.log(that.setCode)       
+            axios.post('user/forgot_password/',that.setCode)
             .then(response =>{                             
                 let Id_usuario = response.data.id;
                 localStorage.setItem('Id_usuario',JSON.stringify(Id_usuario));
-                this.$router.push("/Reestablecer")                
+                that.$message.success("Revise su correo electrónico")
+                this.$router.push("/PassSet")                
             })
             .catch(function(error) {
                 if (error.response){
                     console.log(error)
-                    this.$message.error("Datos inválidos, por favor ingrese de nuevo.")
+                    that.$message.error("Este correo electrónico no se encuentra registrado")
                 }          
             })            
         }
