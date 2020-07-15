@@ -65,29 +65,6 @@
                     ></v-textarea>
                 </v-container>
                 </v-col>
-                <v-col>
-                <h5>
-                Derivación
-                </h5>
-                <h6>
-                En caso el alumno necesite una ayuda especializada. Si no lo necesita, puede dejar este campo vacío.
-                </h6>
-                </v-col>
-                <v-col>
-                <v-select
-                  v-model="unidadApoyo"
-                  :items="listaDerivados"
-                  item-text="name"
-                  item-value="id"
-                  label="Selecciona una unidad de apoyo "
-                  persistent-hint
-                  return-object
-                  single-line
-                  clearable
-                  height=20px
-                >
-                </v-select>
-                </v-col>
 
         </v-container>
       </v-card-text>
@@ -110,7 +87,6 @@ export default {
     return {
       localDialog: this.dialog,
       localCita: this.cita,
-      unidadApoyo:[],
       headers: [
         { text: "Código", value: "codigo" },
         { text: "Nombres", value: "nombre" },
@@ -133,7 +109,7 @@ export default {
         idsesion:"",
         resultado:"",
         alumnos:[],
-        idderivacion:"",
+        idderivacion:0,
         reason1:"",
         reason2:"",
       },
@@ -173,15 +149,10 @@ export default {
             this.datosResultado.reason2=this.motivos[1];
           }
             if (this.datosResultado.reason1!=undefined) { 
-                if (this.unidadApoyo.id == undefined){
-                  this.unidadApoyo.id = 0
-                }
+
                 this.datosResultado.idsesion = this.idSesion;
                 this.datosResultado.resultado = this.resultado.comentario;
                 this.datosResultado.alumnos = this.resultado.asistencia;
-                this.datosResultado.idderivacion=this.unidadApoyo.id
-                console.log(this.datosResultado);
-                console.log(this.unidadApoyo.id)
                 axios
                 .post(
                   "http://184.73.231.88:7002/api/tutor/register_result_and_assistance/",this.datosResultado)
