@@ -452,7 +452,7 @@ export default {
       .then(() => {
         this.cancelarCita.idsesion = item.id_session
         axios
-            .post("http://184.73.231.88:7002/api/tutor/cancel_session/", this.cancelarCita)
+            .post("tutor/cancel_session/", this.cancelarCita)
             .then(res => {
               console.log(res);
               this.listar();

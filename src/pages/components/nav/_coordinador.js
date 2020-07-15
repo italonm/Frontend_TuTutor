@@ -43,12 +43,6 @@ export default [{
       },
       {
         _name: 'CSidebarNavItem',
-        name: 'Tutorías Activas',
-        to: '/Coordinador/Tutorías Activas',
-        icon: 'cil-CheckCircle'
-      },
-      {
-        _name: 'CSidebarNavItem',
         name: 'Solicitudes',
         to: '/Coordinador/Solicitudes',
         icon: 'cil-EnvelopeClosed'

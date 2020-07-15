@@ -8,7 +8,7 @@
           <div class="Iniciar">Regístrate</div>
           <div class="social-container">
             <a class="social icon" style="color:#333;">
-              <i v-google-signin-button="clientId" class="fab fa-google-plus-g"></i>
+              <i class="fab fa-google-plus-g"></i>
             </a>
             <a href="#" class="social icon" style="color:#333;">
               <i class="fab fa-linkedin-in"></i>
@@ -41,12 +41,8 @@
         >
           <div class="Iniciar">Inicia Sesión</div>
           <div class="social-container">
-            <a href="#" class="social" style="color:#333; font-size: 14px; margin-bottom: 5px;">
-              <i class="fab fa-google-plus-g"></i>
-            </a>
-            <a href="#" class="social" style="color:#333; font-size: 14px; margin-bottom: 5px; ">
-              <i class="fab fa-linkedin-in"></i>
-            </a>
+            <GoogleLogin class="social"  :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
+          
           </div>
           <span style="font-size: 12px; padding: 0 50">o inicia a través de</span>
           <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;" type="text" placeholder="Usuario" v-model="login.user_name" @keyup.enter="logItIn"/>          
@@ -90,17 +86,34 @@
 
 <script>
 import axios from "axios";
+import GoogleLogin from 'vue-google-login';
 
-export default {    
+export default {     
     data() {
 			return {
+        google_login:{
+          email:"",
+          access_token:"",
+          id_token:""
+        },
 				login:{
 					user_name:"",
 					password:""
         },
+        params: {
+                    client_id: "829453480197-kqbrfh0qngf6mrneclddc0s0e15ochlk.apps.googleusercontent.com"
+                },
+        renderParams: {
+                    width: 225,
+                    height: 40,
+                    longtitle: true
+                },
         clientId: "829453480197-kqbrfh0qngf6mrneclddc0s0e15ochlk.apps.googleusercontent.com"
 			}
     },     
+    components:{
+      GoogleLogin
+    },
     mounted(){      
       const container = document.getElementById('container');      
       document.getElementById('signUp').addEventListener('click', () => {
@@ -109,10 +122,71 @@ export default {
       document.getElementById('signIn').addEventListener('click', () => {
         container.classList.remove("right-panel-active");
       });     
-    },      
-		methods:{      
-      OnGoogleAuthSuccess (idToken) {
-        console.log(idToken)
+    },    
+		methods:{       
+      onSuccess(googleUser) {
+          console.log(googleUser);
+          var that = this
+          var profile = googleUser.getBasicProfile();
+          this.google_login.email = profile.getEmail()
+          this.google_login.access_token = googleUser.wc.access_token          
+          this.google_login.id_token = googleUser.getAuthResponse().id_token          
+          axios
+          .post("http://184.73.231.88:5000/api/user/google_auth/",this.google_login)
+          .then(response =>{       
+              let Token = response.data.token;            
+              let Id_usuario = response.data.id;
+              let Id_programa = response.data.program_id;
+              let Id_institución = response.data.id_institution;
+              let Nombre_programa = response.data.program_name;
+              let Nombre = response.data.name;
+              let Apellidos = response.data.last_name;
+              let EsAdministrador = response.data.is_admin;
+              let EsCoordinador = response.data.is_coordinator;
+              let EsAlumno = response.data.is_student;
+              let EsSoporte = response.data.is_support;
+              let EsTutor = response.data.is_tutor;
+              localStorage.setItem('Token', JSON.stringify(Token));            
+              localStorage.setItem('Id_usuario',JSON.stringify(Id_usuario));
+              localStorage.setItem('Id_facultad',JSON.stringify(Id_programa));
+              localStorage.setItem('Id_institución',JSON.stringify(Id_institución));
+              localStorage.setItem('Nombre_programa',JSON.stringify(Nombre_programa));
+              localStorage.setItem('Nombre',JSON.stringify(Nombre));                    
+              localStorage.setItem('Apellidos',JSON.stringify(Apellidos));  
+              localStorage.setItem('EsAdministrador',JSON.stringify(EsAdministrador));                    
+              localStorage.setItem('EsCoordinador',JSON.stringify(EsCoordinador));                   
+              localStorage.setItem('EsTutor',JSON.stringify(EsTutor));
+              localStorage.setItem('EsAlumno',JSON.stringify(EsAlumno));
+              localStorage.setItem('EsSoporte',JSON.stringify(EsSoporte));               
+              if (EsAdministrador){
+                  that.$router.push('/Administrador/Bienvenido')  
+              }
+              else if (EsCoordinador){                
+                  that.$router.push('/Coordinador/Bienvenido')                                                                              
+              }
+              else if (EsTutor){    
+                  that.$router.push('/Tutor/Bienvenido')            
+              }
+              else if (EsAlumno){                
+                  that.$router.push('/Alumno/Bienvenido')
+              }       
+          })
+          .catch(function(error) {
+            if (error.response){
+              console.log(error)
+              that.$message.error("Datos inválidos, por favor ingrese de nuevo.")
+            }          
+          }) 
+          /* console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+          console.log('Name: ' + profile.getName());
+          console.log('Image URL: ' + profile.getImageUrl());
+          console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present
+           */
+          /* console.log('Token: ' + googleUser.getAuthResponse().id_token)
+          console.log('Token: ' + googleUser.wc.access_token) */
+      },                 
+      OnGoogleAuthSuccess (authData) {                
+        console.log(authData)
         // Receive the idToken and make your magic with the backend
       },
       OnGoogleAuthFail (error) {
@@ -134,7 +208,7 @@ export default {
       },
 			logItIn(){              
         var that = this;        
-        axios.post('http://184.73.231.88:5000/api/user/log_in/',that.login)
+        axios.post('/user/log_in/',that.login)
         .then(response =>{       
             let Token = response.data.token;            
             let Id_usuario = response.data.id;
