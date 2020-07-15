@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="500px">
+  <v-dialog v-model="dialogForm" persistent max-width="500px">
     <v-card>
       <v-card-title class="cardAdd">
         <h2 class="headline">{{action}}</h2>
@@ -74,12 +74,10 @@ import { nameRules, emailRules, codeRules, phoneRules } from "../../Validation";
 import axios from "axios";
 
 export default {
-  props: ["form", "dialog", "action"],
+  props: ["form", "dialogForm", "action"],
 
   data() {
     return {
-      localDialog: this.dialog,
-      localForm: this.form,
       valid: true,
       lazy: false,
       nameValidation: nameRules,
@@ -98,19 +96,18 @@ export default {
     insertar() {
       this.$refs.form.validate();
       if (this.valid) {
-        console.log(this.form)
+        console.log(this.form);
         axios
           .post("/coordinator/add_tutor/", this.form)
           .then(res => {
             console.log(res);
             this.$emit("resetList");
             this.$message({ message: "Registro exitoso.", type: "success" });
-            this.$emit("resetDialog");
-            this.$refs.form.reset();
+            this.cancelar();
           })
           .catch(error => {
-            console.log(error)
-            this.$message.error("Datos Duplicados");  
+            console.log(error);
+            this.$message.error("Datos Duplicados");
           });
       } else this.$message.error("Datos incorrectos");
     },
@@ -128,8 +125,7 @@ export default {
               message: "Modificación exitosa.",
               type: "success"
             });
-            this.$emit("resetDialog");
-            this.$refs.form.reset();
+            this.cancelar();
           })
           .catch(error => {
             console.log(error);

@@ -181,8 +181,9 @@ export default {
 
   methods: {
     listarUnidades() {
+      var Id_institución = localStorage.getItem("Id_institución");
       axios
-        .get("/admin/show_faculties/")
+        .get("/admin/show_faculties/" + Id_institución)
         .then(res => {
           this.unidades = res.data.faculties;
         })

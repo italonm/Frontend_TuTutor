@@ -31,7 +31,7 @@
             </v-row>
             <v-row>
               <v-col cols="12" md="6">
-                <v-checkbox v-model="form.faculty_unique_faculty" label="Tutoría única" required></v-checkbox>
+                <v-checkbox v-model="form.faculty_unique_faculty" label="Unidad única" required></v-checkbox>
               </v-col>
 
               <v-col cols="12" md="6">
@@ -74,14 +74,20 @@ export default {
   },
 
   created() {
-    axios
-      .get("/admin/show_coordinators_available/")
-      .then(res => {
-        this.coordinadores = res.data.users;
-      })
-      .catch(error => console.log(error));
+    this.listarCoordinadores();
   },
+
   methods: {
+    listarCoordinadores() {
+      var Id_institución = localStorage.getItem("Id_institución");
+      axios
+        .get("/admin/show_coordinators_available/" + Id_institución)
+        .then(res => {
+          this.coordinadores = res.data.users;
+        })
+        .catch(error => console.log(error));
+    },
+
     insertar() {
       this.$refs.form.validate();
       if (this.valid) {
@@ -89,10 +95,8 @@ export default {
           .post("/admin/add_faculty/", this.formFaculty)
           .then(res => {
             console.log(res);
-            this.$emit("resetList");
             this.$message({ message: "Registro exitoso.", type: "success" });
-            this.$emit("resetDialog");
-            this.reset();
+            this.cancelar();
           })
           .catch(error => {
             console.log(error);
@@ -108,6 +112,8 @@ export default {
     },
     cancelar() {
       this.reset();
+      this.listarCoordinadores();
+      this.$emit("resetList");
       this.$emit("resetDialog");
     }
   }

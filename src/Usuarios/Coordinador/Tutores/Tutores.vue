@@ -147,13 +147,13 @@ export default {
 
     insertar() {
       this.action = "Registrar tutor";
-      this.dialog = true;
+      this.dialogForm = true;
     },
 
     editar(item) {
       this.action = "Editar tutor";
       this.form = Object.assign({}, item);
-      this.dialog = true;
+      this.dialogForm = true;
     },
 
     eliminar(item) {

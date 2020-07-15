@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialogForm" persistent max-width="500px">
+  <v-dialog v-model="dialogForm" persistent max-width="700px">
     <v-card>
       <v-card-title class="cardAdd">
         <h2 class="headline">{{action}}</h2>
@@ -117,7 +117,6 @@ export default {
           .post("/coordinator/add_student/", this.form)
           .then(res => {
             console.log(res);
-            this.$emit("resetList");
             this.$message({ message: "Registro exitoso.", type: "success" });
             this.insertarNotas();
           })
@@ -135,7 +134,6 @@ export default {
           .post("/user/update_person/", this.form)
           .then(res => {
             console.log(res);
-            this.$emit("resetList");
             this.$message({
               message: "Modificación exitosa.",
               type: "success"
@@ -161,6 +159,7 @@ export default {
               message: "Archivo cargado exitosamente",
               type: "success"
             });
+            this.$emit("resetList");
             this.cancelar();
           })
           .catch(e => {
