@@ -76,6 +76,7 @@ export default {
       headers: [
         { text: "Código", value: "person_code" },
         { text: "Nombre", value: "person_full_name" },
+        { text: "Programa", value: "program_name" },
         { text: "Teléfono", value: "person_phone_number" },
         { text: "Correo", value: "person_email" },
         { text: "Editar", value: "editar", sortable: false },
@@ -101,9 +102,11 @@ export default {
 
   methods: {
     listar() {
+      var Id_institución = localStorage.getItem("Id_institución");
       axios
-        .get("/admin/show_coordinators/")
+        .get("/admin/show_coordinators/" + Id_institución)
         .then(res => {
+          console.log(res.data.users);
           this.coordinadores = res.data.users;
         })
         .catch(error => console.log(error));

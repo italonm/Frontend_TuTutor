@@ -14,7 +14,7 @@
                   chips
                   accept=".xlsx"
                   show-size
-                  label="Alumno graduados"
+                  label="Alumnos graduados"
                   v-model="documentExcel"
                   :rules="fileValidation"
                   required
@@ -52,6 +52,7 @@ export default {
     insertar() {
       var formData = new FormData();
       formData.append("file", this.documentExcel);
+      console.log(this.documentExcel);
       this.$refs.form.validate();
       if (this.valid) {
         axios
