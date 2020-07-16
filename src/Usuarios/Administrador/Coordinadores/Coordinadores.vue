@@ -50,7 +50,13 @@
         <el-button type="info" icon="el-icon-edit" circle @click="editar(item)"></el-button>
       </template>
       <template v-slot:item.eliminar="{ item }">
-        <el-button type="danger" icon="el-icon-delete" circle @click="eliminar(item)"></el-button>
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          circle
+          @click="eliminar(item)"
+          v-if="item.program_name === '-'"
+        ></el-button>
       </template>
     </v-data-table>
 
@@ -106,7 +112,6 @@ export default {
       axios
         .get("/admin/show_coordinators/" + Id_institución)
         .then(res => {
-          console.log(res.data.users);
           this.coordinadores = res.data.users;
         })
         .catch(error => console.log(error));
