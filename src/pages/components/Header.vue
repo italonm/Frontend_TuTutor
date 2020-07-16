@@ -54,7 +54,7 @@ export default {
   methods: {
     getImage() {
       axios
-        .get("/admin/show_logo/" + 1, { responseType: "arraybuffer" })
+        .get("/admin/show_logo/" + JSON.parse(localStorage.getItem("Id_usuario")), { responseType: "arraybuffer" })
         .then(response => {
           let image = btoa(
             new Uint8Array(response.data).reduce(
