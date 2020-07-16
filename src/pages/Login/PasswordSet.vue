@@ -30,8 +30,7 @@ export default {
     },
     methods:{        
         validar(){
-            var that = this          
-            console.log(that.setCode)  
+            var that = this                      
             axios.post('user/authenticate_mail/',that.setCode)
             .then(response =>{ 
                 console.log(response.data.id)                
@@ -42,7 +41,7 @@ export default {
             .catch(function(error) {
                 if (error.response){
                     console.log(error)
-                    this.$message.error("Datos inválidos, por favor ingrese de nuevo.")
+                    that.$message.error("Datos inválidos, por favor ingrese de nuevo.")
                 }          
             })            
         }

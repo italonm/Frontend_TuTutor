@@ -1,7 +1,7 @@
 <template>
   <div class="grid-content">
     <h1 style="text-align: center;">
-      <i class="fas fa-users"></i>&nbsp;Configuración de la institución
+      <i class="fas fa-university"></i>&nbsp;Configuración de la institución
     </h1>
     <CRow>
       <CCol sm="5">
@@ -56,7 +56,7 @@
                 <v-text-field
                   v-model="logo.institution_phone_number"
                   :rules="phoneValidation"
-                  label="Telefono"
+                  label="Telefono / Celular"
                   required
                 ></v-text-field>
               </v-col>
@@ -82,12 +82,11 @@
         </CCard>
       </CCol>
     </CRow>
-
-    <CCol sm xs="20" class="text-center mt-3">
-      <CButton size="lg" id="done-button" color="success" @click="verificar">
-        <CIcon name="cil-lightbulb" />&nbsp;Actualizar datos
-      </CButton>
-    </CCol>
+  
+    <v-col class="text-right">
+    <v-btn large color="success" rounded   @click="cancelarCambios">Cancelar cambios</v-btn>
+    <v-btn large color="error" rounded   @click="verificar">Actualizar datos</v-btn>
+    </v-col>
   </div>
 </template>
 
@@ -177,6 +176,9 @@ export default {
         })
         .catch(error => console.log(error));
       bus.$emit("updateLogo", 1);
+    },
+    cancelarCambios(){
+      this.listar();
     },
     uploadImage(e) {
       formData = new FormData();

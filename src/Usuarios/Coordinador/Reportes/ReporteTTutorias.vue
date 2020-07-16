@@ -154,8 +154,12 @@
       </v-container>
       </v-card>
           <v-card class="pa-md-4 mx-lg-auto" :height="500" style="overflow:auto;border-radius:0">
+            
             <div v-show="mostrarReporte">
+              <br>
+              
               <el-row>
+                <div  ref="contenidoCabecera">  
                 <el-col :lg="16">
                   <h5 style="color:#3F6FE6">{{tutorBoxReporteTipoTutoria['nombre']}}</h5>
 
@@ -169,6 +173,7 @@
                   <br />
                   <span>Fecha Fin: {{this.endTipoTutoria}}</span>
                 </el-col>
+                </div>
               </el-row>
               <v-data-table
                 :headers="headersTableTipoTutoria"
@@ -187,6 +192,7 @@
 
               
               </v-data-table>
+              
               <br>
               <br>
 
@@ -206,7 +212,7 @@
 
               <v-data-table
                 :headers="headersTablexTipoTutoria"
-                :items="dataTableTipoTutorias"
+                :items="dataTablexTipoTutorias"
                 sort-by="calories"
                 class="elevation-1"
                 v-show="showTableInasistencia"
@@ -224,8 +230,8 @@
 
 <div id="chartDonut">
                     <apexchart 
+                     v-show="showTable"
                       ref="demoChartDonut"
-                      width="380"
                       :height="300"
                       type="donut"
                       :options="OptionsDonutTutor"
@@ -251,7 +257,12 @@
     </v-card>
   </div>
 </template>
+<script src="bower_components/jspdf/dist/jspdf.min.js"></script>
+<script src="bower_components/jspdf-autotable/jspdf.plugin.autotable.js"></script>
 <script>
+import autoTable from 'jspdf-autotable'
+
+import jsPDF from 'jspdf'
 import axios from "axios";
 export default {
   data() {
@@ -271,32 +282,12 @@ export default {
         {
           text: "Alumno",
           align: "start",
-          value: "name"
+          value: "student_name"
         },
-        { text: "Tutor", value: "is_required" },
-        { text: "# Sesiones Inasistidas", value: "cant_students" },
-        { text: "Paso el Examen", value: "assisted_pcj" },
+        { text: "Tutor", value: "tutor_name" },
+        { text: "Inasistencias", value: "value" },
       ],
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+       dataTablexTipoTutorias: [],
 
 
 
@@ -309,7 +300,7 @@ export default {
       OptionsDonutTutor: {
         labels: [],
         title: {
-          text: "Derivaciones X Tipos Tutoría",
+          text: "Sesiones X Tipos Tutoría",
           align: "left"
         }
       },
@@ -332,7 +323,7 @@ export default {
       },
       showTable:false,
 
-
+    lineaDonusTT:[],
 
       showTableInasistencia:false,
       /*FECHA INICIO REPORTE TIPO TUTORIA */
@@ -352,14 +343,25 @@ export default {
 
       headersTableTipoTutoria: [
         {
+          title:'Nombre',
+          dataKey:'name',
           text: "Nombre",
           align: "start",
           value: "name"
         },
-        { text: "Obligatoria?", value: "is_required" },
-        { text: "# Alumnos", value: "cant_students" },
-        { text: "% Asistencias", value: "assisted_pcj" },
-        { text: "# Tutores", value: "total_tutors" }
+        {  title:'Obligatoria?',
+          dataKey:'is_required',
+          text: "Obligatoria?", value: "is_required" },
+        { 
+           title:'Obligatoria?',
+          dataKey:'cant_students',
+          text: "# Alumnos", value: "cant_students" },
+        {  title:'% Asistencias',
+          dataKey:'assisted_pcj',
+          text: "% Asistencias", value: "assisted_pcj" },
+        {  title:'# Tutores',
+          dataKey:'total_tutors',
+          text: "# Tutores", value: "total_tutors" }
       ],
       /*FECHA FIN REPORTE TIPO TUTORIA */
       ///////////////////////////////////
@@ -466,8 +468,7 @@ export default {
         this.mostrarReporte=true;
         this.showTable=true;
         this.cabeceraReporte(localStorage.getItem("Nombre_programa"), "Información Tipo Tutoría");
-        
-        //this.ReporteGeneralTipoTutoria();
+        this.ReporteGeneralTipoTutoria();
       }
     },
     
@@ -475,7 +476,7 @@ export default {
       this.showTableInasistencia=true;
       this.showTable=false;
       this.cabeceraReporte(tipoTutoria.tt_name,tipoTutoria.tt_description);
-      
+      this.generarReportetablaXTipoTutoria(tipoTutoria);
     },
 
 ////////////////////////////////////////////////
@@ -495,7 +496,26 @@ export default {
         .then(res => {
           this.dataTableTipoTutorias = res.data.tutoring_types;
           console.log(res.data);
-          //this.$message({ message: "Registro exitoso.", type: "success" });
+        })
+        .catch(error => console.log(error));
+    },
+  generarReportetablaXTipoTutoria(tutor){
+     this.enviarDatosReporteTipoTutoria["id_program"] = localStorage.getItem(
+        "Id_facultad"
+      );
+      this.enviarDatosReporteTipoTutoria["start_date"] = this.startTipoTutoria;
+      this.enviarDatosReporteTipoTutoria["end_date"] = this.endTipoTutoria;
+      console.log("mostrar dknfasddlj")
+      console.log(this.enviarDatosReporteTipoTutoria);
+      axios
+        .post(
+          "/coordinator/show_absences_report/",
+          this.enviarDatosReporteTipoTutoria
+        )
+        .then(res => {
+          console.log("mostrar ABSENETSSSSSSSSSSSSSSREPOTTS")
+          console.log(res.data);
+          
         })
         .catch(error => console.log(error));
     },
@@ -511,24 +531,40 @@ export default {
           this.ReporteTipoTutoria = res.data.tutoring_types;
           console.log("mostrar reporte tutoria")
           console.log(this.ReporteTipoTutoria);
+          this.serieDonutTutor=[];
+          this.lineaDonusTT=[];
           for(var tipo of this.ReporteTipoTutoria){
             console.log(tipo.name);
-            this.OptionsDonutTutor['labels'].push(tipo.name);
+            this.lineaDonusTT.push(tipo.name);
             this.serieDonutTutor.push(tipo.counter);
           }
-          console.log("mostrando options Donut tutor");
-          console.log(this.serieDonutTutor);
+          console.log(this.OptionsDonutTutor);
+          this.$refs.demoChartDonut.updateOptions({
+            colors:["#0086FF", "#00EC93","#FFB000", "#FF1752","#814AD6", "#A2DE21","#24C1B8", "#F947FD","#A59045", "#152396"]
+            ,labels:this.lineaDonusTT
+          })
+          
         })
         .catch(error => console.log(error));
 
     },
+    imprimirDocumento(){
+      const doc = new jsPDF('p','pt');
 
+      doc.fromHTML(this.$refs.contenidoCabecera,15,15,);
+      doc.autoTable(this.headersTableTipoTutoria,this.dataTableTipoTutorias,{
+       
+      });
+      doc.save("sample.pdf");
+    },
+  imprimir(){
+    window.print();
+  }
   },
   created() {
     //ejecuta por defecto las tutorias Generales en ambos
     this.showReporteXTipoTutoriaGeneral();
 
-  //  this.ReporteGeneralTipoTutoria();
     this.listarTipoTutoria();
   },
   components: {}

@@ -209,9 +209,9 @@
 import axios from 'axios';
   const weekdaysDefault = [1, 2, 3, 4, 5, 6, 0]
   const intervalsDefault = {
-    first: 0,
+    first: 6,
     minutes: 60,
-    count: 24,
+    count: 18,
     height: 40
   }
 var now     = new Date(); 
