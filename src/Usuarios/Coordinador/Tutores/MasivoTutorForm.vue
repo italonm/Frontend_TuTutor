@@ -14,7 +14,7 @@
                   chips
                   accept=".xlsx"
                   show-size
-                  label="Alumno graduados"
+                  label="Excel de tutores"
                   v-model="documentExcel"
                   :rules="fileValidation"
                   required

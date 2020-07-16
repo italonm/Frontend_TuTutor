@@ -75,11 +75,10 @@ export default {
       headers: [
         { text: "Nombre", value: "tt_name" },
         { text: "Descripción", value: "tt_description" },
-        { text: "Cantidad de alumnos", value: "tt_quantity" },
-        { text: "Duración", value: "tt_periodicity" },
-        { text: "¿Es obligatorio?", value: "tt_isrequired" },
-        { text: "¿El tutor es asignado?", value: "tt_assigned" },
-        { text: "¿El tutor es fijo?", value: "tt_permanent" },
+        { text: "Periodicidad", value: "tt_periodicity" },
+        { text: "¿Tutoria Obligatoria?", value: "tt_isrequired" },
+        { text: "¿Tutor Asignado?", value: "tt_assigned" },
+        { text: "¿Tutor Fijo?", value: "tt_permanent" },
         { text: "Editar", value: "editar", sortable: false },
         { text: "Eliminar", value: "eliminar", sortable: false }
       ],
@@ -88,8 +87,8 @@ export default {
         tt_name: "",
         tt_description: "",
         tt_isrequired: "",
-        tt_quantity: "",
-        tt_periodicity: "Semanal",
+        tt_enddate:"",
+        tt_periodicity: "",
         tt_assigned: "",
         tt_permanent: "",
         program_id:JSON.parse(localStorage.getItem("Id_facultad"))

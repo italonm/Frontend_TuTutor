@@ -14,7 +14,7 @@
                   chips
                   accept=".xlsx"
                   show-size
-                  label="Alumno graduados"
+                  label="Excel de alumnos"
                   v-model="documentExcel"
                   :rules="fileValidation"
                   required
@@ -61,7 +61,7 @@ export default {
             console.log(res);
             this.$emit("resetList");
             this.$message({
-              message: "Subiendo archivo, por favor espere",
+              message: "Carga masivo de alumnos exitosa",
               type: "success"
             });
             this.cancelar();
