@@ -36,8 +36,8 @@ import axios from "axios";
 export default {
   data() {
     return { 
-      respondidas: 13,
-      noRespondidas: 4,
+      respondidas: 0,
+      noRespondidas: 0,
     }
   },
   methods: {
@@ -48,8 +48,8 @@ export default {
         .get("http://184.73.231.88:5000/api/coordinator/show_status_report_polls/",  { "coordinator_id": localStorage.getItem("Id_usuario")})
         .then(res => {
           console.log(res.data);
-          //this.respondidas = res.data.answered;
-          //this.noRespondidas = res.data.not_answered;
+          this.respondidas = res.data.answered;
+          this.noRespondidas = res.data.not_answered;
         })
         .catch(error => console.log(error));
     },    
