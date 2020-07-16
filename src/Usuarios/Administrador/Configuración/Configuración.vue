@@ -158,6 +158,7 @@ export default {
             res.data.institution_phone_number;
           this.logo.institution_web_page = res.data.institution_web_page;
           this.editarlogo.institution_id = res.data.institution_id;
+          localStorage.setItem('Id_institución',JSON.stringify(this.editarlogo.institution_id));
           axios
             .get("/admin/show_logo/" + Id_usuario, {
               responseType: "arraybuffer"
@@ -183,7 +184,6 @@ export default {
     uploadImage(e) {
       formData = new FormData();
       const image = e.target.files[0];
-      console.log(image)
       formData.append("file", image, image.name);
       const reader = new FileReader();
       reader.readAsDataURL(image);
@@ -195,22 +195,30 @@ export default {
     registrar() {
       this.$refs.form.validate();
       if (this.valid) {
-        if (this.logoActualizado) {
-          this.logo.admin_id = JSON.parse(localStorage.getItem("Id_usuario"));
-          axios
-            .post("/admin/add_logo/" + this.logo.admin_id, formData)
-            .then(this.$message({ message: "Subiendo logo", type: "success" }))
-            .catch(e => {
-              console.log(e);
-              this.listar();
-            });
-          this.logoActualizado = false;
-        }
         axios
           .post("/admin/add_institution/", this.logo)
           .then(
             this.$message({ message: "Registro exitoso.", type: "success" })
           )
+          .then(res =>{
+                    console.log(res);
+                    if (this.logoActualizado) {
+                      this.logo.admin_id = JSON.parse(localStorage.getItem("Id_usuario"));
+                      axios
+                        .post("/admin/add_logo/" + this.logo.admin_id, formData)
+                        .then(this.$message({ message: "Subiendo logo", type: "success" }))
+                        .then(res => {
+                          console.log(res);
+                          this.listar();
+                        })
+                        .catch(e => {
+                          console.log(e);
+                          this.listar();
+                        });
+                      this.logoActualizado = false;
+                    }
+          })
+          .then(this.listar())
           .then(this.listar())
           .then(this.listar())
           .catch(e => {
