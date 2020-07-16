@@ -281,6 +281,7 @@
 </template>
 <script>
 import axios from "axios";
+import jsPDF from 'jspdf';
 export default {
   data() {
     return {
@@ -814,8 +815,12 @@ ReporteGeneralHorasInstruidasTotales(TutorOGeneral){
   },
 /*IMPRIMIR REPORTE TUTOR*/
 imprimirReporteTutor(){
-  
-  
+  const doc= new jsPDF();
+  const contentHtml=this.$refs.content.innerHTML;
+  doc.fromHTML(contentHtml,15,15,{
+    width:170,
+  });
+  doc.save("ReporteTutores.pdf");
  
 },
 

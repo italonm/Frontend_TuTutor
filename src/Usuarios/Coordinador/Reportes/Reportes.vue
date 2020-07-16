@@ -254,6 +254,8 @@
 <script>
 import ReportesTTipos from "./ReporteTTutorias"
 import ReportesTTutores from "./ReporteTutores"
+import alumno from "../../../notificaciones/alumno.png"
+import tutor from "../../../notificaciones/tutor.png"
 import axios from "axios";
 export default {
   data() {
@@ -263,22 +265,22 @@ export default {
       ReporteTipoTutoria: "",
       items: [
         {
-          avatar: "https://picsum.photos/250/300?image=660",
-          title: "Meeting @ Noon",
+          avatar: tutor,
+          title: "Tutor1Test1, Tutor1",
           subtitle:
-            "<span class='font-weight-bold'>Spike Lee</span> &mdash; I'll be in your neighborhood"
+            "<span class='font-weight-bold'>Finalizó</span> &mdash; Sesión de Tutoría Trica"
         },
         {
-          avatar: "https://picsum.photos/250/300?image=821",
-          title: 'Summer BBQ <span class="grey--text text--lighten-1"></span>',
+          avatar: tutor,
+          title: 'Tutor2Test2, Tutor2',
           subtitle:
-            "<span class='font-weight-bold'>to Operations support</span> &mdash; Wish I could come."
+            "<span class='font-weight-bold'>Inició</span> &mdash; Sesión de Tutoría por Carta"
         },
         {
-          avatar: "https://picsum.photos/250/300?image=783",
-          title: "Yes yes",
+          avatar: alumno,
+          title: "Alumno1Alumno1, Alumno1",
           subtitle:
-            "<span class='font-weight-bold'>Bella</span> &mdash; Do you have Paris recommendations"
+            "<span class='font-weight-bold'>Egresó</span> &mdash; Tutorías Finalizadas"
         }
       ],
       nombre:

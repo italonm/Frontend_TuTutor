@@ -260,7 +260,9 @@
 <script src="bower_components/jspdf/dist/jspdf.min.js"></script>
 <script src="bower_components/jspdf-autotable/jspdf.plugin.autotable.js"></script>
 <script>
+import autoTable from 'jspdf-autotable'
 
+import jsPDF from 'jspdf'
 import axios from "axios";
 export default {
   data() {
