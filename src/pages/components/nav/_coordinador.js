@@ -24,11 +24,7 @@ export default [{
           {
             name: 'Tutores',
             to: '/Coordinador/Miembros/Tutores'
-          },          
-          {
-            name: 'Soporte',
-            to: '/Coordinador/Miembros/Soporte'
-          },
+          },                    
           {
             name: 'Unidades de Apoyo',
             to: '/Coordinador/Miembros/Unidades de Apoyo'

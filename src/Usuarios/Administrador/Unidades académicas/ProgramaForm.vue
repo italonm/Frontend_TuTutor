@@ -65,7 +65,7 @@ export default {
 
   created() {
     axios
-      .get("/admin/show_coordinators_available/")
+      .get("/admin/show_coordinators_available/"+localStorage.getItem("Id_institución"))
       .then(res => {
         this.coordinadores = res.data.users;
       })
