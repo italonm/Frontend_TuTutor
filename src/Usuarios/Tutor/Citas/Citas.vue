@@ -3,11 +3,9 @@
     <!-- Titulo-->
     <el-row>
       <el-col :span="8">
-        <div class="grid-content">
           <h1 style="text-align: center;">
             <i class="fa fa-calendar"></i>&nbsp;Citas programadas
           </h1>
-        </div>
       </el-col>
     </el-row>
 
@@ -32,7 +30,7 @@
             <v-divider></v-divider>
 
 
-          <v-list flat subheader  height="430px" class="scroll">
+          <v-list flat subheader  height="460px" class="scroll">
             <v-list-item-group
                 subgroup
                 color = "blue"
@@ -63,7 +61,7 @@
                       <v-list-item-title >Horario</v-list-item-title>
                       <v-list-item-subtitle v-text="cita.horaIni +'-'+cita.horaFin"></v-list-item-subtitle>
                       </v-col>
-                      <template v-if="cita.ubicacion === 'Sin ubicacion'">
+                      <template v-if="cita.ubicacion === ''">
                         <v-col>
                         <v-list-item-title >Sesión Virtual</v-list-item-title>
                         <a :href="cita.link" target="_blank">Enlace de la reunión</a>
@@ -85,7 +83,12 @@
 
                       <v-list-item-action>
 
-                          <v-btn text small @click="cancelar(cita)">
+                          <v-btn text small  @click="editarLugar(cita)">
+                            Editar Lugar
+                            <v-icon color="grey lighten-1">mdi-clipboard-outline</v-icon>
+                          </v-btn>
+
+                          <v-btn text small @click="cancelarDialog(cita)">
                             Cancelar Cita
                             <v-icon>mdi-close</v-icon>
                           </v-btn>
@@ -111,7 +114,7 @@
                     :key="'D'+i"
                     link
                   >
-                    <v-list-item-title v-text="datosAlumno.nombre + ' ' + datosAlumno.apellidos"></v-list-item-title>
+                    <v-list-item-title v-text="datosAlumno.codigo + ' ' + datosAlumno.nombre + ' ' + datosAlumno.apellidos"></v-list-item-title>
                   </v-list-item> 
                   </v-list-group>
                 </v-list>
@@ -131,7 +134,7 @@
 
       </v-card>
 
-      <br><br>
+      <br>
 
       <v-card max-width="1200" class="ml-4 ">
         <v-row>
@@ -152,7 +155,7 @@
           <div v-show = "show2">
             <v-divider></v-divider>
 
-        <v-list flat subheader height="430px" class="scroll">
+        <v-list flat subheader height="460px" class="scroll">
           <v-list-item-group
               subgroup
               color = "blue"
@@ -183,7 +186,7 @@
                     <v-list-item-title >Horario</v-list-item-title>
                     <v-list-item-subtitle v-text="cita.horaIni +'-'+cita.horaFin"></v-list-item-subtitle>
                     </v-col>
-                    <template v-if="cita.ubicacion === 'Sin ubicacion'">
+                    <template v-if="cita.ubicacion === ''">
                         <v-col>
                         <v-list-item-title >Sesión Virtual</v-list-item-title>
                         <a :href="cita.link" target="_blank">Enlace de la reunión</a>
@@ -208,7 +211,7 @@
                         <v-icon color="grey lighten-1">mdi-clipboard-outline</v-icon>
                       </v-btn>
 
-                        <v-btn text small @click="cancelar(cita)">
+                        <v-btn text small @click="cancelarDialog(cita)">
                           Cancelar Cita
                           <v-icon>mdi-close</v-icon>
                         </v-btn>
@@ -233,7 +236,7 @@
                   :key="'I'+i"
                   link
                 >
-                  <v-list-item-title v-text="datosAlumno.nombre + ' ' + datosAlumno.apellidos"></v-list-item-title>
+                  <v-list-item-title v-text="datosAlumno.codigo + ' ' + datosAlumno.nombre + ' ' + datosAlumno.apellidos"></v-list-item-title>
                 </v-list-item> 
               </v-list-group>
               </v-list>
@@ -255,6 +258,35 @@
 
       <br>
 
+      <v-row justify="center">
+      <v-dialog v-model="dialogCancelar" persistent max-width="650">
+        <v-card>
+          <v-card-title class="headline">
+            {{
+            "Para cancelar la cita, seleccione un motivo de rechazo" }}
+          </v-card-title>
+            <v-col>
+                <v-overflow-btn
+                  v-model="motivos"
+                  :items="rechazos"
+                  label="Motivos de rechazo"
+                  target="#dropdown-example"
+                  :dense="dense"
+                ></v-overflow-btn>
+            </v-col>
+          <v-card-text>Nota 1: Al cancelar la cita, esta no podrá ser revertida</v-card-text>
+          <v-card-text>Nota 2: El motivo elegido será mostrado al alumno a través de un correo electrónico.</v-card-text>
+          <v-col>
+          <v-btn color="blue darken-1" text @click="cancelar()" >Cancelar</v-btn>
+          <v-btn color="green darken-1" text @click="cancelarCita()" > Enviar motivo y cancelar cita </v-btn>
+          </v-col>
+        </v-card>
+      </v-dialog>
+    </v-row>
+
+
+
+
     <!--Formulario-->
     <resultadoForm
       :listaDerivados = "listaDerivados"
@@ -266,12 +298,20 @@
       v-on:resetDialog="dialog=$event"
       v-on:resetList="listar()"
     ></resultadoForm>
+
+    <editarLugarForm
+      :idSesion = "idSesion"
+      :dialogLugar="dialogLugar"
+      v-on:resetDialog="dialogLugar=$event"
+      v-on:resetList="listar()"
+    ></editarLugarForm>
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
 import resultadoF from "./Resultado"
+import editarLugarF from "./Lugar"
 var now     = new Date(); 
 var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
 var horaActual = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
@@ -286,14 +326,19 @@ export default {
         listaCitasSinResultados:[],
         listaProximasCitas:[],
         listaDerivados:[],
+        dialogCancelar:false,
         grupoCitasSinResultados:[],
         grupoProximasCitas:[],
+        rechazos: [],
+        motivos: null,
         contadorProxCitas:0,
         contadorSinResultados:0,
         idSesion:"",
         search: "",
         dialog: false,
+        dialogLugar:false,
         action: "",
+        dense:true,
         timeDiffInSecond:"",
         horasDif:[],
         page:1,
@@ -304,13 +349,14 @@ export default {
         comentario:"",
         asistencia:[],
         },
-        cancelarCita:{
+        cancelarCitaDatos:{
           idsesion:""
         }
     }
   },
   created() {
     this.listar();
+    this.listarRechazos();
   },
   methods: {
     listar() {
@@ -319,6 +365,15 @@ export default {
         .then(res => {
           this.listaCitas = res.data.data;
           this.ordenarCitas();
+        })
+        .catch(error => console.log(error));
+    },
+    listarRechazos() {      
+      axios
+        .get("http://184.73.231.88:7002/api/tutor/show_reasons_rejection/")
+        .then(res => {
+          this.rechazos = res.data.reasons;
+          this.motivos = this.rechazos[0];
         })
         .catch(error => console.log(error));
     },
@@ -356,10 +411,10 @@ export default {
       });
       this.listaProximasCitas.sort(function (a, b) {
         if (a.fecha > b.fecha) {
-          return -1;
+          return 1;
         }
         if (a.fecha < b.fecha) {
-          return 1;
+          return -1;
         }
         // a must be equal to b
         return 0;
@@ -408,6 +463,8 @@ export default {
           }
       });
       this.grupoProximasCitas = groupsProxCit;
+
+      console.log(this.grupoProximasCitas);
     },
     editar(item) {
       axios
@@ -439,37 +496,40 @@ export default {
       .catch(error => console.log(error));
 
     },
-    cancelar(item){
-      this.$confirm(
-        "¿Esta seguro de cancelar esta cita?",
-        "Advertencia",
-        {
-          confirmButtonText: "Confirmar",
-          cancelButtonText: "Cancelar",
-          type: "warning"
-        }
-      )
-      .then(() => {
-        this.cancelarCita.idsesion = item.id_session
+    editarLugar(item){
+      this.idSesion = item.id_session;
+      this.dialogLugar = true;
+
+    },
+    cancelar() {
+      this.dialogCancelar = false;
+      this.$emit("resetDialog", this.dialogCancelar);
+    },
+    cancelarDialog(item){
+      this.citaGuardar = item
+      this.dialogCancelar = true;
+    },
+    cancelarCita(){
+        this.cancelarCitaDatos.idsesion = this.citaGuardar.id_session;
+        this.cancelarCitaDatos.motivo = this.motivos;
         axios
-            .post("tutor/cancel_session/", this.cancelarCita)
+            .post("http://184.73.231.88:7002/api/tutor/cancel_session/", this.cancelarCitaDatos)
             .then(res => {
               console.log(res);
               this.listar();
               this.$message({
-                message: "Rechazo exitoso",
+                message: "Cancelación exitosa. Se le envió un correo electrónico al estudiante",
                 type: "success"
               });
+              this.dialogCancelar = false;
+              this.$emit("resetDialog", this.dialogCancelar);
             })
             .catch(error => console.log(error));
-      })
-      .catch(() => {
-          this.$message({ type: "info", message: "Cancelación no realizada" });
-      });
     }
   },
   components: {
-    resultadoForm: resultadoF
+    resultadoForm: resultadoF,
+    editarLugarForm: editarLugarF
   }
 }
 </script>
