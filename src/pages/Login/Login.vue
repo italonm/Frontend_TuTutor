@@ -50,7 +50,7 @@
             <input id="pass" style ="padding: 12px 15px; margin: 8px 0;	width: 100%;" type="password" placeholder="Contraseña" v-model="login.password" value @keyup.enter="logItIn">          
             <i id="pass icon" class="fa fa-eye" style="position: absolute; right:7%; padding: 24px; min-width: 50px; text-align: right;" @click="ShowPass()" ></i>
           </div>
-          <a style="color:#333; font-size: 12px; margin: 15px 0" hre  f="#">Olvidaste tu contraseña?</a>
+          <a style="color:#333; font-size: 12px; margin: 15px 0" @click="resetPass">Olvidaste tu contraseña?</a>
           <button style="border-radius: 20px; border: 1.3px solid #3C4B64; background-color: transparent;color: #3C4B64;font-size: 11px;padding: 12px 45px;letter-spacing: 1px;text-transform: uppercase;transition: transform 80ms ease-in;"
           id="LogButton" @click='logItIn'>Iniciar</button>
         </div>
@@ -124,6 +124,10 @@ export default {
       });     
     },    
 		methods:{       
+      resetPass(){
+
+        this.$router.push("/ResetPass")
+      },
       onSuccess(googleUser) {
           console.log(googleUser);
           var that = this

@@ -42,10 +42,10 @@ export default {
   },
   methods: {
     listarRespondidas_y_NoRespondidas() {  
-      console.log(localStorage.getItem("Id_programa")); 
-      console.log(localStorage.getItem("Id_usuario"));   
+      //console.log(localStorage.getItem("Id_programa")); 
+      //console.log(localStorage.getItem("Id_usuario"));   
       axios
-        .get("http://184.73.231.88:5000/api/coordinator/show_status_report_polls/" + localStorage.getItem("Id_programa"))
+        .get("http://184.73.231.88:5000/api/coordinator/show_status_report_polls/",  { "coordinator_id": localStorage.getItem("Id_usuario")})
         .then(res => {
           console.log(res.data);
           //this.respondidas = res.data.answered;
