@@ -20,6 +20,17 @@
                   required
                 ></v-file-input>
               </v-col>
+              <v-col cols="12" md="12">
+                <v-select
+                  v-model="tipo"
+                  :items="tipotutorias"
+                  :rules="[v => !!v || 'Seleccione un tipo de tutoría']"
+                  item-text="tt_name"
+                  item-value="tt_id"
+                  label="Tipo de tutoría"
+                  required
+                ></v-select>
+              </v-col>
             </v-row>
           </v-form>
         </v-container>
@@ -42,23 +53,42 @@ export default {
   data() {
     return {
       documentExcel: null,
+      tipo: "",
+      tipotutorias: [],
       valid: true,
       lazy: false,
       fileValidation: excelRules
     };
   },
 
+  created() {
+    this.listarTipos();
+  },
+
   methods: {
+    listarTipos() {
+      var Id_facultad = localStorage.getItem("Id_facultad");
+      axios
+        .get("/coordinator/show_tutoring_types/" + Id_facultad)
+        .then(res => {
+          this.tipotutorias = res.data.tutoriaData;
+          console.log(this.tipotutorias);
+        })
+        .catch(error => console.log(error));
+    },
+
     insertar() {
       var formData = new FormData();
       formData.append("file", this.documentExcel);
-      console.log(this.documentExcel);
       this.$refs.form.validate();
       if (this.valid) {
         var Id_facultad = localStorage.getItem("Id_facultad");
         axios
           .post(
-            "/coordinator/add_tutors_to_student/" + Id_facultad + "/15",
+            "/coordinator/add_tutors_to_student/" +
+              Id_facultad +
+              "/" +
+              this.tipo,
             formData
           )
           .then(res => {
