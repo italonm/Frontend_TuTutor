@@ -2,7 +2,7 @@
   <el-container direction="vertical">
     <!-- Titulo-->
     <el-row>
-      <el-col :span="9">
+      <el-col :span="8">
         <div class="grid-content">
           <h1 style="text-align: center;">
             <i class="fas fa-users"></i>&nbsp;Coordinadores
@@ -16,14 +16,33 @@
           </el-input>
         </div>
       </el-col>
-      <el-col :span="7">
-        <div class="grid-content">
-          <el-button
-            type="success"
-            icon="fas fa-user-plus"
-            @click="insertar()"
-            class="buttonAdd"
-          >&nbsp;Agregar</el-button>
+      <el-col :span="8">
+        <div class="text-center">
+          <v-menu open-on-hover bottom offset-y transition="slide-x-transition">
+            <template v-slot:activator="{ on: menu, attrs }">
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on: tooltip }">
+                  <v-btn
+                    color="success"
+                    dark
+                    v-bind="attrs"
+                    v-on="{ ...tooltip, ...menu }"
+                  >Registrar</v-btn>
+                </template>
+                <span>Registro desplegable</span>
+              </v-tooltip>
+            </template>
+            <v-list color="success">
+              <v-list-item @click="insertar" dark>
+                <v-list-item-title>Registrar coordinador</v-list-item-title>
+              </v-list-item>
+              <v-divider></v-divider>
+              <v-list-item @click="dialogMasivo = true;" dark>
+                <v-list-item-title>Registrar masivamente</v-list-item-title>
+              </v-list-item>
+              <v-divider></v-divider>
+            </v-list>
+          </v-menu>
         </div>
       </el-col>
     </el-row>
@@ -50,7 +69,13 @@
         <el-button type="info" icon="el-icon-edit" circle @click="editar(item)"></el-button>
       </template>
       <template v-slot:item.eliminar="{ item }">
-        <el-button type="danger" icon="el-icon-delete" circle @click="eliminar(item)"></el-button>
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          circle
+          @click="eliminar(item)"
+          v-if="item.program_name === '-'"
+        ></el-button>
       </template>
     </v-data-table>
 
@@ -62,13 +87,18 @@
       v-on:resetDialog="dialog=false"
       v-on:resetList="listar()"
     ></coordinadorForm>
+    <coordinadorMasivoForm
+      :dialogMasivo="dialogMasivo"
+      v-on:resetDialog="dialogMasivo=false"
+      v-on:resetList="listar()"
+    ></coordinadorMasivoForm>
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
 import CoordinadorForm from "./CoordinadorForm";
-
+import CoordinadorMasivoForm from "./MasivoCoordinadorForm";
 export default {
   data() {
     return {
@@ -92,6 +122,7 @@ export default {
       },
       search: "",
       dialog: false,
+      dialogMasivo: false,
       action: ""
     };
   },
@@ -106,7 +137,6 @@ export default {
       axios
         .get("/admin/show_coordinators/" + Id_institución)
         .then(res => {
-          console.log(res.data.users);
           this.coordinadores = res.data.users;
         })
         .catch(error => console.log(error));
@@ -151,7 +181,8 @@ export default {
   },
 
   components: {
-    coordinadorForm: CoordinadorForm
+    coordinadorForm: CoordinadorForm,
+    coordinadorMasivoForm: CoordinadorMasivoForm
   }
 };
 </script>
