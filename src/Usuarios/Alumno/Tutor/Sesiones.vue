@@ -129,7 +129,7 @@ export default {
           this.plan = res.data[0].plan_de_accion;
           // this.total = res.data[0].plan_de_accion.length;
           console.log(this.tutoria);
-          console.log(res.data[0].plan_de_accion);
+          console.log(res.data[0].sesiones);
         })
         .catch(error => console.log(error));
     },

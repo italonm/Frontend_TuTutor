@@ -130,7 +130,7 @@
                 <v-list-item-title v-text="notificacion.hours"></v-list-item-title>
                 <v-list-item-title v-text="notificacion.tutor"></v-list-item-title>
                 <v-list-item-subtitle class="text--primary" v-text="notificacion.tutoring_type"></v-list-item-subtitle>                              
-                <div v-if="notificacion.place == 'Sin Ubicacion'">                    
+                <div v-if="notificacion.place == 'Oficina xx'">                    
                   <a :href="notificacion.link" target="_blank">Enlace de la reunión</a>
                 </div>
                 <div v-else>

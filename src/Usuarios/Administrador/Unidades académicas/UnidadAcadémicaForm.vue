@@ -10,7 +10,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="form.faculty_name"
+                  v-model="formFaculty.faculty_name"
                   :rules="nameValidation"
                   label="Nombre"
                   required
@@ -19,7 +19,7 @@
 
               <v-col cols="12" md="6">
                 <v-select
-                  v-model="form.faculty_id_coordinator"
+                  v-model="formFaculty.faculty_id_coordinator"
                   :items="coordinadores"
                   :rules="[v => !!v || 'Seleccione un coordinador']"
                   item-text="person_full_name"
@@ -31,11 +31,19 @@
             </v-row>
             <v-row>
               <v-col cols="12" md="6">
-                <v-checkbox v-model="form.faculty_unique_faculty" label="Tutoría única" required></v-checkbox>
+                <v-checkbox
+                  v-model="formFaculty.faculty_unique_faculty"
+                  label="Unidad única"
+                  required
+                ></v-checkbox>
               </v-col>
 
               <v-col cols="12" md="6">
-                <v-checkbox v-model="form.faculty_required_tutorship" label="Tutoría fija" required></v-checkbox>
+                <v-checkbox
+                  v-model="formFaculty.faculty_required_tutorship"
+                  label="Tutoría fija"
+                  required
+                ></v-checkbox>
               </v-col>
             </v-row>
           </v-form>
@@ -63,7 +71,7 @@ export default {
       lazy: false,
       nameValidation: nameRules,
       coordinadores: [],
-      form: {
+      formFaculty: {
         faculty_name: "",
         faculty_unique_faculty: false,
         faculty_required_tutorship: false,
@@ -74,14 +82,20 @@ export default {
   },
 
   created() {
-    axios
-      .get("/admin/show_coordinators_available/")
-      .then(res => {
-        this.coordinadores = res.data.users;
-      })
-      .catch(error => console.log(error));
+    this.listarCoordinadores();
   },
+
   methods: {
+    listarCoordinadores() {
+      var Id_institución = localStorage.getItem("Id_institución");
+      axios
+        .get("/admin/show_coordinators_available/" + Id_institución)
+        .then(res => {
+          this.coordinadores = res.data.users;
+        })
+        .catch(error => console.log(error));
+    },
+
     insertar() {
       this.$refs.form.validate();
       if (this.valid) {
@@ -89,10 +103,8 @@ export default {
           .post("/admin/add_faculty/", this.formFaculty)
           .then(res => {
             console.log(res);
-            this.$emit("resetList");
             this.$message({ message: "Registro exitoso.", type: "success" });
-            this.$emit("resetDialog");
-            this.reset();
+            this.cancelar();
           })
           .catch(error => {
             console.log(error);
@@ -103,11 +115,13 @@ export default {
 
     reset() {
       this.$refs.form.reset();
-      this.form.faculty_unique_faculty = false;
-      this.form.faculty_required_tutorship = false;
+      this.formFaculty.faculty_unique_faculty = false;
+      this.formFaculty.faculty_required_tutorship = false;
     },
     cancelar() {
       this.reset();
+      this.listarCoordinadores();
+      this.$emit("resetList");
       this.$emit("resetDialog");
     }
   }

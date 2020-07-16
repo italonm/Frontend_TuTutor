@@ -44,13 +44,16 @@ import PassSet from "../../pages/Login/PasswordSet.vue";
 import RegPass from "../../pages/Login/RegistrarContraseña.vue";
 import Reestablecer from "../../pages/Login/Reestablecer.vue";
 import Registrar from "../../pages/Login/Registro.vue";
+import ResetPass from "../../pages/Login/ResetPass.vue"
+
 export const routes = [
-    { path: "", redirect: "Login", name:'main' },
-    { path: "/Login", component: Login, name:"login"},
-    { path: "/PassSet", component: PassSet, name:'passSet'},
-    { path: "/RegPass", component: RegPass, name:'regPass' },    
-    { path: "/Reestablecer", component: Reestablecer, name:'reestablecer' }, 
-    { path: "/Registrar", component: Registrar, name:'registrar'},        
+    { path: "", redirect: "Login", name:'main', meta:{requiresAuth: false} },
+    { path: "/Login", component: Login, name:"login", meta:{requiresAuth: false}},
+    { path: "/PassSet", component: PassSet, name:'passSet', meta:{requiresAuth: false}},
+    { path: "/RegPass", component: RegPass, name:'regPass', meta:{requiresAuth: false}},    
+    { path: "/Reestablecer", component: Reestablecer, name:'reestablecer', meta:{requiresAuth: false} }, 
+    { path: "/Registrar", component: Registrar, name:'registrar', meta:{requiresAuth: false}},      
+    { path: "/ResetPass", component: ResetPass, name:'reiniciar', meta:{requiresAuth: false}},        
     {
         path: "/Administrador",
         component: MainAdmin,
@@ -165,8 +168,20 @@ const router =  new Router({
 }); 
 
 router.beforeEach((to ,from, next)=>{    
-    if (to.name !== 'login' && (localStorage.getItem("Token")===null)) next({ name: 'login' })
-    else next()
+    if(to.matched.some((record)=>record.meta.requiresAuth)){
+        if (localStorage.getItem("Token")){
+            next()
+            return
+        }
+        else{
+            next("/Login")
+        }
+    }
+    else{
+        next()
+    }
+/*     if (to.name !== 'login' && (localStorage.getItem("Token")===null)) next({ name: 'login' })
+    else next() */
 })
 
 export default router
