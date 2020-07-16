@@ -84,8 +84,8 @@
     </CRow>
   
     <v-col class="text-right">
-    <v-btn large color="success" rounded   @click="cancelarCambios">Cancelar cambios</v-btn>
-    <v-btn large color="error" rounded   @click="verificar">Actualizar datos</v-btn>
+    <v-btn large color="error" rounded   @click="cancelarCambios">Cancelar cambios</v-btn>
+    <v-btn large color="success" rounded   @click="verificar">Actualizar datos</v-btn>
     </v-col>
   </div>
 </template>
@@ -218,7 +218,6 @@ export default {
                       this.logoActualizado = false;
                     }
           })
-          .then(this.listar())
           .then(this.listar())
           .then(this.listar())
           .catch(e => {
