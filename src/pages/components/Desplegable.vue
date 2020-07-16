@@ -7,12 +7,6 @@
         </div>
       </CHeaderNavLink>
     </template>
-    <!-- <v-btn class="ma-2" outlined large fab color="indigo" @click="CerrarSesión()">
-      <v-icon>mdi-pencil</v-icon>
-    </v-btn>-->
-    <CDropdownItem>
-      <CIcon name="cil-shield-alt" />Perfil
-    </CDropdownItem>
     <CDropdownItem @click="CerrarSesión()">
       <CIcon name="cil-lock-locked" />Cerrar Sesión
     </CDropdownItem>
