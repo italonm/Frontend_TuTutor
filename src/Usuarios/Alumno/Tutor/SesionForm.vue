@@ -89,7 +89,7 @@ var diaActual =
   (now.getDate() < 10 ? "0" : "") +
   now.getDate();
 export default {
-  props: ["dialog", "idtutor", "events"],
+  props: ["dialog", "idtutoria", "idtutor", "events"],
   data() {
     return {
       start: diaActual,
@@ -98,6 +98,7 @@ export default {
       cita: {
         s_date: "",
         s_hour: "",
+        s_id_assignment: "",
         s_id_student: localStorage.getItem("Id_usuario"),
         s_code_tutor: ""
       }
@@ -109,6 +110,7 @@ export default {
     },
 
     citar() {
+      this.cita.s_id_assignment = this.idtutoria;
       this.cita.s_code_tutor = this.idtutor;
       this.$confirm("¿Desea reservar una cita?", "Warning", {
         confirmButtonText: "OK",
@@ -132,7 +134,10 @@ export default {
 
     citarServicio() {
       axios
-        .post("/student/register_appointment/", this.cita)
+        .post(
+          "http://184.73.231.88:7002/api/student/register_appointment/",
+          this.cita
+        )
         .then(res => {
           console.log(res);
           this.cita.s_date = "";
@@ -167,13 +172,10 @@ export default {
   }
 };
 </script>>
+
 <style lang="scss">
 .v-calendar .v-event-timed-container {
   margin-right: 0px !important ;
-}
-.v-event-timed {
-  // left: 2.5% !important;
-  // right: 2.5% !important;
 }
 .my-event {
   overflow: hidden;
