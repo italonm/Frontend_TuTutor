@@ -30,7 +30,7 @@ import Sesiones from "../../Usuarios/Tutor/Sesiones/Sesiones";
 import SolicitudesTutor from "../../Usuarios/Tutor/Solicitudes/Solicitudes";
 import AlumnosTutor from "../../Usuarios/Tutor/Alumnos/Alumnos";
 //COMPONENTE BIENVENIDOS
-import Welcome from "../../Usuarios/Welcome";
+import Welcome from "../../pages/Welcome/Welcome";
 import Vue from "vue";
 import Router from "vue-router";
 // COMPONENTE CONTENEDOR DE ACUERDO AL ROL
@@ -180,8 +180,7 @@ router.beforeEach((to ,from, next)=>{
     else{
         next()
     }
-/*     if (to.name !== 'login' && (localStorage.getItem("Token")===null)) next({ name: 'login' })
-    else next() */
+
 })
 
 export default router
