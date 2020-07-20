@@ -199,8 +199,7 @@ export default {
       OnGoogleAuthFail (error) {
         console.log(error)
       },
-      register(){
-        this.$router.push("/PassSet")
+      register(){        
       },
       ShowPass(){
         var x = document.getElementById("pass");
