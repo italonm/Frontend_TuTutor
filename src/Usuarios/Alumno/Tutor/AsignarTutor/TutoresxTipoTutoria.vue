@@ -224,7 +224,7 @@ export default {
       this.customCalendar = [];
 
       for (etiqueta in this.scheduler) {
-        var birthday = new Date(etiqueta);
+        var birthday = new Date(etiqueta.replace('-',','));
         var options = {
           weekday: "long",
           day: "numeric",
@@ -232,8 +232,9 @@ export default {
           year: "numeric"
         };
         //dias.day=new Intl.DateTimeFormat("es-PE", options).format(birthday);
-        console.log("mostrar dias");
+        console.log("mostrar dias e");
         console.log(etiqueta);
+        console.log(birthday);
         var contenedor = { fecha: "val", hora: [] };
         contenedor["fecha"] = new Intl.DateTimeFormat("es-PE", options).format(
           birthday
@@ -244,6 +245,8 @@ export default {
           console.log(val);
         }
         this.customCalendar.push(contenedor);
+        console.log("customer calendar");
+        console.log(contenedor);
         console.log(this.customCalendar);
       }
     },

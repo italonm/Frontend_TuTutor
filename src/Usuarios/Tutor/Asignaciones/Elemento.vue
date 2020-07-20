@@ -2,8 +2,8 @@
     <div class="courses-container">
         <div class="course">
             <div class="course-preview">
-                <h6 style="color:#FFFFFF;">Participantes</h6>
-                <h4>{{name}}</h4>                  
+                <h6 style="color:#FFFFFF; font-family: 'Muli', sans-serif;font-weight: 500;font-size: .875rem;">Participantes</h6>
+                <h4 style="font-family: 'Muli', sans-serif;font-weight: 500;font-size: 1.3125rem;">{{name}}</h4>                  
                 <a style="color:#FFFFFF; font-size:13px;" @click="derivar()">Derivar <i class="fas fa-chevron-right"></i></a>
             </div>
             <div class="course-info">
@@ -18,8 +18,8 @@
                         {{comp.finished_activities}}/{{comp.total_activities}} Actividades
                     </span>
                 </div>                
-                <h6>{{comp.state}}</h6>
-                <h2>{{comp.tutoring_type}}</h2>
+                <h6 style="font-family: 'Muli', sans-serif;font-weight: 500;font-size: .875rem;">{{comp.state}}</h6>
+                <h2 style="font-family: 'Muli', sans-serif;font-weight: 500;font-size: 26px;">{{comp.tutoring_type}}</h2>
                 <button class="btn" v-on:click="verPlan()">
                     Ver Plan
                 </button>

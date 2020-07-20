@@ -61,6 +61,7 @@
     <!--Formulario-->
     <sesionForm
       :dialog="dialog"
+      :idtutoria="idtutoria"
       :idtutor="idtutor"
       :events="events"
       v-on:closeDialog="dialog = false"
@@ -90,6 +91,7 @@ export default {
       },
       search: "",
       dialog: false,
+      idtutoria: "",
       idtutor: "",
       events: []
     };
@@ -103,7 +105,10 @@ export default {
     listar() {
       var Id_usuario = localStorage.getItem("Id_usuario");
       axios
-        .get("/student/show_tutoring_list/" + Id_usuario)
+        .get(
+          "http://184.73.231.88:7002/api/student/show_tutoring_list/" +
+            Id_usuario
+        )
         .then(res => {
           this.tutorias = res.data.tutor;
         })
@@ -116,10 +121,11 @@ export default {
     },
 
     agendar(tutoria) {
+      this.idtutoria = tutoria.t_id_assignment;
       this.idtutor = tutoria.t_code;
       this.dialog = true;
       axios
-        .get("/student/show_calendar/" + this.idtutor)
+        .get("/student/show_calendar/" + tutoria.t_code)
         .then(res => {
           this.events = res.data.events;
         })
@@ -129,7 +135,8 @@ export default {
     verTutoria(tutoria) {
       var that = this;
       that.$router.push("/Alumno/Sesiones");
-      localStorage.setItem("Id_tutoria", tutoria.t_code);
+      localStorage.setItem("Id_tutoria", tutoria.t_id_assignment);
+      localStorage.setItem("Id_tutor", tutoria.t_code);
     },
 
     miFiltrado(tutorias) {
