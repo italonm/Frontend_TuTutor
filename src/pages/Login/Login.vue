@@ -106,7 +106,7 @@ export default {
         renderParams: {
                     width: 225,
                     height: 40,
-                    longtitle: true
+                    longtitle: true,                    
                 },
         clientId: "829453480197-kqbrfh0qngf6mrneclddc0s0e15ochlk.apps.googleusercontent.com"
 			}
@@ -114,6 +114,7 @@ export default {
     components:{
       GoogleLogin
     },
+    /* connecteddzk7oq3anv5w */
     mounted(){      
       const container = document.getElementById('container');      
       document.getElementById('signUp').addEventListener('click', () => {
@@ -124,12 +125,14 @@ export default {
       });     
     },    
 		methods:{       
+      onFailure(){
+
+      },
       resetPass(){
 
         this.$router.push("/ResetPass")
       },
-      onSuccess(googleUser) {
-          console.log(googleUser);
+      onSuccess(googleUser) {          
           var that = this
           var profile = googleUser.getBasicProfile();
           this.google_login.email = profile.getEmail()
