@@ -388,7 +388,7 @@ export default {
           this.listaCitasSinResultados.push(datodeCita);
         }
         else if (datodeCita.fecha == diaActual){
-          if(datodeCita.horafin<horaActual){
+          if(datodeCita.horaFin<horaActual){
             this.listaProximasCitas.push(datodeCita);
           }
           else{
@@ -464,7 +464,6 @@ export default {
       });
       this.grupoProximasCitas = groupsProxCit;
 
-      console.log(this.grupoProximasCitas);
     },
     editar(item) {
       axios
