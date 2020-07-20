@@ -41,20 +41,15 @@
               tile
             >
             <v-col>
-            <el-container>
-              <el-row>
                 <h6>¿El tutor es fijo?</h6>
-                <label class="c-switch c-switch-pill c-switch-opposite-success">
-                  <input type="checkbox" class="c-switch-input" @click="cambiarvalorFijo" />
-                  <span class="c-switch-slider" data-checked="true" data-unchecked="false"></span>
-                </label>
-              </el-row>
-            </el-container>
+              <v-switch v-model="fijado" @change="cambio_fijado(fijado)"></v-switch>
             </v-col>
 
             <v-col>
+              
+            <h6>Si el tutor es fijo, seleccione una fecha fin para la tutoría:</h6>
             <v-menu
-                    v-bind:disabled="!valor_fijo"
+                    v-bind:disabled="!fijado"
                     ref="startMenu"
                     v-model="startMenu"
                     :close-on-content-click="false"
@@ -66,14 +61,14 @@
                 >
             <template v-slot:activator="{ on }">
                     <v-text-field
-                        v-model="start"
-                        label=" Si el tutor es fijo, seleccione una fecha fin para la tutoría"
+                        v-model="signtipo.tt_end_date"
+                        label="Fecha fin para la tutoría"
                         readonly
                         v-on="on"
                     ></v-text-field>
             </template>
             <v-date-picker
-                    v-model="start"
+                    v-model="signtipo.tt_end_date"
                     no-title
                     scrollable
                     :min= "actualidad"
@@ -87,7 +82,7 @@
                     </v-btn>
                     <v-btn
                         color="primary"
-                        @click="$refs.startMenu.save(start)"
+                        @click="$refs.startMenu.save(signtipo.tt_end_date)"
                     >
                         OK
                     </v-btn>
@@ -105,35 +100,15 @@
               tile
             >
             <v-col>
-            <el-container>
-              <el-row>
-                <h6>¿Es obligatorio?</h6>
-                <label class="c-switch c-switch-pill c-switch-opposite-success">
-                  <input
-                    type="checkbox"
-                    class="c-switch-input"
-                    color="success"
-                    @click="cambiarvalorOblig"
-                  />
-                  <span class="c-switch-slider" data-checked="true" data-unchecked="false"></span>
-                </label>
-              </el-row>
-            </el-container>
+            <h6>¿Es obligatorio?</h6>
+            <v-switch v-model="obligado" @change="cambio_obligado(obligado)"></v-switch>
             </v-col>
 
             <v-col class="form-group">
-              <h6>Si la tutoria es obligatoria, selecciona la periodicidad de recordatorios:</h6>
-              <select
-                v-bind:disabled="!valor_obli"
-                v-model="signtipo.tt_periodicity"
-                class="form-control"
-                id="exampleFormControlSelect1"
-              >
-                <option value="Diario" selected>Diario</option>
-                <option value="Semanal">Semanal</option>
-                <option value="Mensual">Mensual</option>
-                <option value="Semestral">Semestral</option>
-              </select>
+              <h6>Si la tutoria es obligatoria, coloque la cantidad de días para enviar recordatorios:</h6>
+              <v-container>
+                <v-text-field v-bind:disabled="!obligado" v-model="signtipo.tt_periodicity" type="number" label="Número de días" min="1" @click:append-outer="increment" @click:prepend="decrement"></v-text-field>
+              </v-container>
             </v-col>
             </v-card>
 
@@ -146,19 +121,8 @@
               tile
             >
             <v-col>
-            <el-container>
-              <el-row>
                 <h6>¿Se asigna un tutor?</h6>
-                <label class="c-switch c-switch-pill c-switch-opposite-success">
-                  <input
-                    type="checkbox"
-                    class="c-switch-input"
-                    @click="cambiarvalorAsignar"
-                  />
-                  <span class="c-switch-slider" data-checked="true" data-unchecked="false"></span>
-                </label>
-              </el-row>
-            </el-container>
+                <v-switch v-model="asignado" ></v-switch>
             </v-col>
             </v-card>
 
@@ -188,9 +152,9 @@ export default {
       localTipoTutoria: this.signtipo,
       valid: true,
       lazy: false,
-      valor_obli : false,
-      valor_asignar: false,
-      valor_fijo : false,
+      obligado : false,
+      asignado: false,
+      fijado : false,
       actualidad: diaActual,
       nameValidation: nameRules,
       codeValidation: codeRules,
@@ -200,10 +164,11 @@ export default {
       editarTipo: {
         tt_id: "",
         tt_name: "",
-        tt_enddate:"",
+        tt_end_date:"",
         tt_description: "",
+        tt_quantity:0,
         tt_isrequired: "",
-        tt_periodicity: "Diario",
+        tt_periodicity:0,
         tt_assigned: "",
         tt_permanent: "",
         program_id: JSON.parse(localStorage.getItem("Id_facultad"))
@@ -212,6 +177,12 @@ export default {
   },
 
   methods: {
+    increment () {
+      this.signtipo.tt_periodicity = parseInt(this.signtipo.tt_periodicity,10) + 1
+    },
+    decrement () {
+      this.signtipo.tt_periodicity = parseInt(this.signtipo.tt_periodicity,10) - 1
+    },
     guardar() {
       if (this.action == "Registrar tipo de tutoría") {
         this.insertar();
@@ -223,47 +194,44 @@ export default {
     insertar() {
       this.$refs.form.validate();
       if (this.valid) {
-        this.signtipo.tt_isrequired = this.valor_obli;
-        this.signtipo.tt_assigned = this.valor_asignar;
-        this.signtipo.tt_permanent = this.valor_fijo;
-        if (this.signtipo.tt_permanent){
-          this.signtipo.tt_enddate = this.start;
-          this.signtipo.tt_permanent = "Si";
-        }
-        else {
-          this.signtipo.tt_permanent = "No";
-          this.signtipo.tt_enddate = ""
-        }
-        if (this.signtipo.tt_isrequired){
-          this.signtipo.tt_isrequired = "Si";
-        }
-        else {
-          this.signtipo.tt_permanent = "No";
-          this.signtipo.tt_periodicity = "";
-        }
-        console.log(this.signtipo);
-        axios
-          .post("/coordinator/add_tutoring_type/", this.signtipo)
-          .then(res => {
-            console.log(this.$refs.form);
-            console.log(res);
-            this.$emit("resetList");
-            this.$message({ message: "Registro exitoso.", type: "success" });
-            this.newDialog = false;
-            this.$emit("resetDialog", this.newDialog);            
-            this.signtipo.tt_id= "",
-            this.signtipo.tt_name= "",
-            this.signtipo.tt_description= "",
-            this.signtipo.tt_isrequired= false,
-            this.signtipo.tt_periodicity= "",
-            this.signtipo.tt_assigned= false,
-            this.signtipo.tt_permanent= false
-          })
-          .catch(error => {
-            console.log(error);
-            this.$message.error("Datos duplicados");
-          });
-      } else this.$message.error("Datos incorrectos");
+          this.signtipo.tt_isrequired = this.obligado;
+          this.signtipo.tt_assigned = this.asignado;
+          this.signtipo.tt_permanent = this.fijado;
+          this.signtipo.tt_quantity=0;
+          if (this.signtipo.tt_permanent){
+            this.signtipo.tt_permanent = "Si";
+          }
+          else {
+            this.signtipo.tt_permanent = "No";
+            this.signtipo.tt_end_date = ""
+          }
+          if (this.signtipo.tt_isrequired){
+            this.signtipo.tt_isrequired = "Si";
+          }
+          else {
+            this.signtipo.tt_isrequired = "No";
+            this.signtipo.tt_periodicity = 0;
+          }
+          if  (this.signtipo.tt_assigned){
+            this.signtipo.tt_assigned = "Si"
+          }
+          else{
+            this.signtipo.tt_assigned = "No"
+          }
+          axios
+            .post("http://184.73.231.88:7002/api/coordinator/add_tutoring_type/", this.signtipo)
+            .then(res => {
+              console.log(res);
+              this.$emit("resetList");
+              this.$message({ message: "Registro exitoso.", type: "success" });
+              this.newDialog = false;
+              this.$emit("resetDialog", this.newDialog);            
+            })
+            .catch(error => {
+              console.log(error);
+              this.$message.error("Datos duplicados");
+            });
+        } else this.$message.error("Datos incorrectos");
     },  
 
     editar() {
@@ -271,28 +239,33 @@ export default {
       this.editarTipo = Object.assign({}, this.signtipo);
       this.$refs.form.validate();
       if (this.valid) {
-        this.editarTipo.tt_isrequired = this.valor_obli;
-        this.editarTipo.tt_assigned = this.valor_asignar;
-        this.editarTipo.tt_permanent = this.valor_fijo;
+        this.editarTipo.tt_isrequired = this.obligado;
+        this.editarTipo.tt_assigned = this.asignado;
+        this.editarTipo.tt_permanent = this.fijado;
+        this.editarTipo.tt_quantity=0;
 
         if (this.editarTipo.tt_permanent){
-          this.editarTipo.tt_enddate = this.start;
           this.editarTipo.tt_permanent = "Si";
         }
         else {
           this.editarTipo.tt_permanent = "No";
-          this.editarTipo.tt_enddate = ""
+          this.editarTipo.tt_end_date = ""
         }
         if (this.editarTipo.tt_isrequired){
           this.editarTipo.tt_isrequired = "Si";
         }
         else {
-          this.editarTipo.tt_permanent = "No";
-          this.editarTipo.tt_periodicity = "";
+          this.editarTipo.tt_isrequired = "No";
+          this.signtipo.tt_periodicity = 0;
         }
-        console.log(this.editarTipo);
+        if (this.editarTipo.tt_assigned){
+          this.editarTipo.tt_assigned = "Si"
+        }
+        else{
+          this.editarTipo.tt_assigned = "No"
+        }
         axios
-          .post("/coordinator/update_tutoring_types/", this.editarTipo)
+          .post("http://184.73.231.88:7002/api/coordinator/update_tutoring_types/", this.editarTipo)
           .then(res => {
             console.log(res);
             this.$emit("resetList");
@@ -316,29 +289,19 @@ export default {
       this.newDialog = false;
       this.$emit("resetDialog", this.newDialog);
     },
-    cambiarvalorOblig() {
-      if (this.valor_obli == true) {
-        this.valor_obli = false;
-        this.signtipo.tt_periodicity="";
-      }
-      else {
-        this.signtipo.tt_periodicity="Diario";
-        this.valor_obli = true;
+    cambio_fijado(fijado){
+      if (fijado){
+        if(this.signtipo.tt_end_date=="" || this.signtipo.tt_end_date==undefined ){
+          this.signtipo.tt_end_date = diaActual;
+        }
       }
     },
-    cambiarvalorAsignar() {
-      if (this.valor_asignar == true) this.valor_asignar = false;
-      else this.valor_asignar = true;
-    },
-    cambiarvalorFijo() {
-      if (this.valor_fijo == true) {
-        this.start = null;
-        this.valor_fijo = false;
+    cambio_obligado(obligado){
+      if(obligado){
+        if(this.signtipo.tt_periodicity=="" || this.signtipo.tt_periodicity==undefined)
+        this.signtipo.tt_periodicity = 1;
       }
-      else {
-        this.valor_fijo = true;
-        this.start= diaActual;
-      }
+
     }
   }
 };

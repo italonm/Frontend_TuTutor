@@ -43,7 +43,7 @@
       multi-sort
       class="elevation-3"
       loading-text="Cargando.."
-      height="288px"
+      height="300px"
       fixed-header
     >
       <template v-slot:item.editar="{ item }">
@@ -75,10 +75,11 @@ export default {
       headers: [
         { text: "Nombre", value: "tt_name" },
         { text: "Descripción", value: "tt_description" },
-        { text: "Periodicidad", value: "tt_periodicity" },
-        { text: "¿Tutoria Obligatoria?", value: "tt_isrequired" },
-        { text: "¿Tutor Asignado?", value: "tt_assigned" },
         { text: "¿Tutor Fijo?", value: "tt_permanent" },
+        { text: "Fecha Fin de la tutoría", value: "tt_end_date" },
+        { text: "¿Tutoria Obligatoria?", value: "tt_isrequired" },
+        { text: "Periodicidad de recordatorios (dias) ", value: "tt_periodicity" },
+        { text: "¿Tutor Asignado?", value: "tt_assigned" },
         { text: "Editar", value: "editar", sortable: false },
         { text: "Eliminar", value: "eliminar", sortable: false }
       ],
@@ -87,8 +88,9 @@ export default {
         tt_name: "",
         tt_description: "",
         tt_isrequired: "",
-        tt_enddate:"",
-        tt_periodicity: "",
+        tt_end_date:"",
+        tt_quantity:0,
+        tt_periodicity:0,
         tt_assigned: "",
         tt_permanent: "",
         program_id:JSON.parse(localStorage.getItem("Id_facultad"))
@@ -106,7 +108,7 @@ export default {
   methods: {
     listar() {
       axios
-        .get("/coordinator/show_tutoring_types/" + localStorage.getItem("Id_facultad"))
+        .get("http://184.73.231.88:7002/api/coordinator/show_tutoring_types/" + localStorage.getItem("Id_facultad"))
         .then(res => {
           this.tipotutorias = res.data.tutoriaData;
         })
@@ -121,7 +123,6 @@ export default {
     editar(item) {
       this.action = "Editar tipo de tutoría";
       this.signtipo = Object.assign({}, item);
-      console.log(this.signtipo);
       this.dialog = true;
     },
 
@@ -136,7 +137,6 @@ export default {
         }
       )
         .then(() => {
-          console.log(item.tt_id);
           axios
             .post("/coordinator/delete_tutoring_types/", item)
             .then(res => {
