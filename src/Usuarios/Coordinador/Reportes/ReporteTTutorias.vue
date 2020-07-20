@@ -50,10 +50,9 @@
               >
                 <v-divider></v-divider>
 
-                <v-list-item two-line>
+                <v-list-item one-line>
                   <v-list-item-content>
                     <v-list-item-title>{{tipos.tt_name}}</v-list-item-title>
-                    <v-list-item-subtitle>{{tipos.tt_periodicity}}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
               </v-card>
@@ -200,15 +199,7 @@
 
 
                 <!-----------Reporte x Tipo Tutoria--->         
-                <div id="chartDonut2" v-show="showTableInasistencia">
-                    <apexchart 
-                      ref="demoChartDonut2"
-                      width="500"
-                      type="donut"
-                      :options="OptionsDonutInasistenciaXTipo"
-                      :series="seriesDonutInasistenciaXTipo"
-                    ></apexchart>
-                  </div>
+
 
               <v-data-table
                 :headers="headersTablexTipoTutoria"
@@ -257,12 +248,8 @@
     </v-card>
   </div>
 </template>
-<script src="bower_components/jspdf/dist/jspdf.min.js"></script>
-<script src="bower_components/jspdf-autotable/jspdf.plugin.autotable.js"></script>
 <script>
-import autoTable from 'jspdf-autotable'
 
-import jsPDF from 'jspdf'
 import axios from "axios";
 export default {
   data() {
@@ -327,7 +314,12 @@ export default {
 
       showTableInasistencia:false,
       /*FECHA INICIO REPORTE TIPO TUTORIA */
-
+      enviarDatosXTipoTutoria: {
+        id_program: "",
+        start_date: "",
+        end_date: "",
+        id_tutoring_type:"",
+      },
       startMenuTT: false,
       endMenuTT: false,
       startTipoTutoria: "",
@@ -477,6 +469,7 @@ export default {
       this.showTable=false;
       this.cabeceraReporte(tipoTutoria.tt_name,tipoTutoria.tt_description);
       this.generarReportetablaXTipoTutoria(tipoTutoria);
+      console.log(tipoTutoria);
     },
 
 ////////////////////////////////////////////////
@@ -487,7 +480,8 @@ export default {
       );
       this.enviarDatosReporteTipoTutoria["start_date"] = this.startTipoTutoria;
       this.enviarDatosReporteTipoTutoria["end_date"] = this.endTipoTutoria;
-      console.log(this.enviarDatosReporteTutor);
+      
+      console.log(this.enviarDatosReporteTipoTutoria);
       axios
         .post(
           "/coordinator/show_tutoring_types_report/",
@@ -500,22 +494,31 @@ export default {
         .catch(error => console.log(error));
     },
   generarReportetablaXTipoTutoria(tutor){
-     this.enviarDatosReporteTipoTutoria["id_program"] = localStorage.getItem(
+     this.enviarDatosXTipoTutoria["id_program"] = localStorage.getItem(
         "Id_facultad"
       );
-      this.enviarDatosReporteTipoTutoria["start_date"] = this.startTipoTutoria;
-      this.enviarDatosReporteTipoTutoria["end_date"] = this.endTipoTutoria;
+      this.enviarDatosXTipoTutoria["start_date"] = this.startTipoTutoria;
+      this.enviarDatosXTipoTutoria["end_date"] = this.endTipoTutoria;
+      this.enviarDatosXTipoTutoria["id_tutoring_type"]=tutor.tt_id;
       console.log("mostrar dknfasddlj")
-      console.log(this.enviarDatosReporteTipoTutoria);
+      console.log(this.enviarDatosXTipoTutoria);
       axios
         .post(
           "/coordinator/show_absences_report/",
-          this.enviarDatosReporteTipoTutoria
+          this.enviarDatosXTipoTutoria
         )
         .then(res => {
           console.log("mostrar ABSENETSSSSSSSSSSSSSSREPOTTS")
           console.log(res.data);
           
+
+//////////////////////////////////////////asdasdsadasdsad////////////
+          for(var i of res.data['tutoring_types']){
+            console.log("mos");
+            console.log(i['students']);
+            this.dataTablexTipoTutorias=i['students'];
+        
+        }
         })
         .catch(error => console.log(error));
     },
@@ -549,13 +552,7 @@ export default {
 
     },
     imprimirDocumento(){
-      const doc = new jsPDF('p','pt');
-
-      doc.fromHTML(this.$refs.contenidoCabecera,15,15,);
-      doc.autoTable(this.headersTableTipoTutoria,this.dataTableTipoTutorias,{
-       
-      });
-      doc.save("sample.pdf");
+      
     },
   imprimir(){
     window.print();
