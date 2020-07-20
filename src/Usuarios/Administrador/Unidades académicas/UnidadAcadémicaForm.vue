@@ -63,14 +63,13 @@ import { nameRules } from "../../Validation";
 import axios from "axios";
 
 export default {
-  props: ["dialog"],
+  props: ["dialog", "coordinadores"],
 
   data() {
     return {
       valid: true,
       lazy: false,
       nameValidation: nameRules,
-      coordinadores: [],
       formFaculty: {
         faculty_name: "",
         faculty_unique_faculty: false,
@@ -81,21 +80,7 @@ export default {
     };
   },
 
-  created() {
-    this.listarCoordinadores();
-  },
-
   methods: {
-    listarCoordinadores() {
-      var Id_institución = localStorage.getItem("Id_institución");
-      axios
-        .get("/admin/show_coordinators_available/" + Id_institución)
-        .then(res => {
-          this.coordinadores = res.data.users;
-        })
-        .catch(error => console.log(error));
-    },
-
     insertar() {
       this.$refs.form.validate();
       if (this.valid) {
@@ -120,7 +105,7 @@ export default {
     },
     cancelar() {
       this.reset();
-      this.listarCoordinadores();
+      this.$emit("resetCoordinadores");
       this.$emit("resetList");
       this.$emit("resetDialog");
     }

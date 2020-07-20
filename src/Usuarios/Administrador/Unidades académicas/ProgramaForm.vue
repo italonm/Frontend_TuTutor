@@ -46,7 +46,7 @@ import { nameRules } from "../../Validation";
 import axios from "axios";
 
 export default {
-  props: ["faculty_id", "dialog"],
+  props: ["faculty_id", "dialog", "coordinadores"],
 
   data() {
     return {
@@ -54,7 +54,6 @@ export default {
       lazy: false,
       nameValidation: nameRules,
       checkbox: false,
-      coordinadores: [],
       formPrograma: {
         program_name: "",
         program_id_faculty: this.faculty_id,
@@ -63,14 +62,6 @@ export default {
     };
   },
 
-  created() {
-    axios
-      .get("/admin/show_coordinators_available/")
-      .then(res => {
-        this.coordinadores = res.data.users;
-      })
-      .catch(error => console.log(error));
-  },
   methods: {
     insertar() {
       this.formPrograma.program_id_faculty = this.faculty_id;
@@ -80,10 +71,8 @@ export default {
           .post("/admin/add_program/", this.formPrograma)
           .then(res => {
             console.log(res);
-            this.$emit("resetList");
             this.$message({ message: "Registro exitoso.", type: "success" });
-            this.$emit("resetDialog");
-            this.$refs.form.reset();
+            this.cancelar();
           })
           .catch(error => {
             console.log(error);
@@ -94,6 +83,8 @@ export default {
 
     cancelar() {
       this.$refs.form.reset();
+      this.$emit("resetList");
+      this.$emit("resetCoordinadores");
       this.$emit("resetDialog");
     }
   }

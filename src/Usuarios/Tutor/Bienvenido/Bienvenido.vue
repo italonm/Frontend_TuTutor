@@ -27,7 +27,7 @@
             <v-card-text>
             <p class="font-weight-black subtitle-2 text-center">Notificaciones</p>
             <div class="text--primary">
-              Consulte las últimas sesiones asignadas a su horario<br>
+              Consulte las últimas notificaciones asignadas a usted.<br>
             </div>
             </v-card-text>
             <v-card-actions>
@@ -55,13 +55,14 @@
             <v-card-text>
                 <p class="font-weight-black subtitle-2 text-center">Citas programadas</p>
               <div class="text--primary">
-                Aqui se mostrarán las citas programadas<br>
+              Revise sus próximas citas programadas y registre el resultado de sus citas pend<ientes.<br>
               </div>
             </v-card-text>
             <v-card-actions>
             <v-btn
               text
               color="deep-purple accent-4"
+              to="/Tutor/Citas"
             >
               Ver citas programadas
             </v-btn>
@@ -77,7 +78,7 @@
           <v-card-text>
             <p class="font-weight-black subtitle-2 text-center">Disponibilidad del tutor</p>
             <div class="text--primary">
-              Edite su disponibilidad para realizar tutorías. Recuerde modificarlo lo antes posible.
+              Edite su disponibilidad para realizar tutorías. Recuerde modificarlo cada semana.
             </div>
           </v-card-text>
           <v-card-actions>

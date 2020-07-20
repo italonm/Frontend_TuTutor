@@ -17,7 +17,7 @@
             <v-timeline-item v-for="(session, i) in sessions" :key="i" :color="colors[i]" small>
               <template v-slot:opposite>
                 <span
-                  :class="`headline font-weight-bold ${colors[i]}--text`"
+                  :class="`headline font-weight-bold ${colors[i%2]}--text`"
                   v-text="getDayOfWeek(session.fecha)"
                 ></span>
               </template>
@@ -35,16 +35,8 @@
                         <i v-else class="fas fa-times"></i>
                         {{ cita.lugar }}
                       </v-list-item-title>
-
-                      <!-- <v-list-item-subtitle class="text-right">{{ "hora" }}</v-list-item-subtitle> -->
                     </v-list-item>
                   </v-list>
-                  <!-- <div v-if="cita.asistencia == 1">
-                    <i class="fas fa-check">&nbsp;Asistió</i>
-                  </div>
-                  <div v-else>
-                    <i class="fas fa-times">&nbsp;No asistió</i>
-                  </div>-->
                 </v-card-text>
               </v-card>
             </v-timeline-item>
@@ -86,8 +78,7 @@
             </v-card>
           </v-col>
         </ul>
-        <p v-if="loading">Loading...</p>
-        <p v-if="noMore">No more</p>
+        <p v-if="loading">Cargando...</p>
       </el-col>
     </el-row>
   </el-container>
@@ -105,7 +96,8 @@ export default {
       plan: [],
       tutoria: {
         s_id_alumno: localStorage.getItem("Id_usuario"),
-        s_code_tutor: localStorage.getItem("Id_tutoria")
+        s_code_tutor: localStorage.getItem("Id_tutor"),
+        s_id_assignment: localStorage.getItem("Id_tutoria")
       },
       loading: false,
       count: 1
@@ -118,7 +110,6 @@ export default {
 
   methods: {
     listar() {
-      console.log(this.tutoria);
       axios
         .post(
           "http://184.73.231.88:7002/api/student/show_sesion_with_actionplan_student/",
@@ -127,9 +118,6 @@ export default {
         .then(res => {
           this.sessions = res.data[0].sesiones.reverse();
           this.plan = res.data[0].plan_de_accion;
-          // this.total = res.data[0].plan_de_accion.length;
-          console.log(this.tutoria);
-          console.log(res.data[0].sesiones);
         })
         .catch(error => console.log(error));
     },

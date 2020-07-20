@@ -2,7 +2,7 @@
   <el-container direction="vertical">
     <el-row :gutter="20">
       <!--Unidades académicas-->
-      <el-col :md="24" :lg="12">
+      <el-col :md="24" :lg="24">
         <el-row>
           <div class="grid-content">
             <h1 style="text-align: center;">
@@ -25,7 +25,7 @@
             </div>
           </el-col>
         </el-row>
-        <el-row style="margin-bottom:15px;">
+        <el-row style="margin-bottom:30px;">
           <!-- Tabla unidades-->
           <el-col>
             <v-data-table
@@ -60,13 +60,16 @@
                   @click="insertarPrograma(item)"
                 ></el-button>
               </template>
+              <template v-slot:item.edit="{ item }">
+                <el-button type="info" icon="el-icon-edit" circle @click="editarUnidad(item)"></el-button>
+              </template>
             </v-data-table>
           </el-col>
         </el-row>
       </el-col>
 
       <!--Programas-->
-      <el-col :md="24" :lg="12">
+      <el-col :md="24" :lg="24">
         <el-row>
           <div class="grid-content">
             <h1 style="text-align: center;">
@@ -105,6 +108,9 @@
               <template slot="no-data">
                 <label>Seleccione una unidad académica</label>
               </template>
+              <template v-slot:item.edit="{ item }">
+                <el-button type="info" icon="el-icon-edit" circle @click="editarPrograma(item)"></el-button>
+              </template>
             </v-data-table>
           </el-col>
         </el-row>
@@ -114,23 +120,43 @@
     <!--Formularios-->
     <unidadForm
       :dialog="dialogUnidad"
+      :coordinadores="coordinadores"
       v-on:resetDialog="dialogUnidad = false"
       v-on:resetList="listarUnidades()"
+      v-on:resetCoordinadores="listarCoordinadores()"
     ></unidadForm>
 
     <programaForm
       :faculty_id="faculty_id"
       :dialog="dialogPrograma"
+      :coordinadores="coordinadores"
       v-on:resetDialog="dialogPrograma = false"
       v-on:resetList="listarProgramas()"
+      v-on:resetCoordinadores="listarCoordinadores()"
     ></programaForm>
+
+    <unidadEditarForm
+      :unidad="unidad"
+      :dialog="dialogUnidadEditar"
+      v-on:resetDialog="dialogUnidadEditar = false"
+      v-on:resetList="listarUnidades()"
+    ></unidadEditarForm>
+
+    <programaEditarForm
+      :programa="programa"
+      :dialog="dialogProgramaEditar"
+      v-on:resetDialog="dialogProgramaEditar = false"
+      v-on:resetList="listarProgramas()"
+    ></programaEditarForm>
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
 import UnidadForm from "./UnidadAcadémicaForm";
+import UnidadEditarForm from "./UnidadAcadémicaEditarForm";
 import ProgramaForm from "./ProgramaForm";
+import ProgramaEditarForm from "./ProgramaEditarForm";
 
 export default {
   data() {
@@ -150,7 +176,8 @@ export default {
           sortable: false
         },
         { text: "Programas", value: "watch", sortable: false },
-        { text: "Agregar", value: "add", sortable: false }
+        { text: "Agregar", value: "add", sortable: false },
+        { text: "Editar", value: "edit", sortable: false }
       ],
 
       //Programas
@@ -158,15 +185,27 @@ export default {
       headersProgramas: [
         { text: "Nombre", value: "program_name" },
         { text: "Coordinador", value: "coordinator_full_name" },
-        { text: "Contacto", value: "coordinator_email" }
+        { text: "Contacto", value: "coordinator_email" },
+        { text: "Editar", value: "edit", sortable: false }
       ],
 
       searchUnidad: "",
       searchPrograma: "",
       dialogUnidad: false,
       dialogPrograma: false,
+      dialogUnidadEditar: false,
+      dialogProgramaEditar: false,
       faculty_id: 1,
       faculty_name: "",
+      coordinadores: [],
+      unidad: {
+        idfaculty: "",
+        namefaculty: ""
+      },
+      programa: {
+        idprogram: "",
+        nameprogram: ""
+      },
       footerProps: {
         "items-per-page-options": [5, 10, 15, -1],
         "items-per-page-text": "Registros por página:",
@@ -177,6 +216,7 @@ export default {
 
   created() {
     this.listarUnidades();
+    this.listarCoordinadores();
   },
 
   methods: {
@@ -201,6 +241,17 @@ export default {
         .get("/admin/show_programs/" + this.faculty_id)
         .then(res => {
           this.programas = res.data.programs;
+          console.log(this.programas);
+        })
+        .catch(error => console.log(error));
+    },
+
+    listarCoordinadores() {
+      var Id_institución = localStorage.getItem("Id_institución");
+      axios
+        .get("/admin/show_coordinators_available/" + Id_institución)
+        .then(res => {
+          this.coordinadores = res.data.users;
         })
         .catch(error => console.log(error));
     },
@@ -208,12 +259,26 @@ export default {
     insertarPrograma(item) {
       this.faculty_id = item.faculty_id;
       this.dialogPrograma = true;
+    },
+
+    editarUnidad(item) {
+      this.unidad.idfaculty = item.faculty_id;
+      this.unidad.namefaculty = item.faculty_name;
+      this.dialogUnidadEditar = true;
+    },
+
+    editarPrograma(item) {
+      this.programa.idprogram = item.program_id;
+      this.programa.nameprogram = item.program_name;
+      this.dialogProgramaEditar = true;
     }
   },
 
   components: {
     unidadForm: UnidadForm,
-    programaForm: ProgramaForm
+    programaForm: ProgramaForm,
+    unidadEditarForm: UnidadEditarForm,
+    programaEditarForm: ProgramaEditarForm
   }
 };
 </script>
