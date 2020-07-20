@@ -20,6 +20,11 @@
           {{"Total de encuestas no respondidas: " + noRespondidas}}
         </h5>
       </el-col>
+      <el-col :span="4">
+        <div class="grid-content">
+          <el-button type="success" @click="descargar" class="buttonAdd">&nbsp;Descargar</el-button>
+        </div>
+      </el-col> 
     </el-row>
     </div>
     <v-container>
@@ -52,7 +57,11 @@ export default {
           this.noRespondidas = res.data.not_answered;
         })
         .catch(error => console.log(error));
-    },    
+    }, 
+    
+    descargar() {
+      window.open("https://a20160298.typeform.com/report/RGn9ztac/Yx7GClikh9Oyrnqf");
+    },
   },
   
   created() {
