@@ -35,7 +35,7 @@
         <div class="col-md-5 intro-info order-md-first order-last" style="top: 50%; transform: translateY(20%);">
           <h2>Lleva las tutorías<br> a otro <span>nivel</span></h2>
           <div class="row justify-content-center align-self-center">
-            <a href="#about" class="btn-get-started scrollto">Comienza</a>
+            <a href="#about" class="btn-get-started scrollto" @click="iniciarSesion()" >Comienza</a>
           </div>
         </div>  
         <div class="col-md-7 intro-img order-md-last order-first">
