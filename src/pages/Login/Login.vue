@@ -16,17 +16,17 @@
           </div>
           <span style="font-size: 12px;">o usa alguna de tus cuentas</span>
           <input
-            style="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;"
+            style="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;font-size:14px;"
             type="text"
             placeholder="Nombre"
           />
           <input
-            style="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;"
+            style="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;font-size:14px;"
             type="email"
             placeholder="Correo electrónico"
           />
           <input
-            style="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;"
+            style="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;font-size:14px;"
             type="password"
             placeholder="Contraseña"
           />
@@ -45,9 +45,9 @@
           
           </div>
           <span style="font-size: 12px; padding: 0 50">o inicia a través de</span>
-          <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;" type="text" placeholder="Usuario" v-model="login.user_name" @keyup.enter="logItIn"/>          
+          <input style ="background-color: #FFFFFF; border: none; padding: 12px 15px; margin: 8px 0;	width: 100%;font-size:14px;" type="text" placeholder="Usuario" v-model="login.user_name" @keyup.enter="logItIn"/>          
           <div id="pass-container" style="display: flex; width: 100%; margin-bottom: 15px; width: 100%; background-color: #FFFFFF;">            
-            <input id="pass" style ="padding: 12px 15px; margin: 8px 0;	width: 100%;" type="password" placeholder="Contraseña" v-model="login.password" value @keyup.enter="logItIn">          
+            <input id="pass" style ="padding: 12px 15px; margin: 8px 0;	width: 100%;font-size:14px;" type="password" placeholder="Contraseña" v-model="login.password" value @keyup.enter="logItIn">          
             <i id="pass icon" class="fa fa-eye" style="position: absolute; right:7%; padding: 24px; min-width: 50px; text-align: right;" @click="ShowPass()" ></i>
           </div>
           <a style="color:#333; font-size: 12px; margin: 15px 0" @click="resetPass">Olvidaste tu contraseña?</a>

@@ -1,70 +1,44 @@
 <template>
     <div class="contenedorPrimario">
-        <div class="card-container"> 
-            <div class="card"><a href="hottub">
-                <div class="card--display"><i class="far fa-calendar-times"></i>
-                    <h2>Hot Tub Time Machine</h2>
+        <div class="card-container1"> 
+            <div class="card"><a class="aux1">
+                <div class="card--display"><i class="far fa-calendar-times" style="color:#C84955;"></i>
+                    <h2 >Optimiza tu tiempo</h2>
                 </div>
                 <div class="card--hover">
-                    <h2>Hot Tub Time Machine</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at est orci. Nam molestie pellentesque mi nec lacinia. Cras volutpat arcu sit amet elit sodales, nec volutpat velit bibendum.</p>
-                    <p class="link">Click to see project</p>
+                    <h2>Optimiza tu tiempo</h2>
+                    <p>Nunca hay suficiente tiempo para hacerlo todo, pero siempre hay suficiente tiempo para hacer lo más importante</p>
+                    <p class="link">Solicita tu tutoría</p>
                 </div></a>
                 <div class="card--border"></div>
             </div>
         </div>
-        <div class="card-container"> 
-            <div class="card"><a href="worldweb">
-                <div class="card--display"><i class="fas fa-graduation-cap"></i>
-                    <h2>World Wide Web</h2>
+        <div class="card-container1"> 
+            <div class="card"><a class="aux1">
+                <div class="card--display"><i class="fas fa-graduation-cap" style="color:#C84955;"></i>
+                    <h2>Alcanza tus metas</h2>
                 </div>
                 <div class="card--hover">
-                    <h2>World Wide Web</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at est orci. Nam molestie pellentesque mi nec lacinia. Cras volutpat arcu sit amet elit sodales, nec volutpat velit bibendum.</p>
-                    <p class="link">Click to see project</p>
+                    <h2>Alcanza tus metas</h2>
+                    <p>Lo que le da forma a nuestras vidas no es lo que hacemos de vez en cuando, sino lo que hacemos constantemente</p>
+                    <p class="link">Solicita tu tutoría</p>
                 </div></a>
                 <div class="card--border"></div>
             </div>
         </div>
-        <div class="card-container"> 
-            <div class="card"><a href="trainthings">
-                <div class="card--display"><i class="fas fa-procedures"></i>
-                    <h2>Why I Hate Trains</h2>
+        <div class="card-container1"> 
+            <div class="card"><a class="aux1">
+                <div class="card--display"><i class="fas fa-procedures" style="color:#C84955;"></i>
+                    <h2>Duerme tus horas</h2>
                 </div>
                 <div class="card--hover">
-                    <h2>Why I Hate Trains</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at est orci. Nam molestie pellentesque mi nec lacinia. Cras volutpat arcu sit amet elit sodales, nec volutpat velit bibendum.</p>
-                    <p class="link">Click to see project</p>
+                    <h2>Duerme tus horas</h2>
+                    <p>Cuando no se encuentra descanso en uno mismo, es inútil buscarlo en otra parte</p>
+                    <p class="link">Solicita tu tutoría</p>
                 </div></a>
                 <div class="card--border"></div>
             </div>
-        </div>
-        <div class="card-container"> 
-            <div class="card card--dark"><a href="androidupdate">
-                <div class="card--display"><i class="material-icons">android</i>
-                    <h2>Another Android Update</h2>
-                </div>
-                <div class="card--hover">
-                    <h2>Another Android Update</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at est orci. Nam molestie pellentesque mi nec lacinia. Cras volutpat arcu sit amet elit sodales, nec volutpat velit bibendum.</p>
-                    <p class="link">Click to see project</p>
-                </div></a>
-                <div class="card--border"></div>
-            </div>
-        </div>
-        <div class="card-container"> 
-            <div class="card card--dark"><a href="phonesoff">
-                <div class="card--display"><i class="material-icons">ring_volume</i>
-                    <h2>Why Phones Are So Loud</h2>
-                </div>
-                <div class="card--hover">
-                    <h2>Why Phones Are So Loud</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at est orci. Nam molestie pellentesque mi nec lacinia. Cras volutpat arcu sit amet elit sodales, nec volutpat velit bibendum.</p>
-                    <p class="link">Click to see project</p>
-                </div></a>
-                <div class="card--border"></div>
-            </div>
-        </div>
+        </div>        
     </div>
 </template>
 <style lang="scss" scoped>

@@ -11,6 +11,7 @@ import Tutores from "../../Usuarios/Coordinador/Tutores/Tutores";
 import TipoTutoria from "../../Usuarios/Coordinador/Tipos de tutoría/TipoTutoria";
 import Reportes from "../../Usuarios/Coordinador/Reportes/Reportes";
 import ReporteEncuesta from "../../Usuarios/Coordinador/Reportes/ReporteEncuestas";
+import WelcomeCoord from "../../Usuarios/Coordinador/Reportes/Reportes"
 /* import Tutorías from '../../Usuarios/Coordinador/Tutorías/Tutorías' */
 import Solicitudes from "../../Usuarios/Coordinador/Solicitudes/Solicitudes";
 import Soporte from "../../Usuarios/Coordinador/Soporte/Soporte";
@@ -60,17 +61,7 @@ export const routes = [
         path: "/Administrador",
         component: MainAdmin,
         name: "administrador",
-        beforeEnter(to, from, next){
-            if(from.name==='login') next()
-            else{                
-                if(localStorage.getItem("EsAdministrador") === true)next()
-                else {                                            
-                    next()
-                    /* localStorage.clear(); 
-                    next({name:'login'}) */
-                }
-            }                        
-        },
+        meta:{requiresAuth: true},
         children: [
             //Administrador
             { path: "Bienvenido", component: Welcome, name:"bienvenido" }, //Luiggi
@@ -98,7 +89,7 @@ export const routes = [
         },
         children: [
             //Coordinador
-            { path: "Bienvenido", component: Welcome }, //Luiggi
+            { path: "Bienvenido", component: WelcomeCoord }, //Luiggi
             { path: "/Coordinador/Miembros/Tutores", component: Tutores }, //herbert
             { path: "/Coordinador/Miembros/Alumnos", component: Alumnos }, //herbert
             { path: "Tutorías activas", component: Welcome },

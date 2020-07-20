@@ -708,10 +708,12 @@ seriesMotivosRechazo: '',
  generarReportetablaTutores(){
       this.enviarDatosReporteTutor['id_program']=localStorage.getItem("Id_facultad");
       this.enviarDatosReporteTutor['start_date']=this.startTutor;
+      this.enviarDatosReporteTutor['end_date']=this.endTutor;
 
        axios
         .post("/coordinator/show_general_information/", this.enviarDatosReporteTutor)
         .then(res => {
+          console.log(res)
           this.dataTableTutores=res.data.tutors;
     
         })

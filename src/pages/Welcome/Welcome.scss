@@ -5,14 +5,14 @@ $darkhighlight: #fde74c;
 	padding: 50px;
 	display: flex;
 	flex-flow: wrap;
-	font-family: "Ubuntu", sans-serif;
+	font-family: 'PT Sans', sans-serif;
 	
 	* {
 		box-sizing: border-box;
 	}
 }
 
-.card-container {
+.card-container1 {
 	flex: 300px;
 	margin: 30px;
 	
@@ -21,11 +21,11 @@ $darkhighlight: #fde74c;
 		position: relative;
 		width: 100%;
 		
-		a {
+		.aux1 {
 			padding: 30px;
 			width: 100%;
-			height: 400px;
-			border: 2px solid black;
+			height: 320px;
+			border: 2px solid #3D5863;
 			background: white;
 			text-decoration: none;
 			color: black;
@@ -48,11 +48,13 @@ $darkhighlight: #fde74c;
 			.card--display {
 				i {
 					font-size: 60px;
-					margin-top: 200px;
+					margin-top: 120px;
 				}
 				
 				h2 {
 					margin: 20px 0 0;
+					font-size: 25px;
+					font-weight: 500;
 				}
 			}
 			
