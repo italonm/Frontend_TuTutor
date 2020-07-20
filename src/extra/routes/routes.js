@@ -48,7 +48,7 @@ import ResetPass from "../../pages/Login/ResetPass.vue"
 import LandingPage from "../../pages/LandingPage/LadingPage.vue"
 
 export const routes = [
-    { path: "", redirect: "Login", name:'main', meta:{requiresAuth: false}},
+    { path: "", redirect: "LandingPage", name:'main', meta:{requiresAuth: false}},
     { path: "/Login", component: Login, name:"login", meta:{requiresAuth: false}},
     { path: "/LandingPage", component: LandingPage, name:"landingPage", meta:{requiresAuth: false}},
     { path: "/PassSet", component: PassSet, name:'passSet', meta:{requiresAuth: false}},
