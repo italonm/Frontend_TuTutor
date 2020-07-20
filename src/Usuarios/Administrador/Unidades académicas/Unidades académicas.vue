@@ -120,15 +120,19 @@
     <!--Formularios-->
     <unidadForm
       :dialog="dialogUnidad"
+      :coordinadores="coordinadores"
       v-on:resetDialog="dialogUnidad = false"
       v-on:resetList="listarUnidades()"
+      v-on:resetCoordinadores="listarCoordinadores()"
     ></unidadForm>
 
     <programaForm
       :faculty_id="faculty_id"
       :dialog="dialogPrograma"
+      :coordinadores="coordinadores"
       v-on:resetDialog="dialogPrograma = false"
       v-on:resetList="listarProgramas()"
+      v-on:resetCoordinadores="listarCoordinadores()"
     ></programaForm>
 
     <unidadEditarForm
@@ -193,6 +197,7 @@ export default {
       dialogProgramaEditar: false,
       faculty_id: 1,
       faculty_name: "",
+      coordinadores: [],
       unidad: {
         idfaculty: "",
         namefaculty: ""
@@ -211,6 +216,7 @@ export default {
 
   created() {
     this.listarUnidades();
+    this.listarCoordinadores();
   },
 
   methods: {
@@ -236,6 +242,16 @@ export default {
         .then(res => {
           this.programas = res.data.programs;
           console.log(this.programas);
+        })
+        .catch(error => console.log(error));
+    },
+
+    listarCoordinadores() {
+      var Id_institución = localStorage.getItem("Id_institución");
+      axios
+        .get("/admin/show_coordinators_available/" + Id_institución)
+        .then(res => {
+          this.coordinadores = res.data.users;
         })
         .catch(error => console.log(error));
     },
