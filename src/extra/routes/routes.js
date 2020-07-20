@@ -45,13 +45,15 @@ import RegPass from "../../pages/Login/RegistrarContraseña.vue";
 import Reestablecer from "../../pages/Login/Reestablecer.vue";
 import Registrar from "../../pages/Login/Registro.vue";
 import ResetPass from "../../pages/Login/ResetPass.vue"
+import LandingPage from "../../pages/LandingPage/LadingPage.vue"
 
 export const routes = [
-    { path: "", redirect: "Login", name:'main', meta:{requiresAuth: false} },
+    { path: "", redirect: "Login", name:'main', meta:{requiresAuth: false}},
     { path: "/Login", component: Login, name:"login", meta:{requiresAuth: false}},
+    { path: "/LandingPage", component: LandingPage, name:"landingPage", meta:{requiresAuth: false}},
     { path: "/PassSet", component: PassSet, name:'passSet', meta:{requiresAuth: false}},
     { path: "/RegPass", component: RegPass, name:'regPass', meta:{requiresAuth: false}},    
-    { path: "/Reestablecer", component: Reestablecer, name:'reestablecer', meta:{requiresAuth: false} }, 
+    { path: "/Reestablecer", component: Reestablecer, name:'reestablecer', meta:{requiresAuth: false}}, 
     { path: "/Registrar", component: Registrar, name:'registrar', meta:{requiresAuth: false}},      
     { path: "/ResetPass", component: ResetPass, name:'reiniciar', meta:{requiresAuth: false}},        
     {
