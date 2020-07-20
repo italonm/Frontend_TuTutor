@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: "App",
+  name: "App"
 };
 </script>
 <style lang="scss">
@@ -35,7 +35,7 @@ export default {
 }
 .v-data-table-header th {
   color: #2f64ba !important;
-  background-color: transparent !important;
+  background-color: white !important;
   overflow: hidden;
 }
 .v-data-table {

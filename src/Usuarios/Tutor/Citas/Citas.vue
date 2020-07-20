@@ -277,7 +277,7 @@
           <v-card-text>Nota 1: Al cancelar la cita, esta no podrá ser revertida</v-card-text>
           <v-card-text>Nota 2: El motivo elegido será mostrado al alumno a través de un correo electrónico.</v-card-text>
           <v-col>
-          <v-btn color="blue darken-1" text @click="cancelar()" >Cancelar</v-btn>
+          <v-btn color="blue darken-1" text @click="cancelar()" >Cerrar</v-btn>
           <v-btn color="green darken-1" text @click="cancelarCita()" > Enviar motivo y cancelar cita </v-btn>
           </v-col>
         </v-card>
@@ -388,7 +388,7 @@ export default {
           this.listaCitasSinResultados.push(datodeCita);
         }
         else if (datodeCita.fecha == diaActual){
-          if(datodeCita.horafin<horaActual){
+          if(datodeCita.horaFin<horaActual){
             this.listaProximasCitas.push(datodeCita);
           }
           else{
@@ -464,7 +464,6 @@ export default {
       });
       this.grupoProximasCitas = groupsProxCit;
 
-      console.log(this.grupoProximasCitas);
     },
     editar(item) {
       axios

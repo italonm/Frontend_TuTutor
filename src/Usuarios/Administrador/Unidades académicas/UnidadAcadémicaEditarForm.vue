@@ -2,31 +2,19 @@
   <v-dialog v-model="dialog" persistent max-width="500px">
     <v-card>
       <v-card-title class="cardAdd">
-        <h2 class="headline">Registrar programa</h2>
+        <h2 class="headline">Editar unidad académica</h2>
       </v-card-title>
       <v-card-text>
         <v-container>
           <v-form ref="form" v-model="valid" :lazy-validation="lazy">
             <v-row>
-              <v-col cols="12" md="6">
+              <v-col cols="12" md="12">
                 <v-text-field
-                  v-model="formPrograma.program_name"
+                  v-model="unidad.namefaculty"
                   :rules="nameValidation"
                   label="Nombre"
                   required
                 ></v-text-field>
-              </v-col>
-
-              <v-col cols="12" md="6">
-                <v-select
-                  v-model="formPrograma.program_id_coordinator"
-                  :items="coordinadores"
-                  :rules="[v => !!v || 'Seleccione un coordinador']"
-                  item-text="person_full_name"
-                  item-value="person_id"
-                  label="Coordinador"
-                  required
-                ></v-select>
               </v-col>
             </v-row>
           </v-form>
@@ -35,7 +23,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="error" @click="cancelar">Cerrar</v-btn>
-        <v-btn color="green" @click="insertar">Guardar</v-btn>
+        <v-btn color="green" @click="editar">Guardar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -46,32 +34,37 @@ import { nameRules } from "../../Validation";
 import axios from "axios";
 
 export default {
-  props: ["faculty_id", "dialog", "coordinadores"],
+  props: ["dialog", "unidad"],
 
   data() {
     return {
       valid: true,
       lazy: false,
       nameValidation: nameRules,
-      checkbox: false,
-      formPrograma: {
-        program_name: "",
-        program_id_faculty: this.faculty_id,
-        program_id_coordinator: 0
+      coordinadores: [],
+      formFaculty: {
+        faculty_name: "",
+        faculty_id: ""
       }
     };
   },
 
   methods: {
-    insertar() {
-      this.formPrograma.program_id_faculty = this.faculty_id;
+    editar() {
+      console.log(this.unidad);
       this.$refs.form.validate();
       if (this.valid) {
         axios
-          .post("/admin/add_program/", this.formPrograma)
+          .post(
+            "http://184.73.231.88:7002/api/admin/edit_faculty/",
+            this.unidad
+          )
           .then(res => {
             console.log(res);
-            this.$message({ message: "Registro exitoso.", type: "success" });
+            this.$message({
+              message: "Modificación exitosa.",
+              type: "success"
+            });
             this.cancelar();
           })
           .catch(error => {
@@ -81,10 +74,12 @@ export default {
       } else this.$message.error("Datos incorrectos");
     },
 
-    cancelar() {
+    reset() {
       this.$refs.form.reset();
+    },
+    cancelar() {
+      this.reset();
       this.$emit("resetList");
-      this.$emit("resetCoordinadores");
       this.$emit("resetDialog");
     }
   }

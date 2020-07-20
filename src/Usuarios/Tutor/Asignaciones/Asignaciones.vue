@@ -33,7 +33,7 @@
       <el-col :span="12">
         <div class="containerBody">
           <h3 class="mt-10" v-if="show">Seleccione un alumno</h3>
-          <asignaciones v-else v-for="(comp, ind) in asignaciones" :key="ind" :comp="comp" :name="namae" :callMethod="parentMethod"></asignaciones>
+          <asignaciones v-else v-for="(comp, ind) in asignaciones" :key="ind" :comp="comp" :name="namae" :callMethod="parentMethod" :auxData="auxData"></asignaciones>
         </div>
       </el-col>
     </el-row>    
@@ -50,6 +50,7 @@
       v-on:resetList="listarAsignaciones(auxData)"
       v-on:rerender="rerender()"
     ></plan>
+    
   </el-container> 
 </template>
 
@@ -59,6 +60,7 @@ import Plan from "./PlanAcción.vue"
 import { bus } from "../../../main"
 import Alumnos from "./Alumnos.vue"
 import Asignaciones from "./Elemento.vue"
+
 
   export default {
     data(){
@@ -97,9 +99,26 @@ import Asignaciones from "./Elemento.vue"
         this.listarAsignaciones(data)        
         this.show = false                     
       })
+      bus.$on("verEstado", data=>{        
+        this.listarAux(data)
+      })
       this.listar();      
     },    
     methods:{     
+      listarAux(data){
+        console.log(data)
+        var username = localStorage.getItem("Token")
+        username = username.slice(1,username.length-1)
+        var password = '';
+        var token = new Buffer(username + ':' + password).toString('base64');
+        axios
+        .get("/tutor/show_assignments_from_student/" + localStorage.getItem("Id_usuario") + "/" + data.id,{headers:{
+          'Authorization': `Basic ${token}`
+        }})
+        .then(response=>{
+          this.components = response.data.assignments
+        })
+      },
       listarAsignaciones(data){
         this.auxData=data
         var username = localStorage.getItem("Token")
@@ -196,7 +215,7 @@ import Asignaciones from "./Elemento.vue"
         })
       }
     },
-    components:{    
+    components:{       
       asignaciones:Asignaciones,  
       plan:Plan,
       alumnos:Alumnos      

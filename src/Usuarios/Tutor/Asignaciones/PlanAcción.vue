@@ -117,7 +117,8 @@ export default {
             var add={
                 id_assignment: this.id_assignment,
                 activities: this.auxTodos
-            }                  
+            }            
+            console.log(add)      
             axios
             .post("/tutor/edit_activities/",add)                                  
             .catch(error => {

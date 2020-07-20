@@ -1,6 +1,5 @@
 //COMPONENTES DE ADMINISTRADOR
 import Configuración from "../../Usuarios/Administrador/Configuración/Configuración";
-/* import Auditoría from '../../Usuarios/Administrador/Auditoría' */
 import Errores from '../../Usuarios/Administrador/Errores/Errores'
 import Académicas from "../../Usuarios/Administrador/Unidades académicas/Unidades académicas";
 import Usuarios from "../../Usuarios/Administrador/Usuarios/Usuarios";
@@ -11,6 +10,7 @@ import Tutores from "../../Usuarios/Coordinador/Tutores/Tutores";
 import TipoTutoria from "../../Usuarios/Coordinador/Tipos de tutoría/TipoTutoria";
 import Reportes from "../../Usuarios/Coordinador/Reportes/Reportes";
 import ReporteEncuesta from "../../Usuarios/Coordinador/Reportes/ReporteEncuestas";
+import WelcomeCoord from "../../Usuarios/Coordinador/Reportes/Reportes"
 /* import Tutorías from '../../Usuarios/Coordinador/Tutorías/Tutorías' */
 import Solicitudes from "../../Usuarios/Coordinador/Solicitudes/Solicitudes";
 import Soporte from "../../Usuarios/Coordinador/Soporte/Soporte";
@@ -30,7 +30,7 @@ import Sesiones from "../../Usuarios/Tutor/Sesiones/Sesiones";
 import SolicitudesTutor from "../../Usuarios/Tutor/Solicitudes/Solicitudes";
 import AlumnosTutor from "../../Usuarios/Tutor/Alumnos/Alumnos";
 //COMPONENTE BIENVENIDOS
-import Welcome from "../../Usuarios/Welcome";
+import Welcome from "../../pages/Welcome/Welcome";
 import Vue from "vue";
 import Router from "vue-router";
 // COMPONENTE CONTENEDOR DE ACUERDO AL ROL
@@ -48,7 +48,7 @@ import ResetPass from "../../pages/Login/ResetPass.vue"
 import LandingPage from "../../pages/LandingPage/LadingPage.vue"
 
 export const routes = [
-    { path: "", redirect: "Login", name:'main', meta:{requiresAuth: false}},
+    { path: "", redirect: "LandingPage", name:'main', meta:{requiresAuth: false}},
     { path: "/Login", component: Login, name:"login", meta:{requiresAuth: false}},
     { path: "/LandingPage", component: LandingPage, name:"landingPage", meta:{requiresAuth: false}},
     { path: "/PassSet", component: PassSet, name:'passSet', meta:{requiresAuth: false}},
@@ -60,20 +60,10 @@ export const routes = [
         path: "/Administrador",
         component: MainAdmin,
         name: "administrador",
-        beforeEnter(to, from, next){
-            if(from.name==='login') next()
-            else{                
-                if(localStorage.getItem("EsAdministrador") === true)next()
-                else {                                            
-                    next()
-                    /* localStorage.clear(); 
-                    next({name:'login'}) */
-                }
-            }                        
-        },
+        meta:{requiresAuth: true},
         children: [
             //Administrador
-            { path: "Bienvenido", component: Welcome, name:"bienvenido" }, //Luiggi
+            { path: "Bienvenido", component: Configuración , name:"bienvenido" }, //Luiggi
             { path: "Configuración", component: Configuración, name:"configuración" }, //Luiggi
             { path: "Unidades académicas", component: Académicas, name:"unidades" }, //italo
             { path: "Coordinadores", component: Coordinadores, name: "coordinadores" }, //italo
@@ -98,7 +88,7 @@ export const routes = [
         },
         children: [
             //Coordinador
-            { path: "Bienvenido", component: Welcome }, //Luiggi
+            { path: "Bienvenido", component: WelcomeCoord }, //Luiggi
             { path: "/Coordinador/Miembros/Tutores", component: Tutores }, //herbert
             { path: "/Coordinador/Miembros/Alumnos", component: Alumnos }, //herbert
             { path: "Tutorías activas", component: Welcome },
@@ -182,8 +172,7 @@ router.beforeEach((to ,from, next)=>{
     else{
         next()
     }
-/*     if (to.name !== 'login' && (localStorage.getItem("Token")===null)) next({ name: 'login' })
-    else next() */
+
 })
 
 export default router

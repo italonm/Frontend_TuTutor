@@ -5,7 +5,7 @@ export default [
         {
           _name: 'CSidebarNavItem',
           name: 'Principal',
-          to: '/Administrador/Bienvenido',
+          to: '/Administrador/Configuración',
           icon: 'cil-GlobeAlt'
         },
         {
