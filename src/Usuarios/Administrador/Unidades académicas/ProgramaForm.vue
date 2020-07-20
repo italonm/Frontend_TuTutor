@@ -46,7 +46,7 @@ import { nameRules } from "../../Validation";
 import axios from "axios";
 
 export default {
-  props: ["faculty_id", "dialog"],
+  props: ["faculty_id", "dialog", "coordinadores"],
 
   data() {
     return {
@@ -54,7 +54,6 @@ export default {
       lazy: false,
       nameValidation: nameRules,
       checkbox: false,
-      coordinadores: [],
       formPrograma: {
         program_name: "",
         program_id_faculty: this.faculty_id,
@@ -63,20 +62,7 @@ export default {
     };
   },
 
-  created() {
-    this.listarCoordinadores();
-  },
   methods: {
-    listarCoordinadores() {
-      var Id_institución = localStorage.getItem("Id_institución");
-      axios
-        .get("/admin/show_coordinators_available/" + Id_institución)
-        .then(res => {
-          this.coordinadores = res.data.users;
-        })
-        .catch(error => console.log(error));
-    },
-
     insertar() {
       this.formPrograma.program_id_faculty = this.faculty_id;
       this.$refs.form.validate();
@@ -98,7 +84,7 @@ export default {
     cancelar() {
       this.$refs.form.reset();
       this.$emit("resetList");
-      this.listarCoordinadores();
+      this.$emit("resetCoordinadores");
       this.$emit("resetDialog");
     }
   }
