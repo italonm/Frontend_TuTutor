@@ -4,7 +4,7 @@ export default [{
       {
         _name: 'CSidebarNavItem',
         name: 'Principal',
-        to: '/Coordinador/Reportes',
+        to: '/Coordinador/Bienvenido',
         icon: 'cil-GlobeAlt'
       },
       {

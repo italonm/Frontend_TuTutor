@@ -1,6 +1,5 @@
 //COMPONENTES DE ADMINISTRADOR
 import Configuración from "../../Usuarios/Administrador/Configuración/Configuración";
-/* import Auditoría from '../../Usuarios/Administrador/Auditoría' */
 import Errores from '../../Usuarios/Administrador/Errores/Errores'
 import Académicas from "../../Usuarios/Administrador/Unidades académicas/Unidades académicas";
 import Usuarios from "../../Usuarios/Administrador/Usuarios/Usuarios";
@@ -64,7 +63,7 @@ export const routes = [
         meta:{requiresAuth: true},
         children: [
             //Administrador
-            { path: "Bienvenido", component: Welcome, name:"bienvenido" }, //Luiggi
+            { path: "Bienvenido", component: Configuración , name:"bienvenido" }, //Luiggi
             { path: "Configuración", component: Configuración, name:"configuración" }, //Luiggi
             { path: "Unidades académicas", component: Académicas, name:"unidades" }, //italo
             { path: "Coordinadores", component: Coordinadores, name: "coordinadores" }, //italo
