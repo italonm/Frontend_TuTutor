@@ -1,5 +1,5 @@
 <template>
-<v-dialog v-model="dialog" persistent max-width="870px" color="color">
+<v-dialog v-model="dialog" persistent max-width="910px" color="color">
       <v-card>
           <v-card-title class="cardAdd justify-center">
              Horario de disponibilidad
@@ -30,7 +30,7 @@
                 >
                     <v-icon dark>mdi-chevron-right</v-icon>
                 </v-btn>
-                <br><br><br>
+                <br><br>
                 <v-select
                     v-model="programa"
                     :items="facultades"
@@ -40,12 +40,6 @@
                     @change="listar()"
                 >
                 </v-select>
-
-                <v-select
-                    v-model="weekdays"
-                    :items="weekdaysOptions"
-                    label="Rango de días"
-                ></v-select>
                 <v-text-field
                     v-if="type === 'custom-weekly'"
                     v-model="minWeeks"
@@ -59,7 +53,17 @@
                     label="Intervalos"
                 ></v-select>
 
-                <h6> Agregar disponibilidad: </h6> 
+                <h6> Agregar disponibilidad: </h6>      
+                    <v-radio-group row v-model="tipoSesion" hide-details>
+                        <v-radio value="Sesión Presencial" label="Sesión Presencial"></v-radio>
+                        <v-radio value="Sesión Virtual" label="Sesión Virtual"></v-radio>
+                    </v-radio-group>
+
+                    <v-text-field
+                        v-model="ubicacion"
+                        label="Lugar/Enlace de la cita"
+                    ></v-text-field>
+
                 <v-menu
                     ref="startMenu"
                     v-model="startMenu"
@@ -125,7 +129,6 @@
                 </el-time-select>
                 <br><br>
                 <v-btn color="success" @click="agregarEvento">Añadir al calendario</v-btn>
-
                 </v-col>
 
             <v-col
@@ -133,7 +136,7 @@
             lg="9"
             class="pl-4"
             >
-                <v-sheet height="500" color ="color">
+                <v-sheet height="580" color ="color">
                     <v-calendar
                     ref="calendar"
                     v-model="start"
@@ -196,11 +199,14 @@
                 </v-sheet>
             </v-col>
             </v-layout>
-            <v-card-actions>
+            <div class="v-card__actions" style="
+                padding-bottom: 3px;
+                padding-top: 3px;">
                 <v-spacer></v-spacer>
-                <v-btn color="success" @click="repetirSemana">Repetir semana pasada</v-btn>
+
+                <v-btn color="success" @click="repetirSemana">Repetir horario de la semana pasada</v-btn>
                 <v-btn color="error" @click="cancelar">Cerrar</v-btn>
-            </v-card-actions>
+            </div>
       </v-card>
   </v-dialog>
 </template>
@@ -232,12 +238,14 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       endTime: "",
       endMenu: false,
       nowMenu: false,
+      tipoSesion: "Sesión Presencial",
       minWeeks: 1,
       now: null,
       type: 'week',
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
+      ubicacion:"",
       weekdays: weekdaysDefault,
       weekdaysOptions: [
         { text: 'Lunes - Domingo', value: weekdaysDefault},
@@ -260,7 +268,9 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       schedule:{
         tutor_id:JSON.parse(localStorage.getItem("Id_usuario")),
         events: [],
-        program_id:""
+        program_id:"",
+        place:"",
+        is_presencial:true
       },
       eventosAgregados:[],
       borrarEvento:{
@@ -323,42 +333,52 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       this.listar();
       },
       agregarEvento(){
-        var dt = new Date(this.start);
-        dt.setDate(dt.getDate() + 1);
-        var diaSemana = dt.getDay()
-        var nombreDia = ""
-        if (diaSemana == 0)
-        nombreDia = "Domingo"
-        else if (diaSemana == 1)
-        nombreDia = "Lunes"
-        else if (diaSemana == 2)
-        nombreDia = "Martes"
-        else if (diaSemana == 3)
-        nombreDia = "Miercoles"
-        else if (diaSemana == 4)
-        nombreDia = "Jueves"
-        else if (diaSemana == 5)
-        nombreDia = "Viernes"
-        else 
-        nombreDia = "Sabado"
+        if (this.ubicacion!=""){
+          var dt = new Date(this.start);
+          dt.setDate(dt.getDate() + 1);
+          var diaSemana = dt.getDay()
+          var nombreDia = ""
+          if (diaSemana == 0)
+          nombreDia = "Domingo"
+          else if (diaSemana == 1)
+          nombreDia = "Lunes"
+          else if (diaSemana == 2)
+          nombreDia = "Martes"
+          else if (diaSemana == 3)
+          nombreDia = "Miercoles"
+          else if (diaSemana == 4)
+          nombreDia = "Jueves"
+          else if (diaSemana == 5)
+          nombreDia = "Viernes"
+          else 
+          nombreDia = "Sabado"
 
-        this.eventosAgregados.push({id:null , name: nombreDia,
-                          start: this.start +" "+ this.startTime,
-                          end: this.start +" "+ this.endTime, color:"green"}) 
-        this.schedule.program_id = this.programa;
-        this.schedule.events = this.eventosAgregados;
-        axios
-          .post("/tutor/add_schedule/", this.schedule)
-          .then(res => {
-            console.log(res);
-            this.$message({ message: "Registro de evento exitoso.", type: "success" });
-            this.listar();
-          })
-          .catch(error => {
-            console.log(error);
-            this.$message.error("Error al registrar evento");
-          });
-        this.eventosAgregados=[];
+          this.eventosAgregados.push({id:null , name: nombreDia,
+                            start: this.start +" "+ this.startTime,
+                            end: this.start +" "+ this.endTime, color:"green"}) 
+          this.schedule.program_id = this.programa;
+          this.schedule.events = this.eventosAgregados;
+          if (this.tipoSesion === "Sesión Presencial")
+            this.schedule.is_presencial = true; 
+          else if (this.tipoSesion === "Sesión Virtual")
+            this.schedule.is_presencial = false;
+          this.schedule.place = this.ubicacion;
+          axios
+            .post("/tutor/add_schedule/", this.schedule)
+            .then(res => {
+              console.log(res);
+              this.$message({ message: "Registro de evento exitoso.", type: "success" });
+              this.listar();
+            })
+            .catch(error => {
+              console.log(error);
+              this.$message.error("Error al registrar evento");
+            });
+          this.eventosAgregados=[];
+        }
+        else{
+          this.$message.error("Falta agregar un lugar o enlace para la cita.");
+        }
       },
       showEvent ({ nativeEvent, event }) {
         const open = () => {
@@ -393,7 +413,6 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
       },
       repetirSemana() {
         this.tutor.program_id = this.programa;
-        console.log(this.tutor);
         axios
           .post("/tutor/repeat_schedule/", this.tutor)
           .then(res => {
@@ -409,4 +428,3 @@ var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (
     }
   }
 </script>
-
