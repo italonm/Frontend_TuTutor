@@ -23,7 +23,7 @@
               <v-col cols="12" md="12">
                 <v-text-field
                   v-model="logo.institution_address"
-                  :rules="nameValidation"
+                  :rules="placeValidaiton"
                   label="Ubicación*"
                   required
                 ></v-text-field>
@@ -99,6 +99,7 @@ import {
   emailRules,
   codeRules,
   phoneRules,
+  placeRules,
   webRules
 } from "../../Validation";
 var formData = new FormData();
@@ -113,6 +114,7 @@ export default {
       emailValidation: emailRules,
       codeValidation: codeRules,
       phoneValidation: phoneRules,
+      placeValidaiton: placeRules,
       webValidation: webRules,
       logo: {
         institution_id: "",
