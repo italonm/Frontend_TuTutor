@@ -22,7 +22,7 @@
             <v-col cols="12" md="12   ">
               <v-text-field
                 v-model="signtipo.tt_description"
-                :rules="nameValidation"
+                :rules="descriptionValidation"
                 label="Descripción"
                 required
               ></v-text-field>
@@ -139,7 +139,7 @@
 </template>
 
 <script>
-import { nameRules, codeRules, cantRules } from "../../Validation";
+import { nameRules, codeRules, cantRules,descriptionRules } from "../../Validation";
 import axios from "axios";
 var now     = new Date(); 
 var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
@@ -159,6 +159,7 @@ export default {
       nameValidation: nameRules,
       codeValidation: codeRules,
       cantValidation: cantRules,
+      descriptionValidation: descriptionRules,
       start:null,
       startMenu:false,
       editarTipo: {
