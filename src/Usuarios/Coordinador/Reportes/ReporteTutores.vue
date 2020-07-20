@@ -281,7 +281,6 @@
 </template>
 <script>
 import axios from "axios";
-import jsPDF from 'jspdf';
 export default {
   data() {
     return {
@@ -589,7 +588,7 @@ seriesMotivosRechazo: '',
           categories:[]
         },
         title: {
-          text: "Sesiones Formales VS Sesiones Informales",
+          text: "Distribución x tipos de Sesiones",
           align: "center"
         }
       },
@@ -815,12 +814,7 @@ ReporteGeneralHorasInstruidasTotales(TutorOGeneral){
   },
 /*IMPRIMIR REPORTE TUTOR*/
 imprimirReporteTutor(){
-  const doc= new jsPDF();
-  const contentHtml=this.$refs.content.innerHTML;
-  doc.fromHTML(contentHtml,15,15,{
-    width:170,
-  });
-  doc.save("ReporteTutores.pdf");
+
  
 },
 
