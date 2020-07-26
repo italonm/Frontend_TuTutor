@@ -42,7 +42,7 @@
             >
             <v-col>
                 <h6>¿El tutor es fijo?</h6>
-              <v-switch v-model="fijado" @change="cambio_fijado(fijado)"></v-switch>
+              <v-switch v-model="signtipo.permanente" @change="cambio_fijado(signtipo.permanente)"></v-switch>
             </v-col>
 
             <v-col>
@@ -101,7 +101,7 @@
             >
             <v-col>
             <h6>¿Es obligatorio?</h6>
-            <v-switch v-model="obligado" @change="cambio_obligado(obligado)"></v-switch>
+            <v-switch v-model="signtipo.requerido" @change="cambio_obligado(signtipo.requerido)"></v-switch>
             </v-col>
 
             <v-col class="form-group">
@@ -122,7 +122,7 @@
             >
             <v-col>
                 <h6>¿Se asigna un tutor?</h6>
-                <v-switch v-model="asignado" ></v-switch>
+                <v-switch v-model="signtipo.asignado" ></v-switch>
             </v-col>
             </v-card>
 
@@ -236,12 +236,16 @@ export default {
 
     editar() {
       //servicio
+      
       this.editarTipo = Object.assign({}, this.signtipo);
       this.$refs.form.validate();
       if (this.valid) {
+        /*AGREGADO POR CORRECION DEL PROFE */
         this.editarTipo.tt_isrequired = this.obligado;
-        this.editarTipo.tt_assigned = this.asignado;
+        this.editarTipo.tt_assigned = this.signtipo.asignado;
         this.editarTipo.tt_permanent = this.fijado;
+
+        ///////////////////
         this.editarTipo.tt_quantity=0;
 
         if (this.editarTipo.tt_permanent){
@@ -290,6 +294,7 @@ export default {
       this.$emit("resetDialog", this.newDialog);
     },
     cambio_fijado(fijado){
+      this.fijado=fijado;//MODIFICADO
       if (fijado){
         if(this.signtipo.tt_end_date=="" || this.signtipo.tt_end_date==undefined ){
           this.signtipo.tt_end_date = diaActual;
@@ -297,12 +302,13 @@ export default {
       }
     },
     cambio_obligado(obligado){
+      this.obligado=obligado;
       if(obligado){
         if(this.signtipo.tt_periodicity=="" || this.signtipo.tt_periodicity==undefined)
         this.signtipo.tt_periodicity = 1;
       }
 
     }
-  }
+  },
 };
 </script>
