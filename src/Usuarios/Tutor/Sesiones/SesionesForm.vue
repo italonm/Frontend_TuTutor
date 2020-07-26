@@ -37,7 +37,7 @@
                 hide-selected      
                 item-text="person_full_name"
                 item-value="person_full_name"        
-                label="Participante"              
+                label="Seleccione un participante"              
                 small-chips
                 clearable
                 return-object              
@@ -244,8 +244,7 @@ export default {
       this.participante=[]
       axios
         .get("/coordinator/show_students/" + item)      
-        .then(res =>{         
-          console.log(res)           
+        .then(res =>{                            
           this.alumnos = res.data.users;          
         })
         .catch(error => {
@@ -262,16 +261,16 @@ export default {
     insertar() {  
       this.$refs.form.validate();
       if (this.valid) {                  
-        this.insert.tutor_id = localStorage.getItem("Id_usuario");      
-        this.insert.student_id = this.participante[0].person_id
+        this.insert.tutor_id = localStorage.getItem("Id_usuario");    
+        console.log(this.participante)  
+        this.insert.student_id = this.participante.person_id
         this.insert.date = this.start            
         this.insert.reason1 = this.motivos[0];
         this.insert.reason2 = this.motivos[1]; 
         this.insert.result = this.form.resultado                                                  
         axios        
         .post("/tutor/register_informal_session/", this.insert)
-        .then(res => {        
-          console.log(res)
+        .then(() => {                  
           this.$emit("resetList");
           this.$message({ message: "Registro exitoso.", type: "success" });
           this.$emit("resetDialog");
@@ -279,7 +278,7 @@ export default {
         })
         .catch(error => {
           console.log(error);
-          this.$message.error("Datos duplicados");
+          this.$message.error("Datos incompletos");
         });  
       }
       else this.$message.error("Datos incorrectos");

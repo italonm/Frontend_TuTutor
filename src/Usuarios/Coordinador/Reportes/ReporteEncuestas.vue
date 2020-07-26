@@ -20,6 +20,11 @@
           {{"Total de encuestas no respondidas: " + noRespondidas}}
         </h5>
       </el-col>
+      <el-col :span="4">
+        <div class="grid-content">
+          <el-button type="success" @click="descargar" class="buttonAdd">&nbsp;Descargar</el-button>
+        </div>
+      </el-col> 
     </el-row>
     </div>
     <v-container>
@@ -45,14 +50,19 @@ export default {
       //console.log(localStorage.getItem("Id_programa")); 
       //console.log(localStorage.getItem("Id_usuario"));   
       axios
-        .get("http://184.73.231.88:5000/api/coordinator/show_status_report_polls/",  { "coordinator_id": localStorage.getItem("Id_usuario")})
+        .post("http://184.73.231.88:5000/api/coordinator/show_status_report_polls/",  { "coordinator_id": localStorage.getItem("Id_usuario")})
         .then(res => {
+          console.log("Cha va estar bien")
           console.log(res.data);
           this.respondidas = res.data.answered;
           this.noRespondidas = res.data.not_answered;
         })
         .catch(error => console.log(error));
-    },    
+    }, 
+    
+    descargar() {
+      window.open("https://a20160298.typeform.com/report/RGn9ztac/Yx7GClikh9Oyrnqf");
+    },
   },
   
   created() {

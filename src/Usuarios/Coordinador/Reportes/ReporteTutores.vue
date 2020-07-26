@@ -281,7 +281,6 @@
 </template>
 <script>
 import axios from "axios";
-import jsPDF from 'jspdf';
 export default {
   data() {
     return {
@@ -589,7 +588,7 @@ seriesMotivosRechazo: '',
           categories:[]
         },
         title: {
-          text: "Sesiones Formales VS Sesiones Informales",
+          text: "Distribución x tipos de Sesiones",
           align: "center"
         }
       },
@@ -709,10 +708,12 @@ seriesMotivosRechazo: '',
  generarReportetablaTutores(){
       this.enviarDatosReporteTutor['id_program']=localStorage.getItem("Id_facultad");
       this.enviarDatosReporteTutor['start_date']=this.startTutor;
+      this.enviarDatosReporteTutor['end_date']=this.endTutor;
 
        axios
         .post("/coordinator/show_general_information/", this.enviarDatosReporteTutor)
         .then(res => {
+          console.log(res)
           this.dataTableTutores=res.data.tutors;
     
         })
@@ -815,12 +816,7 @@ ReporteGeneralHorasInstruidasTotales(TutorOGeneral){
   },
 /*IMPRIMIR REPORTE TUTOR*/
 imprimirReporteTutor(){
-  const doc= new jsPDF();
-  const contentHtml=this.$refs.content.innerHTML;
-  doc.fromHTML(contentHtml,15,15,{
-    width:170,
-  });
-  doc.save("ReporteTutores.pdf");
+
  
 },
 
