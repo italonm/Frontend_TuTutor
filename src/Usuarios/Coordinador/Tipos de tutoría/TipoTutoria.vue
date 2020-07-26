@@ -93,7 +93,15 @@ export default {
         tt_periodicity:0,
         tt_assigned: "",
         tt_permanent: "",
-        program_id:JSON.parse(localStorage.getItem("Id_facultad"))
+        program_id:JSON.parse(localStorage.getItem("Id_facultad")),
+
+////////////////AGREGADO
+        requerido:"",
+        asignado:"",
+        permanente:"",
+
+/////////////////////
+
       },
       search: "",
       dialog: false,
@@ -123,6 +131,16 @@ export default {
     editar(item) {
       this.action = "Editar tipo de tutoría";
       this.signtipo = Object.assign({}, item);
+      
+      /*AGREGADO  DE CORRECION DEL PROFE*/
+      this.signtipo.requerido=this.signtipo.tt_isrequired=='Si';
+      this.signtipo.asignado=this.signtipo.tt_assigned=='Si';
+      this.signtipo.permanente=this.signtipo.tt_permanent=='Si';
+      /////////////////
+      
+      
+      console.log("el editar sing tipo");
+      console.log(this.signtipo);
       this.dialog = true;
     },
 
