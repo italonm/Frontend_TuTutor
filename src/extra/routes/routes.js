@@ -68,7 +68,7 @@ export const routes = [
             { path: "Unidades académicas", component: Académicas, name:"unidades" }, //italo
             { path: "Coordinadores", component: Coordinadores, name: "coordinadores" }, //italo
             { path: "Usuarios", component: Usuarios, name:"usuarios"}, //italo
-            { path: "Auditoría", component: Welcome, name:"auditoría" },
+            { path: "Unidades de Apoyo", component: Apoyo, name:"unidades" },
             { path: "Errores", component: Errores, name:"errores" },            
         ],
     },

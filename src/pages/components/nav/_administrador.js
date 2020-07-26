@@ -30,12 +30,13 @@ export default [
           to: '/Administrador/Coordinadores',
           icon: 'cil-user'
         }, 
-        /* {
+        {
           _name: 'CSidebarNavItem',
-          name: 'Auditoría',
-          to: '/Auditoría',
-          icon: 'cil-task'
-        },    */
+          name: 'Apoyo',
+          to: '/Administrador/Unidades de Apoyo',
+          icon: 'cil-ShieldAlt'
+        },    
+
         {
           _name: 'CSidebarNavItem',
           name: 'Errores',
