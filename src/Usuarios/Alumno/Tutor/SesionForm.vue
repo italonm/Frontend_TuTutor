@@ -38,32 +38,37 @@
                   <h4 center absolute>Horario</h4>
                 </div>
               </v-col>
+              <v-form ref="form" v-model="valid" :lazy-validation="lazy">
+                <v-col class="px-0">
+                  <div class="text">
+                    <el-date-picker
+                      v-model="cita.s_date"
+                      type="date"
+                      placeholder="Seleccione un día"
+                      value-format="yyyy-MM-dd"
+                      @change="updateDays"
+                    ></el-date-picker>
+                  </div>
+                </v-col>
 
-              <v-col class="px-0">
-                <div class="text">
-                  <el-date-picker
-                    v-model="cita.s_date"
-                    type="date"
-                    placeholder="Seleccione un día"
-                    value-format="yyyy-MM-dd"
-                    @change="updateDays"
-                  ></el-date-picker>
-                </div>
-              </v-col>
-
-              <v-col class="px-0">
-                <div class="text">
-                  <el-select
-                    v-model="cita.s_hour"
-                    placeholder="Seleccione una hora"
-                    style="width:220px !important"
-                  >
-                    <i slot="prefix" class="el-input__icon el-icon-time"></i>
-                    <el-option v-for="item in freeOptions" :key="item" :label="item" :value="item"></el-option>
-                  </el-select>
-                </div>
-              </v-col>
-
+                <v-col class="px-0">
+                  <div class="text">
+                    <el-select
+                      v-model="cita.s_hour"
+                      placeholder="Seleccione una hora"
+                      style="width:220px !important"
+                    >
+                      <i slot="prefix" class="el-input__icon el-icon-time"></i>
+                      <el-option
+                        v-for="item in freeOptions"
+                        :key="item"
+                        :label="item"
+                        :value="item"
+                      ></el-option>
+                    </el-select>
+                  </div>
+                </v-col>
+              </v-form>
               <v-col class="px-0">
                 <v-btn absolute left color="success" @click="citar">Citar</v-btn>&nbsp;
                 <v-btn absolute right color="error" @click="cancelar">Cerrar</v-btn>
@@ -94,14 +99,16 @@ export default {
     return {
       start: diaActual,
       freeOptions: "",
-      weekdays: [1, 2, 3, 4, 5, 6],
+      //weekdays: [1, 2, 3, 4, 5, 6],
+      valid: true,
+      lazy: false,
       cita: {
         s_date: "",
         s_hour: "",
         s_id_assignment: "",
         s_id_student: localStorage.getItem("Id_usuario"),
-        s_code_tutor: ""
-      }
+        s_code_tutor: "",
+      },
     };
   },
   methods: {
@@ -110,26 +117,29 @@ export default {
     },
 
     citar() {
-      this.cita.s_id_assignment = this.idtutoria;
-      this.cita.s_code_tutor = this.idtutor;
-      this.$confirm("¿Desea reservar una cita?", "Warning", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancelar",
-        type: "info"
-      })
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "Cita reservada"
-          });
-          this.citarServicio();
+      this.$refs.form.validate();
+      if (this.cita.s_date && this.cita.s_hour) {
+        this.cita.s_id_assignment = this.idtutoria;
+        this.cita.s_code_tutor = this.idtutor;
+        this.$confirm("¿Desea reservar una cita?", "Warning", {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancelar",
+          type: "info",
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "Cita no solicitada"
+          .then(() => {
+            this.$message({
+              type: "success",
+              message: "Cita reservada",
+            });
+            this.citarServicio();
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "Cita no solicitada",
+            });
           });
-        });
+      } else this.$message.error("Seleccione una fecha y hora");
     },
 
     citarServicio() {
@@ -138,13 +148,13 @@ export default {
           "http://184.73.231.88:7002/api/student/register_appointment/",
           this.cita
         )
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.cita.s_date = "";
           this.cita.s_hour = "";
           this.$emit("closeDialog");
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -153,12 +163,12 @@ export default {
       axios
         .post("/student/show_free_hours/", {
           s_date: this.cita.s_date,
-          s_code_tutor: this.idtutor
+          s_code_tutor: this.idtutor,
         })
-        .then(res => {
+        .then((res) => {
           this.freeOptions = res.data;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -168,8 +178,8 @@ export default {
       this.cita.s_hour = "";
       this.$emit("closeDialog");
       this.listar();
-    }
-  }
+    },
+  },
 };
 </script>>
 
