@@ -42,14 +42,14 @@
             >
             <v-col>
                 <h6>¿El tutor es fijo?</h6>
-              <v-switch v-model="signtipo.permanente" @change="cambio_fijado(signtipo.permanente)"></v-switch>
+              <v-switch v-model="switches.fijado" @change="cambio_fijado(switches.fijado)"></v-switch>
             </v-col>
 
             <v-col>
               
             <h6>Si el tutor es fijo, seleccione una fecha fin para la tutoría:</h6>
             <v-menu
-                    v-bind:disabled="!fijado"
+                    v-bind:disabled="!switches.fijado"
                     ref="startMenu"
                     v-model="startMenu"
                     :close-on-content-click="false"
@@ -101,13 +101,13 @@
             >
             <v-col>
             <h6>¿Es obligatorio?</h6>
-            <v-switch v-model="signtipo.requerido" @change="cambio_obligado(signtipo.requerido)"></v-switch>
+            <v-switch v-model="switches.obligado" @change="cambio_obligado(switches.obligado)"></v-switch>
             </v-col>
 
             <v-col class="form-group">
               <h6>Si la tutoria es obligatoria, coloque la cantidad de días para enviar recordatorios:</h6>
               <v-container>
-                <v-text-field v-bind:disabled="!obligado" v-model="signtipo.tt_periodicity" type="number" label="Número de días" min="1" @click:append-outer="increment" @click:prepend="decrement"></v-text-field>
+                <v-text-field v-bind:disabled="!switches.obligado" v-model="signtipo.tt_periodicity" type="number" label="Número de días" min="1" @click:append-outer="increment" @click:prepend="decrement"></v-text-field>
               </v-container>
             </v-col>
             </v-card>
@@ -122,7 +122,7 @@
             >
             <v-col>
                 <h6>¿Se asigna un tutor?</h6>
-                <v-switch v-model="signtipo.asignado" ></v-switch>
+                <v-switch v-model="switches.asignado" ></v-switch>
             </v-col>
             </v-card>
 
@@ -144,7 +144,7 @@ import axios from "axios";
 var now     = new Date(); 
 var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
 export default {
-  props: ["signtipo", "dialog", "action"],
+  props: ["switches","signtipo", "dialog", "action"],
 
   data() {
     return {
@@ -152,9 +152,6 @@ export default {
       localTipoTutoria: this.signtipo,
       valid: true,
       lazy: false,
-      obligado : false,
-      asignado: false,
-      fijado : false,
       actualidad: diaActual,
       nameValidation: nameRules,
       codeValidation: codeRules,
@@ -195,9 +192,10 @@ export default {
     insertar() {
       this.$refs.form.validate();
       if (this.valid) {
-          this.signtipo.tt_isrequired = this.obligado;
-          this.signtipo.tt_assigned = this.asignado;
-          this.signtipo.tt_permanent = this.fijado;
+          this.signtipo.program_id = JSON.parse(localStorage.getItem("Id_facultad"));
+          this.signtipo.tt_isrequired = this.switches.obligado;
+          this.signtipo.tt_assigned = this.switches.asignado;
+          this.signtipo.tt_permanent = this.switches.fijado;
           this.signtipo.tt_quantity=0;
           if (this.signtipo.tt_permanent){
             this.signtipo.tt_permanent = "Si";
@@ -226,7 +224,8 @@ export default {
               this.$emit("resetList");
               this.$message({ message: "Registro exitoso.", type: "success" });
               this.newDialog = false;
-              this.$emit("resetDialog", this.newDialog);            
+              this.$emit("resetDialog", this.newDialog);   
+              this.$refs.form.reset();         
             })
             .catch(error => {
               console.log(error);
@@ -236,17 +235,12 @@ export default {
     },  
 
     editar() {
-      //servicio
-      
       this.editarTipo = Object.assign({}, this.signtipo);
       this.$refs.form.validate();
       if (this.valid) {
-        /*AGREGADO POR CORRECION DEL PROFE */
-        this.editarTipo.tt_isrequired = this.obligado;
-        this.editarTipo.tt_assigned = this.signtipo.asignado;
-        this.editarTipo.tt_permanent = this.fijado;
-
-        ///////////////////
+        this.editarTipo.tt_isrequired = this.switches.obligado;
+        this.editarTipo.tt_assigned = this.switches.asignado;
+        this.editarTipo.tt_permanent = this.switches.fijado;
         this.editarTipo.tt_quantity=0;
 
         if (this.editarTipo.tt_permanent){
@@ -295,7 +289,6 @@ export default {
       this.$emit("resetDialog", this.newDialog);
     },
     cambio_fijado(fijado){
-      this.fijado=fijado;//MODIFICADO
       if (fijado){
         if(this.signtipo.tt_end_date=="" || this.signtipo.tt_end_date==undefined ){
           this.signtipo.tt_end_date = diaActual;
@@ -303,13 +296,12 @@ export default {
       }
     },
     cambio_obligado(obligado){
-      this.obligado=obligado;
       if(obligado){
         if(this.signtipo.tt_periodicity=="" || this.signtipo.tt_periodicity==undefined)
         this.signtipo.tt_periodicity = 1;
       }
 
     }
-  },
+  }
 };
 </script>
