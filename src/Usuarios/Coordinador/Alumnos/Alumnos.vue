@@ -202,7 +202,7 @@ export default {
 
     eliminar(item) {
       this.$confirm(
-        "Esta seguro de eliminar: " + item.name + "?",
+        "Esta seguro de eliminar: " + item.person_name + "?",
         "Advertencia",
         {
           confirmButtonText: "Confirmar",
