@@ -235,7 +235,6 @@ export default {
     },  
 
     editar() {
-      //servicio
       this.editarTipo = Object.assign({}, this.signtipo);
       this.$refs.form.validate();
       if (this.valid) {

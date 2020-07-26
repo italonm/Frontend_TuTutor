@@ -132,7 +132,6 @@ export default {
       this.switches.obligado=this.signtipo.tt_isrequired=='Si';
       this.switches.asignado=this.signtipo.tt_assigned=='Si';
       this.switches.fijado=this.signtipo.tt_permanent=='Si';
-      console.log(this.switches);
       this.dialog = true;
     },
 
