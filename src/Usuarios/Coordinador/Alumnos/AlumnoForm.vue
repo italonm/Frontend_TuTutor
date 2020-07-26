@@ -64,7 +64,6 @@
                   show-size
                   label="Notas"
                   v-model="form.person_scores"
-                  :rules="fileValidation"
                 ></v-file-input>
               </v-col>
             </v-row>
@@ -86,7 +85,7 @@ import {
   emailRules,
   codeRules,
   phoneRules,
-  pdfRules
+  pdfRules,
 } from "../../Validation";
 import axios from "axios";
 export default {
@@ -100,7 +99,7 @@ export default {
       emailValidation: emailRules,
       codeValidation: codeRules,
       phoneValidation: phoneRules,
-      fileValidation: pdfRules
+      fileValidation: pdfRules,
     };
   },
 
@@ -115,12 +114,12 @@ export default {
       if (this.valid) {
         axios
           .post("/coordinator/add_student/", this.form)
-          .then(res => {
+          .then((res) => {
             console.log(res);
             this.$message({ message: "Registro exitoso.", type: "success" });
             this.insertarNotas();
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
             this.$message.error("Datos Duplicados");
           });
@@ -132,15 +131,15 @@ export default {
       if (this.valid) {
         axios
           .post("/user/update_person/", this.form)
-          .then(res => {
+          .then((res) => {
             console.log(res);
             this.$message({
               message: "Modificación exitosa.",
-              type: "success"
+              type: "success",
             });
             this.insertarNotas();
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
             this.$message.error("Datos duplicados");
           });
@@ -148,31 +147,36 @@ export default {
     },
 
     insertarNotas() {
-      var formData = new FormData();
       if (this.form.person_scores) {
-        formData.append("file", this.form.person_scores);
-        axios
-          .post("/coordinator/add_scores/" + this.form.person_code, formData)
-          .then(res => {
-            console.log(res);
-            this.$message({
-              message: "Archivo cargado exitosamente",
-              type: "success"
+        var formData = new FormData();
+        if (this.form.person_scores) {
+          formData.append("file", this.form.person_scores);
+          axios
+            .post("/coordinator/add_scores/" + this.form.person_code, formData)
+            .then((res) => {
+              console.log(res);
+              this.$message({
+                message: "Archivo cargado exitosamente",
+                type: "success",
+              });
+              this.$emit("resetList");
+              this.cancelar();
+            })
+            .catch((e) => {
+              console.log(e);
+              this.$message.error("Archivo con formato incorrecto");
             });
-            this.$emit("resetList");
-            this.cancelar();
-          })
-          .catch(e => {
-            console.log(e);
-            this.$message.error("Archivo con formato incorrecto");
-          });
+        }
+      } else {
+        this.$emit("resetList");
+        this.cancelar();
       }
     },
 
     cancelar() {
       this.$refs.form.reset();
       this.$emit("resetDialog");
-    }
-  }
+    },
+  },
 };
 </script>

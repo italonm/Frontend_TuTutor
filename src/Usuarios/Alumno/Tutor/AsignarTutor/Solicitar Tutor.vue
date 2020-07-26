@@ -8,7 +8,7 @@
             Aún no tienes un tutor asignado...
             <el-link type="danger" icon="fas fa-question-circle" @click="showProcesoTutoria()"></el-link>
           </h3>
-          <h6>Selecciona el tutor que deseas que se te asigne</h6>
+          <h6>Por más que solicites tutor varias veces, se registrará 1 vez.</h6>
         </div>
       </el-col>
       <el-col :span="7">
