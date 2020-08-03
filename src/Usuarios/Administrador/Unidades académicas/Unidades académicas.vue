@@ -63,6 +63,9 @@
               <template v-slot:item.edit="{ item }">
                 <el-button type="info" icon="el-icon-edit" circle @click="editarUnidad(item)"></el-button>
               </template>
+              <template v-slot:item.delete="{ item }">
+                <el-button type="danger" icon="fas fa-trash" circle @click="eliminarUnidades(item)"></el-button>
+              </template>
             </v-data-table>
           </el-col>
         </el-row>
@@ -110,6 +113,9 @@
               </template>
               <template v-slot:item.edit="{ item }">
                 <el-button type="info" icon="el-icon-edit" circle @click="editarPrograma(item)"></el-button>
+              </template>
+              <template v-slot:item.delete="{ item }">
+                <el-button type="danger" icon="fas fa-trash" circle @click="eliminarProgramas(item)"></el-button>
               </template>
             </v-data-table>
           </el-col>
@@ -177,7 +183,8 @@ export default {
         },
         { text: "Programas", value: "watch", sortable: false },
         { text: "Agregar", value: "add", sortable: false },
-        { text: "Editar", value: "edit", sortable: false }
+        { text: "Editar", value: "edit", sortable: false },
+        { text: "Eliminar", value: "delete", sortable: false}
       ],
 
       //Programas
@@ -186,7 +193,8 @@ export default {
         { text: "Nombre", value: "program_name" },
         { text: "Coordinador", value: "coordinator_full_name" },
         { text: "Contacto", value: "coordinator_email" },
-        { text: "Editar", value: "edit", sortable: false }
+        { text: "Editar", value: "edit", sortable: false },  
+        { text: "Eliminar", value: "delete", sortable: false}      
       ],
 
       searchUnidad: "",
@@ -220,11 +228,60 @@ export default {
   },
 
   methods: {
+    eliminarUnidades(item){      
+      this.$confirm(
+        "Está seguro de eliminar la unidad académica: " + item.faculty_name + "?",//MODIFICACION ERROR PROFE 
+        "Advertencia",
+        {
+          confirmButtonText: "Confirmar",
+          cancelButtonText: "Cancelar",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          console.log(item.faculty_id)
+          axios
+            .post("/admin/delete_faculty/", { faculty_id: item.faculty_id })
+            .then(()=>{
+              this.listarUnidades();
+              this.$message({ type: "success", message: "Registro eliminado" });
+            })
+            .catch(() => this.$message({ type: "danger", message: "No se pudo eliminar la unidad, revise si hay usuarios activos" }));
+          
+        })
+        .catch(() => {
+          this.$message({ type: "info", message: "Eliminación cancelada" });
+        });    
+    },
+    eliminarProgramas(item){
+      this.$confirm(
+        "Está seguro de eliminar el programa: " + item.program_name + "?",//MODIFICACION ERROR PROFE 
+        "Advertencia",
+        {
+          confirmButtonText: "Confirmar",
+          cancelButtonText: "Cancelar",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          axios
+            .post("/admin/delete_program/", { program_id: item.program_id })
+            .then(()=>{
+              this.listarProgramas();
+              this.$message({ type: "success", message: "Registro eliminado" });
+            })
+            .catch(() => this.$message({ type: "danger", message: "No se pudo eliminar el programa, revise si hay usuarios activos" }));
+          
+        })
+        .catch(() => {
+          this.$message({ type: "info", message: "Eliminación cancelada" });
+        });    
+    }, 
     listarUnidades() {
       var Id_institución = localStorage.getItem("Id_institución");
       axios
         .get("/admin/show_faculties/" + Id_institución)
-        .then(res => {
+        .then(res => {          
           this.unidades = res.data.faculties;
         })
         .catch(error => console.log(error));
@@ -240,8 +297,7 @@ export default {
       axios
         .get("/admin/show_programs/" + this.faculty_id)
         .then(res => {
-          this.programas = res.data.programs;
-          console.log(this.programas);
+          this.programas = res.data.programs;          
         })
         .catch(error => console.log(error));
     },

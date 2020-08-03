@@ -12,7 +12,7 @@
               <v-chip-group
                 column
                 active-class="primary--text"                                
-                v-if="option"
+                v-if="option"                                
               >     
                 <v-chip filter v-for="facultad in facultades" :key="facultad.program_name" :value="facultad.program_name"                                                              
                   class="ma-2"
@@ -68,7 +68,8 @@
                 <v-date-picker
                   v-model="start"
                   no-title
-                  scrollable                
+                  scrollable         
+                  :max= "actualidad"       
                   >
                   <v-spacer></v-spacer>
                   <v-btn
@@ -91,9 +92,9 @@
                 :rules="[v => !!v || 'Seleccione una hora de inicio']"
                 required       
                 :picker-options="{
-                  start:'08:00',
+                  start:comienzo,
                   step:'00:15',
-                  end:'23:00'
+                  end:horaFin
                 }"
                 placeholder="Hora Inicio"
                 style="display: inline-block">
@@ -103,9 +104,9 @@
                 v-model="insert.end_hour"
                 :rules="[v => !!v || 'Seleccione una hora de fin']"
                 :picker-options="{
-                  start:'08:00',
+                  start:comienzo,
                   step:'00:15',
-                  end:'23:00'
+                  end:horaFin
                 }"
                 placeholder="Hora Fin"
                 class="ml-5"
@@ -162,7 +163,7 @@ export default {
     return {
       show:true,
       inicio: "",
-      fin:"",
+      fin:"",            
       insert:{     
         student_id: null,
         tutor_id: null,
@@ -224,22 +225,40 @@ export default {
       codeValidation: codeRules,
       phoneValidation: phoneRules,      
     };
+  },
+  computed:{
+    comienzo(){     
+      if (diaActual === this.start){
+        var naw = new Date(); 
+        if (naw.getHours() < 8 && naw.getMinutes < 15) return ""      
+        else{                    
+          return "08:00"
+        }        
+      } 
+      return "08:00"
+      
+    },
+    horaFin(){
+      if (diaActual === this.start){
+        var naw = new Date(); 
+        if (naw.getHours() < 8 && naw.getMinutes < 15) return ""      
+        else{          
+          return naw.getHours() + ":" + Math.trunc(naw.getMinutes()/15)*15
+        }        
+      } 
+      return "23:00"
+    }
   },  
   watch: {
     motivos (val) {
       if (val.length > 2) {
         this.$nextTick(() => this.motivos.pop())
       }
-    },
-    participante (val){
-      if (val.length > 1 && this.action == "Registrar nueva sesión") {
-        this.$nextTick(() => this.participante.pop())
-      }
     }
   },
 
   methods: { 
-    cargarAlumnos(item){   
+    cargarAlumnos(item){         
       this.show=false    
       this.participante=[]
       axios
@@ -261,16 +280,20 @@ export default {
     insertar() {  
       this.$refs.form.validate();
       if (this.valid) {                  
-        this.insert.tutor_id = localStorage.getItem("Id_usuario");    
-        console.log(this.participante)  
+        this.insert.tutor_id = localStorage.getItem("Id_usuario");            
         this.insert.student_id = this.participante.person_id
         this.insert.date = this.start            
         this.insert.reason1 = this.motivos[0];
+        if (this.insert.reason1 === undefined) this.insert.reason1 = ""        
         this.insert.reason2 = this.motivos[1]; 
-        this.insert.result = this.form.resultado                                                  
+        if (this.insert.reason2 === undefined) this.insert.reason2 = ""
+        this.insert.result = this.form.resultado                      
+        if (this.insert.result === undefined) this.insert.result = ""        
+        if (this.insert.place === undefined) this.insert.place = ""                
         axios        
         .post("/tutor/register_informal_session/", this.insert)
         .then(() => {                  
+          this.resetFields();          
           this.$emit("resetList");
           this.$message({ message: "Registro exitoso.", type: "success" });
           this.$emit("resetDialog");
@@ -282,6 +305,17 @@ export default {
         });  
       }
       else this.$message.error("Datos incorrectos");
+    },
+    resetFields(){
+      this.insert.student_id = null;
+      this.insert.tutor_id = null;
+      this.insert.reason1 = "";
+      this.insert.reason2 = "";
+      this.insert.place = "";
+      this.insert.result = "";
+      this.insert.date = "";
+      this.insert.start_hour = "";
+      this.insert.end_hour = "";            
     },
 
     editar(){
@@ -304,6 +338,7 @@ export default {
       },
 
     cancelar() {                  
+      this.resetFields();          
       this.$refs.form.reset();
       this.$emit("resetDialog");
     }

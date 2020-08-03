@@ -1,6 +1,6 @@
 .cardAlumno {
 	width: 390px;
-	height: 115px;
+	height: 130px;
 	background-color: #E5F8F8;
 	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
 	align-items: center;
@@ -64,5 +64,13 @@
       position: absolute;      
       bottom: 27%;
       left: 73%;
+  }
+  .notas{
+	font-family: 'Arimo', sans-serif;	
+	color: #767583;	
+	font-weight: 300;
+	font-size: 13px;
+	padding-left:8%;  	  
+	padding-bottom:1%;  
   }
   

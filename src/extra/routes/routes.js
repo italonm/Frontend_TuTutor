@@ -60,7 +60,7 @@ export const routes = [
         path: "/Administrador",
         component: MainAdmin,
         name: "administrador",
-        meta:{requiresAuth: true},
+        meta:{requiresAuth: true, isAdmin: true},
         children: [
             //Administrador
             { path: "Bienvenido", component: Configuración , name:"bienvenido" }, //Luiggi
@@ -68,24 +68,15 @@ export const routes = [
             { path: "Unidades académicas", component: Académicas, name:"unidades" }, //italo
             { path: "Coordinadores", component: Coordinadores, name: "coordinadores" }, //italo
             { path: "Usuarios", component: Usuarios, name:"usuarios"}, //italo
-            { path: "Unidades de Apoyo", component: Apoyo, name:"unidades" },
+            { path: "Unidades de Apoyo", component: Apoyo, name:"apoyo" },
             { path: "Errores", component: Errores, name:"errores" },            
         ],
     },
     {
         path: "/Coordinador",
         component: MainCoordi,
-        beforeEnter(to, from, next){ 
-            if(from.name==='login') next()
-            else{                
-                if(localStorage.getItem("EsCoordinador") === true)next()
-                else {        
-                    next()
-                    /* localStorage.clear(); 
-                    next({name:'login'}) */
-                }
-            }                       
-        },
+        name: "coordinador",
+        meta:{requiresAuth: true, isCoordi: true},
         children: [
             //Coordinador
             { path: "Bienvenido", component: WelcomeCoord }, //Luiggi
@@ -104,17 +95,8 @@ export const routes = [
     {
         path: "/Alumno",
         component: MainAlumno,
-        beforeEnter(to, from, next){ 
-            if(from.name==='login') next()
-            else{           
-                if(localStorage.getItem("EsAlumno") === true)next()
-                else {  
-                    next()              
-                    /* localStorage.clear(); 
-                    next({name:'login'}) */
-                }
-            }
-        },
+        name: "alumno",
+        meta:{requiresAuth: true, isStudent: true},
         children: [
             //Alumno
             { path: "Bienvenido", component: Welcome }, //italo / Herbert
@@ -129,17 +111,8 @@ export const routes = [
     {
         path: "/Tutor",
         component: MainTutor,
-        beforeEnter(to, from, next){            
-            if(from.name==='login') next()
-            else{                
-                if(localStorage.getItem("EsTutor") === true)next()
-                else {                                           
-                    next()
-                    /* localStorage.clear();            
-                    next({name:'login'}) */
-                }
-            }
-        },
+        name: "tutor",
+        meta:{requiresAuth: true, isTutor: true},
         children: [
             //Alumno
             { path: "Bienvenido", component: WelcomeTutor }, //luiggi / valeria / melvin
@@ -160,10 +133,49 @@ const router =  new Router({
 }); 
 
 router.beforeEach((to ,from, next)=>{    
-    if(to.matched.some((record)=>record.meta.requiresAuth)){
-        if (localStorage.getItem("Token")){
-            next()
-            return
+    if(to.matched.some((record)=>record.meta.requiresAuth)){        
+        if (localStorage.getItem("Token") !== null){        
+            if(to.matched.some((record)=>record.meta.isTutor)){                
+                if(localStorage.getItem("EsTutor") === "true"){                                 
+                    next()
+                    return
+                }                
+                else{
+                    next("/Login")
+                }
+                
+            }
+            else if(to.matched.some((record)=>record.meta.isAdmin)){                
+                if(localStorage.getItem("EsAdministrador") === "true"){                    
+                    next()
+                    return
+                }                
+                else{
+                    next("/Login")
+                }
+                
+            }
+            else if(to.matched.some((record)=>record.meta.isCoordi)){
+                if(localStorage.getItem("EsCoordinador") === "true"){                    
+                    next()
+                    return
+                }                
+                else{
+                    next("/Login")
+                }
+                
+            }
+            else if(to.matched.some((record)=>record.meta.isStudent)){
+                if(localStorage.getItem("EsAlumno") === "true"){                    
+                    next()
+                    return
+                }                
+                else{
+                    next("/Login")
+                }
+                
+            }
+            else next("/Login")
         }
         else{
             next("/Login")

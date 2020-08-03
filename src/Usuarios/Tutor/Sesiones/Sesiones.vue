@@ -136,7 +136,7 @@ export default {
         });                         
       axios
         .get("http://184.73.231.88:7002/api/tutor/show_student_history_for_tutor/" + localStorage.getItem("Id_usuario"))        
-        .then(res => {                         
+        .then(res => {                                  
           this.sesiones = res.data.sessions        
           for (sesion in res.data.sessions){                      
             aux = 0
