@@ -40,7 +40,7 @@ export default {
     return {
       valid: true,
       lazy: false,
-      nameValidation: nameRules
+      nameValidation: nameRules,
     };
   },
 
@@ -49,19 +49,16 @@ export default {
       this.$refs.form.validate();
       if (this.valid) {
         axios
-          .post(
-            "http://184.73.231.88:7002/api/admin/edit_program/",
-            this.programa
-          )
-          .then(res => {
+          .post("/admin/edit_program/", this.programa)
+          .then((res) => {
             console.log(res);
             this.$message({
               message: "Modificación exitosa.",
-              type: "success"
+              type: "success",
             });
             this.cancelar();
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
             this.$message.error("Datos duplicados");
           });
@@ -72,7 +69,7 @@ export default {
       this.$refs.form.reset();
       this.$emit("resetList");
       this.$emit("resetDialog");
-    }
-  }
+    },
+  },
 };
 </script>

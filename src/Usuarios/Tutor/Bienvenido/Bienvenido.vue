@@ -9,151 +9,116 @@
         class="grey lighten-2"
         max-width="400"
         max-height="400"
-      >
-     </v-img>
+      ></v-img>
     </v-row>
-    <br><br>
+    <br />
+    <br />
     <div class="font-weight-black subtitle-2 text-center">
-    <h4>¡Bienvenido! </h4>
-    <div id="nombreUsuario" style="font-size:20px; font-weight:500; color:#000000"></div>
+      <h4>¡Bienvenido!</h4>
+      <div id="nombreUsuario" style="font-size:20px; font-weight:500; color:#000000"></div>
     </div>
-    <br><br>
+    <br />
+    <br />
     <v-row no-gutters>
       <v-col>
-        <v-card
-          class="mx-auto"
-          max-width="344"
-          >
-            <v-card-text>
+        <v-card class="mx-auto" max-width="344">
+          <v-card-text>
             <p class="font-weight-black subtitle-2 text-center">Notificaciones</p>
             <div class="text--primary">
-              Consulte las últimas notificaciones asignadas a usted.<br>
+              Consulte las últimas notificaciones asignadas a usted.
+              <br />
             </div>
-            </v-card-text>
-            <v-card-actions>
-            <v-badge
-            :content="notificaciones"
-            :value="notificaciones"
-            color="green"
-            overlap      >
+          </v-card-text>
+          <v-card-actions>
+            <v-badge :content="notificaciones" :value="notificaciones" color="green" overlap>
               <v-btn
                 text
                 color="deep-purple accent-4"
-                @click="mostrarNotificaciones"                
-                >Ver notificaciones
-              </v-btn>
+                @click="mostrarNotificaciones"
+              >Ver notificaciones</v-btn>
             </v-badge>
           </v-card-actions>
         </v-card>
       </v-col>
 
       <v-col order="1">
-        <v-card
-          class="mx-auto"
-          max-width="344"
-          >
-            <v-card-text>
-                <p class="font-weight-black subtitle-2 text-center">Citas programadas</p>
-              <div class="text--primary">
-              Revise sus próximas citas programadas y registre el resultado de sus citas pend<ientes.<br>
-              </div>
-            </v-card-text>
-            <v-card-actions>
-            <v-btn
-              text
-              color="deep-purple accent-4"
-              to="/Tutor/Citas"
-            >
-              Ver citas programadas
-            </v-btn>
-          </v-card-actions>          
+        <v-card class="mx-auto" max-width="344">
+          <v-card-text>
+            <p class="font-weight-black subtitle-2 text-center">Citas programadas</p>
+            <div class="text--primary">
+              Revise sus próximas citas programadas y registre el resultado de sus citas pendientes.
+              <br />
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn text color="deep-purple accent-4" to="/Tutor/Citas">Ver citas programadas</v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
 
       <v-col order="2">
-        <v-card
-          class="mx-auto"
-          max-width="344"
-        >
+        <v-card class="mx-auto" max-width="344">
           <v-card-text>
             <p class="font-weight-black subtitle-2 text-center">Disponibilidad del tutor</p>
-            <div class="text--primary">
-              Edite su disponibilidad para realizar tutorías. Recuerde modificarlo cada semana.
-            </div>
+            <div
+              class="text--primary"
+            >Edite su disponibilidad para realizar tutorías. Recuerde modificarlo cada semana.</div>
           </v-card-text>
           <v-card-actions>
-            <v-btn
-              text
-              color="deep-purple accent-4"
-              @click="editar"
-            >
-              Editar disponibilidad
-            </v-btn>
-          </v-card-actions>      
-
+            <v-btn text color="deep-purple accent-4" @click="editar">Editar disponibilidad</v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
 
-    <horasdisponibles
-      :dialog="dialog"
-      v-on:resetDialog="dialog=$event"
-    ></horasdisponibles>
+    <horasdisponibles :dialog="dialog" v-on:resetDialog="dialog=$event"></horasdisponibles>
 
-    <verNotificaciones
-      :dialog="dialogN"
-      v-on:resetDialog="dialogN=$event"
-    ></verNotificaciones>
-
+    <verNotificaciones :dialog="dialogN" v-on:resetDialog="dialogN=$event"></verNotificaciones>
   </v-container>
 </template>
 
 <script>
-
 import HorasDisponibles from "../Horas disponibles";
 import VerNotificaciones from "../VerNotificaciones";
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
     return {
-        search: "",
-        dialog: false,
-        dialogN: false,
-        action: "",
-        notificaciones: 0,
-        show: false
-    }
+      search: "",
+      dialog: false,
+      dialogN: false,
+      action: "",
+      notificaciones: 0,
+      show: false,
+    };
   },
   mounted() {
-    document.getElementById("nombreUsuario").innerHTML = 
-    JSON.parse(localStorage.getItem("Nombre")) + " " +
-      JSON.parse(localStorage.getItem("Apellidos"));  
+    document.getElementById("nombreUsuario").innerHTML =
+      JSON.parse(localStorage.getItem("Nombre")) +
+      " " +
+      JSON.parse(localStorage.getItem("Apellidos"));
   },
   methods: {
-      editar() {   
-        this.action = "Editar disponibilidad";
-        this.dialog = true;
-      },
+    editar() {
+      this.action = "Editar disponibilidad";
+      this.dialog = true;
+    },
 
-      mostrarNotificaciones(){
-        this.action = "Ver notificaciones";
-        this.dialogN = true;
-        console.log(this.dialogN);
-        this.actualizarContador();
-      },
+    mostrarNotificaciones() {
+      this.action = "Ver notificaciones";
+      this.dialogN = true;
+      this.actualizarContador();
+    },
 
-      actualizarContador(){
-        console.log(localStorage.getItem("Id_usuario"));
-        axios
-        .get("http://184.73.231.88:5000/api/tutor/show_counter/" + localStorage.getItem("Id_usuario"))
-        .then(res => {
-          console.log(res.data);
+    actualizarContador() {
+      axios
+        .get("/tutor/show_counter/" + localStorage.getItem("Id_usuario"))
+        .then((res) => {
           this.notificaciones = res.data.contador;
         })
-        .catch(error => console.log(error));
-      }
-
+        .catch((error) => console.log(error));
+    },
   },
   components: {
     horasdisponibles: HorasDisponibles,
@@ -163,6 +128,5 @@ export default {
   created() {
     this.actualizarContador();
   },
-
 };
 </script>

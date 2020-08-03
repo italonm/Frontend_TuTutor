@@ -111,7 +111,7 @@ export default {
         { text: "Teléfono", value: "person_phone_number" },
         { text: "Correo", value: "person_email" },
         { text: "Editar", value: "editar", sortable: false },
-        { text: "Eliminar", value: "eliminar", sortable: false }
+        { text: "Eliminar", value: "eliminar", sortable: false },
       ],
       form: {
         person_name: "",
@@ -120,13 +120,13 @@ export default {
         person_phone_number: "",
         person_code: "",
         person_id: "",
-        program_id: localStorage.getItem("Id_facultad")
+        program_id: localStorage.getItem("Id_facultad"),
       },
       search: "",
       dialogForm: false,
       dialogMasivo: false,
       dialogTutoriasForm: false,
-      action: ""
+      action: "",
     };
   },
 
@@ -139,10 +139,10 @@ export default {
       var Id_facultad = localStorage.getItem("Id_facultad");
       axios
         .get("/coordinator/show_tutors/" + Id_facultad)
-        .then(res => {
+        .then((res) => {
           this.tutores = res.data.users;
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
 
     insertar() {
@@ -158,34 +158,34 @@ export default {
 
     eliminar(item) {
       this.$confirm(
-        "Está seguro de eliminar: " + item.person_name + "?",//MODIFICACION DE ERROR PROFE
+        "Está seguro de eliminar: " + item.person_name + "?",
         "Advertencia",
         {
           confirmButtonText: "Confirmar",
           cancelButtonText: "Cancelar",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           axios
             .post("/user/delete_person/", { person_id: item.person_id })
-            .then(res => {
+            .then((res) => {
               console.log(res);
               this.listar();
             })
-            .catch(error => console.log(error));
+            .catch((error) => console.log(error));
           this.$message({ type: "success", message: "Registro eliminado" });
         })
         .catch(() => {
           this.$message({ type: "info", message: "Eliminación cancelada" });
         });
-    }
+    },
   },
 
   components: {
     tutorForm: TutorForm,
     tutorMasivoForm: TutorMasivoForm,
-    masivoTutoriasForm: MasivoTutoriasForm
-  }
+    masivoTutoriasForm: MasivoTutoriasForm,
+  },
 };
 </script>

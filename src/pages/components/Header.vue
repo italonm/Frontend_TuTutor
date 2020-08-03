@@ -17,7 +17,6 @@
         class="uploading-image img-fluid"
         height="50"
         contain
-        
         max-width="1000"
         max-height="1000"
         alt="Responsive Image"
@@ -36,17 +35,16 @@ import { bus } from "../../main";
 export default {
   data() {
     return {
-      // previewImagen: "http://184.73.231.88:5000/api/admin/show_logo/37"+"?"+Date.now()
-      previewImage: ""
+      previewImage: "",
     };
   },
   name: "TheHeader",
   components: {
-    Desplegable
+    Desplegable,
   },
   created() {
     this.getImage();
-    bus.$on("updateLogo", data => {
+    bus.$on("updateLogo", (data) => {
       console.log(data);
       this.getImage();
     });
@@ -54,8 +52,11 @@ export default {
   methods: {
     getImage() {
       axios
-        .get("/admin/show_logo/" + JSON.parse(localStorage.getItem("Id_usuario")), { responseType: "arraybuffer" })
-        .then(response => {
+        .get(
+          "/admin/show_logo/" + JSON.parse(localStorage.getItem("Id_usuario")),
+          { responseType: "arraybuffer" }
+        )
+        .then((response) => {
           let image = btoa(
             new Uint8Array(response.data).reduce(
               (data, byte) => data + String.fromCharCode(byte),
@@ -66,7 +67,7 @@ export default {
             "content-type"
           ].toLowerCase()};base64,${image}`;
         });
-    }
+    },
   },
   mounted() {
     document.getElementById("nombrecito").innerHTML =
@@ -84,6 +85,6 @@ export default {
     } else if (JSON.parse(localStorage.getItem("EsTutor"))) {
       document.getElementById("sesión").innerHTML = "Sesión de Tutor";
     }
-  }
+  },
 };
 </script>

@@ -18,11 +18,7 @@
       </el-col>
       <el-col :span="8">
         <div class="grid-content">
-          <el-button
-            type="success"
-            @click="insertar()"
-            class="buttonAdd"
-          >&nbsp;Agregar nueva unidad</el-button>
+          <el-button type="success" @click="insertar()" class="buttonAdd">&nbsp;Agregar nueva unidad</el-button>
         </div>
       </el-col>
     </el-row>
@@ -32,7 +28,6 @@
       :footer-props="{'items-per-page-options': [5, 10, 15, -1],
                       'items-per-page-text': 'Registros por página:',
                       'items-per-page-all-text': 'Listar todos'}"
-
       :headers="headers"
       :items="unidades"
       :search="search"
@@ -43,23 +38,12 @@
       loading-text="Cargando.."
       height="288px"
       fixed-header
-    > 
-
+    >
       <template v-slot:item.editar="{ item }">
-        <el-button 
-        type="info" 
-        icon="el-icon-edit" 
-        circle 
-        @click="editar(item)"
-        ></el-button>
+        <el-button type="info" icon="el-icon-edit" circle @click="editar(item)"></el-button>
       </template>
       <template v-slot:item.eliminar="{ item }">
-        <el-button 
-        type="danger" 
-        icon="el-icon-delete" 
-        circle 
-        @click="eliminar(item)"
-        ></el-button>
+        <el-button type="danger" icon="el-icon-delete" circle @click="eliminar(item)"></el-button>
       </template>
     </v-data-table>
 
@@ -71,7 +55,6 @@
       v-on:resetDialog="dialog=$event"
       v-on:resetList="listar()"
     ></unidadForm>
-
   </el-container>
 </template>
 
@@ -88,8 +71,8 @@ export default {
         { text: "Representante", value: "responsible" },
         { text: "Correo electrónico", value: "email" },
         { text: "Número telefónico", value: "phone_number" },
-        { text: ' ', value: 'editar', sortable: false },
-        { text: ' ', value: 'eliminar', sortable: false }
+        { text: " ", value: "editar", sortable: false },
+        { text: " ", value: "eliminar", sortable: false },
       ],
       form: {
         id: "",
@@ -101,7 +84,7 @@ export default {
       },
       search: "",
       dialog: false,
-      action: "",      
+      action: "",
     };
   },
 
@@ -111,14 +94,13 @@ export default {
 
   methods: {
     listar() {
-      console.log(localStorage.getItem("Id_institución"));
-      axios      
-      .get('http://184.73.231.88:5000/api/coordinator/show_support_units/' + localStorage.getItem("Id_institución"))
-      .then(res => {
-        this.unidades = res.data.users;
-        console.log(res.data.users);
-      })
-      .catch(error => console.log(error));
+      var Id_institución = localStorage.getItem("Id_institución");
+      axios
+        .get("/coordinator/show_support_units/" + Id_institución)
+        .then((res) => {
+          this.unidades = res.data.users;
+        })
+        .catch((error) => console.log(error));
     },
 
     insertar() {
@@ -139,31 +121,29 @@ export default {
         {
           confirmButtonText: "Confirmar",
           cancelButtonText: "Cancelar",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           console.log(item);
           axios
-          .post("/coordinator/delete_support_unit/",item)
-          .then(res => {
-            console.log(res);
-            this.listar();
-          })
-          .catch(error => console.log(error));
-          //this.newDialog = false
+            .post("/coordinator/delete_support_unit/", item)
+            .then((res) => {
+              console.log(res);
+              this.listar();
+            })
+            .catch((error) => console.log(error));
           this.$emit("resetList");
           this.$message({ type: "success", message: "Registro eliminado" });
         })
         .catch(() => {
           this.$message({ type: "info", message: "Eliminación cancelada" });
         });
-    }
+    },
   },
 
   components: {
-    unidadForm: UnidadesForm
-  }
-
+    unidadForm: UnidadesForm,
+  },
 };
 </script>

@@ -17,8 +17,7 @@
         </div>
       </el-col>
       <el-col :span="8">
-        <div class="grid-content">
-        </div>
+        <div class="grid-content"></div>
       </el-col>
     </el-row>
 
@@ -27,7 +26,6 @@
       :footer-props="{'items-per-page-options': [5, 10, 15, -1],
                       'items-per-page-text': 'Registros por página:',
                       'items-per-page-all-text': 'Listar todos'}"
-
       :headers="headers"
       :items="unidades"
       :search="search"
@@ -38,16 +36,10 @@
       loading-text="Cargando.."
       height="288px"
       fixed-header
-    > 
-    <template v-slot:item.verMas="{ item }">
-        <el-button 
-        type="info" 
-        icon="el-icon-eye" 
-        circle 
-        @click="verMas(item)"
-        ></el-button>
+    >
+      <template v-slot:item.verMas="{ item }">
+        <el-button type="info" icon="el-icon-eye" circle @click="verMas(item)"></el-button>
       </template>
-
     </v-data-table>
 
     <!--Formulario-->
@@ -58,7 +50,6 @@
       v-on:resetDialog="dialog=$event"
       v-on:resetList="listar()"
     ></historialForm>
-
   </el-container>
 </template>
 
@@ -75,7 +66,7 @@ export default {
         { text: "Tutor", value: "tutor" },
         { text: "Sesión formal", value: "isFormal" },
         { text: "Lugar", value: "place" },
-        { text: 'Ver detalle', value: "verMas", sortable: false }
+        { text: "Ver detalle", value: "verMas", sortable: false },
       ],
       form: {
         date: "",
@@ -86,7 +77,7 @@ export default {
         reason2: "",
       },
       search: "",
-      dialog: false,   
+      dialog: false,
     };
   },
 
@@ -96,14 +87,14 @@ export default {
 
   methods: {
     listar() {
-       console.log(localStorage.getItem("Id_usuario"));
-       axios
-      .get("http://184.73.231.88:5000/api/student/show_student_history/" + localStorage.getItem("Id_usuario"))
-      .then(res => {
-        console.log(res.data);
-        this.unidades = res.data.sessions;
-      })
-      .catch(error => console.log(error));
+      axios
+        .get(
+          "/student/show_student_history/" + localStorage.getItem("Id_usuario")
+        )
+        .then((res) => {
+          this.unidades = res.data.sessions;
+        })
+        .catch((error) => console.log(error));
     },
 
     verMas(item) {
@@ -114,7 +105,7 @@ export default {
   },
 
   components: {
-    historialForm: HistorialForm
-  }
+    historialForm: HistorialForm,
+  },
 };
 </script>

@@ -51,7 +51,7 @@
           <v-container fluid grid-list-xl>
             <v-layout wrap justify-space-around>
               <v-flex v-for="tutor in filterTutor" :key="tutor.t_id_tutor">
-                <v-card class="mx-auto" width="300" aria-selected="true"> 
+                <v-card class="mx-auto" width="300" aria-selected="true">
                   <div>
                     <v-avatar size="80" style="margin:auto;display:block;">
                       <img
@@ -84,14 +84,12 @@
                       @click="solicitarTutor(tutor)"
                       plain
                     >&nbsp;Solicitar</el-button>
-                    
+
                     <v-btn text color="primary" @click="showHorario(tutor)">
                       Horarios
                       <i class="el-icon-arrow-right"></i>
                     </v-btn>
                   </v-card-actions>
-
-    
                 </v-card>
               </v-flex>
             </v-layout>
@@ -187,7 +185,7 @@ export default {
         student_id: "",
         tutor_id: "",
         tutor_code: "",
-        tutoring_type_id: ""
+        tutoring_type_id: "",
       },
       dialog: false,
       color: "#0476D0",
@@ -195,22 +193,18 @@ export default {
   },
   methods: {
     listarTutores() {
-      console.log(localStorage.getItem("Id_facultad"));
       axios
         .get(
           "/student/show_tutors_in_request_2/" +
             localStorage.getItem("Id_facultad")
         )
-        .then(res => {
+        .then((res) => {
           this.tutores = res.data.people;
-
-          console.log(this.tutores);
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
     showMensaje(tutor) {
       this.showBox = true;
-      console.log(tutor);
       this.tutorInfo = tutor;
       this.showBoxHorario = false;
     },
@@ -224,35 +218,22 @@ export default {
       this.customCalendar = [];
 
       for (etiqueta in this.scheduler) {
-        var birthday = new Date(etiqueta.replace('-',','));
+        var birthday = new Date(etiqueta.replace("-", ","));
         var options = {
           weekday: "long",
           day: "numeric",
           month: "long",
-          year: "numeric"
+          year: "numeric",
         };
-        //dias.day=new Intl.DateTimeFormat("es-PE", options).format(birthday);
-        console.log("mostrar dias e");
-        console.log(etiqueta);
-        console.log(birthday);
         var contenedor = { fecha: "val", hora: [] };
         contenedor["fecha"] = new Intl.DateTimeFormat("es-PE", options).format(
           birthday
         );
-        //contenedor['fecha']=etiqueta;
         contenedor["hora"] = this.scheduler[etiqueta];
-        for (var val of this.scheduler[etiqueta]) {
-          console.log(val);
-        }
         this.customCalendar.push(contenedor);
-        console.log("customer calendar");
-        console.log(contenedor);
-        console.log(this.customCalendar);
       }
     },
     solicitarTutor(tutor) {
-      console.log("mostrar info tutor")
-      console.log(tutor);
       this.tutoria.student_id = localStorage.getItem("Id_usuario");
       this.tutoria.tutor_code = tutor.t_code;
       this.tutoria.tutor_id = tutor.t_id_tutor;
@@ -260,28 +241,27 @@ export default {
 
       axios
         .post("/student/request_assignment/", this.tutoria)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.$message({ message: "Registro exitoso.", type: "success" });
         })
-        .catch(error => console.log(error));
-    }
+        .catch((error) => console.log(error));
+    },
   },
   computed: {
-    filterTutor: function() {
-      console.log(localStorage.getItem("Id_facultad"));
-      return this.tutores.filter(tutor => {
+    filterTutor: function () {
+      return this.tutores.filter((tutor) => {
         return (
           tutor.t_fullname.toLowerCase().match(this.search.toLowerCase()) ||
           tutor.t_code.match(this.search)
         );
       });
-    }
+    },
   },
   created() {
     this.listarTutores();
   },
-  components: {}
+  components: {},
 };
 </script>
 <style>

@@ -35,9 +35,7 @@
       loading-text="Cargando.."
       height="288px"
       fixed-header
-    >
-
-    </v-data-table>
+    ></v-data-table>
   </el-container>
 </template>
 
@@ -53,7 +51,7 @@ export default {
         { text: "Tutor", value: "tutor" },
         { text: "Tipo Tutoría", value: "tipotutoria" },
         { text: "Estado", value: "estado" },
-        { text: "Motivo", value: "motivo" }
+        { text: "Motivo", value: "motivo" },
       ],
       search: "",
     };
@@ -65,16 +63,16 @@ export default {
 
   methods: {
     listar() {
-      console.log(localStorage.getItem("Id_usuario"));
       axios
         .get(
-          "http://184.73.231.88:7002/api/student/show_assignment_request_student/" + localStorage.getItem("Id_usuario") )
-        .then(res => {
+          "/student/show_assignment_request_student/" +
+            localStorage.getItem("Id_usuario")
+        )
+        .then((res) => {
           this.tutorias = res.data.tableData;
-          console.log(this.tutorias);
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
-  }
+  },
 };
 </script>

@@ -83,7 +83,7 @@ export default {
       nameValidation: nameRules,
       emailValidation: emailRules,
       codeValidation: codeRules,
-      phoneValidation: phoneRules
+      phoneValidation: phoneRules,
     };
   },
 
@@ -96,16 +96,15 @@ export default {
     insertar() {
       this.$refs.form.validate();
       if (this.valid) {
-        console.log(this.form);
         axios
           .post("/coordinator/add_tutor/", this.form)
-          .then(res => {
+          .then((res) => {
             console.log(res);
             this.$emit("resetList");
             this.$message({ message: "Registro exitoso.", type: "success" });
             this.cancelar();
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
             this.$message.error("Datos Duplicados");
           });
@@ -115,19 +114,18 @@ export default {
     editar() {
       this.$refs.form.validate();
       if (this.valid) {
-        console.log(this.form);
         axios
           .post("/user/update_person/", this.form)
-          .then(res => {
+          .then((res) => {
             console.log(res);
             this.$emit("resetList");
             this.$message({
               message: "Modificación exitosa.",
-              type: "success"
+              type: "success",
             });
             this.cancelar();
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
             this.$message.error("Datos duplicados");
           });
@@ -137,7 +135,7 @@ export default {
     cancelar() {
       this.$refs.form.reset();
       this.$emit("resetDialog");
-    }
-  }
+    },
+  },
 };
 </script>

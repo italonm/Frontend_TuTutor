@@ -57,7 +57,7 @@ export default {
       tipotutorias: [],
       valid: true,
       lazy: false,
-      fileValidation: excelRules
+      fileValidation: excelRules,
     };
   },
 
@@ -70,11 +70,10 @@ export default {
       var Id_facultad = localStorage.getItem("Id_facultad");
       axios
         .get("/coordinator/show_tutoring_types/" + Id_facultad)
-        .then(res => {
+        .then((res) => {
           this.tipotutorias = res.data.tutoriaData;
-          console.log(this.tipotutorias);
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
 
     insertar() {
@@ -91,16 +90,16 @@ export default {
               this.tipo,
             formData
           )
-          .then(res => {
+          .then((res) => {
             console.log(res);
             this.$emit("resetList");
             this.$message({
               message: "Subiendo archivo, por favor espere",
-              type: "success"
+              type: "success",
             });
             this.cancelar();
           })
-          .catch(e => {
+          .catch((e) => {
             console.log(e);
             this.$message.error("Archivo con formato incorrecto");
           });
@@ -110,7 +109,7 @@ export default {
     cancelar() {
       this.$refs.form.reset();
       this.$emit("resetDialog");
-    }
-  }
+    },
+  },
 };
 </script>

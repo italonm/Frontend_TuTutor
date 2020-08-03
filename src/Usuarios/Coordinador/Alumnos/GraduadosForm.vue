@@ -44,7 +44,7 @@ export default {
       documentExcel: null,
       valid: true,
       lazy: false,
-      fileValidation: excelRules
+      fileValidation: excelRules,
     };
   },
 
@@ -52,23 +52,19 @@ export default {
     insertar() {
       var formData = new FormData();
       formData.append("file", this.documentExcel);
-      console.log(this.documentExcel);
       this.$refs.form.validate();
       if (this.valid) {
         axios
-          .post(
-            "http://184.73.231.88:7002/api/coordinator/add_graduated_student_excel/",
-            formData
-          )
-          .then(res => {
+          .post("/coordinator/add_graduated_student_excel/", formData)
+          .then((res) => {
             console.log(res);
             this.$message({
               message: "Registro de alumnos graduados exitoso",
-              type: "success"
+              type: "success",
             });
             this.cancelar();
           })
-          .catch(e => {
+          .catch((e) => {
             console.log(e);
             this.$message.error("Archivo con formato incorrecto");
           });
@@ -78,7 +74,7 @@ export default {
     cancelar() {
       this.$refs.form.reset();
       this.$emit("resetDialog");
-    }
-  }
+    },
+  },
 };
 </script>

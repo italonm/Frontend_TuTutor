@@ -75,7 +75,7 @@ export default {
       nameValidation: nameRules,
       emailValidation: emailRules,
       codeValidation: codeRules,
-      phoneValidation: phoneRules
+      phoneValidation: phoneRules,
     };
   },
 
@@ -85,8 +85,8 @@ export default {
       if (this.valid) {
         axios
           .post("/coordinator/add_student/", this.form)
-          .then(res => console.log(res))
-          .catch(error => console.log(error));
+          .then((res) => console.log(res))
+          .catch((error) => console.log(error));
         this.$message({ message: "Registro exitoso.", type: "success" });
         this.newDialog = false;
         this.$emit("resetDialog", this.newDialog);
@@ -95,19 +95,15 @@ export default {
     },
 
     editar(item) {
-      //servicio
-           
       this.form = Object.assign({}, item);
       this.newDialog = true;
-      
     },
 
     cancelar() {
-        console.log(this.form);
       this.$refs.form.reset();
       this.newDialog = false;
       this.$emit("resetDialog", this.newDialog);
-    }
-  }
+    },
+  },
 };
 </script>

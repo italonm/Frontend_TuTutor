@@ -61,16 +61,16 @@
             <v-spacer></v-spacer>
             <div v-if="action === 'rechazar'">
               <v-row align="start" justify="start">
-              <v-col cols="auto">
-                <v-card-text>Por favor, seleccione un motivo de rechazo</v-card-text>
-                <v-overflow-btn
-                  v-model="motivos"
-                  class="my-2"
-                  :items="rechazos"
-                  label="Motivos de rechazo"
-                  target="#dropdown-example"
-                ></v-overflow-btn>
-              </v-col>
+                <v-col cols="auto">
+                  <v-card-text>Por favor, seleccione un motivo de rechazo</v-card-text>
+                  <v-overflow-btn
+                    v-model="motivos"
+                    class="my-2"
+                    :items="rechazos"
+                    label="Motivos de rechazo"
+                    target="#dropdown-example"
+                  ></v-overflow-btn>
+                </v-col>
               </v-row>
             </div>
             <v-spacer></v-spacer>
@@ -98,11 +98,11 @@ export default {
         { text: "Tipo de tutoría", value: "tipotutoria" },
         { text: "Tutor", value: "tutor" },
         { text: "Alumno", value: "alumno" },
-        { text: "Estado", value: "estado" }
+        { text: "Estado", value: "estado" },
       ],
       search: "",
       dialog: false,
-      action: ""
+      action: "",
     };
   },
 
@@ -113,24 +113,25 @@ export default {
   },
 
   methods: {
-    
-    listar() {      
-      //console.log(localStorage.getItem("Id_usuario"));
+    listar() {
       axios
-        .get( "http://184.73.231.88:5000/api/tutor/show_assignment_requests/" + localStorage.getItem("Id_usuario") )
-        .then(res => {
+        .get(
+          "/tutor/show_assignment_requests/" +
+            localStorage.getItem("Id_usuario")
+        )
+        .then((res) => {
           console.log(res.data);
           this.solicitudes = res.data.tableData;
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
-    listarRechazos() {      
+    listarRechazos() {
       axios
-        .get("http://184.73.231.88:7002/api/tutor/show_reasons_rejection/")
-        .then(res => {
+        .get("/tutor/show_reasons_rejection/")
+        .then((res) => {
           this.rechazos = res.data.reasons;
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
     aceptarSol() {
       if (this.selected.length > 0) {
@@ -139,7 +140,7 @@ export default {
       } else {
         this.$message({
           message: "Seleccione una solicitud",
-          type: "info"
+          type: "info",
         });
       }
     },
@@ -151,7 +152,7 @@ export default {
       } else {
         this.$message({
           message: "Seleccione una solicitud",
-          type: "info"
+          type: "info",
         });
       }
     },
@@ -171,49 +172,47 @@ export default {
     },
 
     aceptar() {
-      console.log(this.selected);
       axios
-        .post( "http://184.73.231.88:7002/api/tutor/accept_list_assignment_requests/",
-            { "obj_list": this.selected } )
-        .then(res => {
+        .post("/tutor/accept_list_assignment_requests/", {
+          obj_list: this.selected,
+        })
+        .then((res) => {
           console.log(res);
           this.selected = [];
           this.listar();
           this.dialog = false;
           this.$message({
             message: "Aceptación exitosa",
-            type: "success"
+            type: "success",
           });
         });
     },
 
     rechazar() {
-      //console.log(this.selected); 
       if (this.motivos == null) {
         this.$message({
           message: "Por favor, seleccione un motivo de rechazo",
-          type: "info"
+          type: "info",
         });
       } else {
         axios
-        .post(
-          "http://184.73.231.88:7002/api/tutor/reject_list_assignment_requests/",
-          { obj_list: this.selected , "motivo": this.motivos}
-        )
-        .then(res => {
-          console.log(res);
-          this.selected = [];
-          this.listar();
-          this.listarRechazos();
-          this.dialog = false;
-          this.$message({
-            message: "Rechazo exitoso",
-            type: "success"
+          .post("/tutor/reject_list_assignment_requests/", {
+            obj_list: this.selected,
+            motivo: this.motivos,
+          })
+          .then((res) => {
+            console.log(res);
+            this.selected = [];
+            this.listar();
+            this.listarRechazos();
+            this.dialog = false;
+            this.$message({
+              message: "Rechazo exitoso",
+              type: "success",
+            });
           });
-        });        
-      }     
-      
-    }
-  }
+      }
+    },
+  },
 };
 </script>

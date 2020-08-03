@@ -118,7 +118,7 @@ export default {
         { text: "Correo", value: "person_email" },
         { text: "Notas", value: "notas", sortable: false },
         { text: "Editar", value: "editar", sortable: false },
-        { text: "Eliminar", value: "eliminar", sortable: false }
+        { text: "Eliminar", value: "eliminar", sortable: false },
       ],
       form: {
         person_name: "",
@@ -128,13 +128,13 @@ export default {
         person_code: "",
         person_id: "",
         program_id: localStorage.getItem("Id_facultad"),
-        person_scores: null
+        person_scores: null,
       },
       search: "",
       dialogForm: false,
       dialogMasivo: false,
       dialogGraduados: false,
-      action: ""
+      action: "",
     };
   },
 
@@ -147,10 +147,10 @@ export default {
       var Id_facultad = localStorage.getItem("Id_facultad");
       axios
         .get("/coordinator/show_students/" + Id_facultad)
-        .then(res => {
+        .then((res) => {
           this.alumnos = res.data.users;
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
 
     insertar() {
@@ -163,20 +163,20 @@ export default {
       this.form = Object.assign({}, item);
       axios
         .get("/tutor/show_scores_from_student/" + item.person_id, {
-          responseType: "blob"
+          responseType: "blob",
         })
-        .then(res => {
+        .then((res) => {
           this.form.person_scores = new File(
             [res.data],
             "notas_" + item.person_code,
             {
               type: "application/pdf",
-              lastModified: Date.now()
+              lastModified: Date.now(),
             }
           );
           this.dialogForm = true;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.dialogForm = true;
         });
@@ -185,9 +185,9 @@ export default {
     descargarNotas(item) {
       axios
         .get("/tutor/show_scores_from_student/" + item.person_id, {
-          responseType: "blob"
+          responseType: "blob",
         })
-        .then(res => {
+        .then((res) => {
           var fileLink = document.createElement("a");
           fileLink.href = window.URL.createObjectURL(new Blob([res.data]));
           fileLink.setAttribute(
@@ -197,36 +197,36 @@ export default {
           document.body.appendChild(fileLink);
           fileLink.click();
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
 
     eliminar(item) {
       this.$confirm(
-        "Está seguro de eliminar: " + item.person_name + "?",//MODIFICACION ERROR PROFE 
+        "Está seguro de eliminar: " + item.person_name + "?",
         "Advertencia",
         {
           confirmButtonText: "Confirmar",
           cancelButtonText: "Cancelar",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           axios
             .post("/user/delete_person/", { person_id: item.person_id })
-            .catch(error => console.log(error));
+            .catch((error) => console.log(error));
           this.listar();
           this.$message({ type: "success", message: "Registro eliminado" });
         })
         .catch(() => {
           this.$message({ type: "info", message: "Eliminación cancelada" });
         });
-    }
+    },
   },
 
   components: {
     alumnoForm: AlumnoForm,
     alumnoMasivoForm: AlumnoMasivoForm,
-    graduadosForm: GraduadosForm
-  }
+    graduadosForm: GraduadosForm,
+  },
 };
 </script>

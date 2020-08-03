@@ -97,10 +97,10 @@ export default {
       tutoria: {
         s_id_alumno: localStorage.getItem("Id_usuario"),
         s_code_tutor: localStorage.getItem("Id_tutor"),
-        s_id_assignment: localStorage.getItem("Id_tutoria")
+        s_id_assignment: localStorage.getItem("Id_tutoria"),
       },
       loading: false,
-      count: 1
+      count: 1,
     };
   },
 
@@ -111,15 +111,12 @@ export default {
   methods: {
     listar() {
       axios
-        .post(
-          "http://184.73.231.88:7002/api/student/show_sesion_with_actionplan_student/",
-          this.tutoria
-        )
-        .then(res => {
+        .post("/student/show_sesion_with_actionplan_student/", this.tutoria)
+        .then((res) => {
           this.sessions = res.data[0].sesiones.reverse();
           this.plan = res.data[0].plan_de_accion;
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
     getDayOfWeek(date) {
       const dayOfWeek = new Date(date).getDay();
@@ -132,7 +129,7 @@ export default {
             "Miercoles",
             "Jueves",
             "Viernes",
-            "Domingo"
+            "Domingo",
           ][dayOfWeek];
     },
     load() {
@@ -141,7 +138,7 @@ export default {
         this.count += 1;
         this.loading = false;
       }, 1000);
-    }
+    },
   },
 
   computed: {
@@ -150,7 +147,7 @@ export default {
     },
     disabled() {
       return this.loading || this.noMore;
-    }
-  }
+    },
+  },
 };
 </script>

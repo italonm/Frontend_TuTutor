@@ -12,7 +12,7 @@ import locale from "element-ui/lib/locale/lang/es";
 import axios from "axios";
 import GoogleSignInButton from 'vue-google-signin-button-directive';
 
-axios.defaults.baseURL = "http://184.73.231.88:5000/api";
+axios.defaults.baseURL = "http://54.144.147.92:5000/api";
 Vue.use(CoreuiVue);
 Vue.use(ElementUI, { locale });
 Vue.config.productionTip = false;

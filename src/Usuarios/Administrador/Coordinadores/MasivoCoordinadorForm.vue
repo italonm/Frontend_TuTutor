@@ -44,7 +44,7 @@ export default {
       documentExcel: null,
       valid: true,
       lazy: false,
-      fileValidation: excelRules
+      fileValidation: excelRules,
     };
   },
 
@@ -55,19 +55,18 @@ export default {
       this.$refs.form.validate();
       if (this.valid) {
         var Id_institución = localStorage.getItem("Id_institución");
-        console.log(Id_institución);
         axios
           .post("admin/add_coordinator_excel/" + Id_institución, formData)
-          .then(res => {
+          .then((res) => {
             console.log(res);
             this.$emit("resetList");
             this.$message({
               message: "Subiendo archivo, por favor espere",
-              type: "success"
+              type: "success",
             });
             this.cancelar();
           })
-          .catch(e => {
+          .catch((e) => {
             console.log(e);
             this.$message.error("Archivo con formato incorrecto");
           });
@@ -77,7 +76,7 @@ export default {
     cancelar() {
       this.$refs.form.reset();
       this.$emit("resetDialog");
-    }
-  }
+    },
+  },
 };
 </script>

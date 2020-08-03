@@ -10,7 +10,7 @@
           </div>
         </el-col>
       </el-row>
-<!-----
+      <!-----
       <v-container fluid grid-list-xl>
         <v-layout wrap justify-space-around>
           <v-flex v-for="tipo in filterTipoTutoria" :key="tipo.name">
@@ -37,7 +37,7 @@
           </v-flex>
         </v-layout>
       </v-container>
---------->
+      --------->
 
       <!---------------------ANALIZAR ESTA PARTE----------------->
       <v-container fluid grid-list-xl>
@@ -54,15 +54,13 @@
                     {{ tipo.description }}
                   </v-card-text>
                   <v-divider></v-divider>
-                 
+
                   <v-card-actions class="justify-space-around">
-                    
-                      <el-tag v-show="tipo.is_required==='Si'" style="border-radius:15px;">Obligatoria</el-tag>
-                      <el-tag v-show="tipo.is_required==='No'" style="border-radius:15px;">Opcional</el-tag>
-                      <el-tag style="border-radius:15px;">{{tipo.periodicity}}</el-tag>
-                    
+                    <el-tag v-show="tipo.is_required==='Si'" style="border-radius:15px;">Obligatoria</el-tag>
+                    <el-tag v-show="tipo.is_required==='No'" style="border-radius:15px;">Opcional</el-tag>
+                    <el-tag style="border-radius:15px;">{{tipo.periodicity}}</el-tag>
                   </v-card-actions>
-                    
+
                   <v-fade-transition>
                     <v-overlay v-if="hover" absolute color="#036358">
                       <v-btn @click="solicitarTutor(tipo)">
@@ -98,50 +96,44 @@ export default {
       tutoria: {
         s_id_student: "",
         s_code_tutor: "",
-        s_tt: ""
+        s_tt: "",
       },
-      dialog: false
+      dialog: false,
     };
   },
   methods: {
     listaTiposTutorias() {
-      console.log(localStorage.getItem("Id_usuario"));
       axios
         .get(
           "/student/show_tutoring_types/" + localStorage.getItem("Id_usuario")
         )
-        .then(res => {
+        .then((res) => {
           this.tiposTutoria = res.data.tutoring_types;
-
-          console.log(this.tiposTutoria);
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
     showMensaje(tipo) {
       this.showBox = true;
       this.tipoTutoriaInfo = tipo;
     },
     solicitarTutor(tipo) {
-      console.log("mostrar tipo tutoria");
       localStorage.setItem("Id_Tipo_Tutoria", tipo.id);
       this.showProgram = false;
-    }
+    },
   },
   computed: {
-    filterTipoTutoria: function() {
-      console.log(localStorage.getItem("Id_facultad"));
-      console.log(this.tiposTutoria);
-      return this.tiposTutoria.filter(tipo => {
+    filterTipoTutoria: function () {
+      return this.tiposTutoria.filter((tipo) => {
         return tipo.name.toLowerCase().match(this.search.toLowerCase());
       });
-    }
+    },
   },
   created() {
     this.listaTiposTutorias();
   },
   components: {
-    tutoresxTipoTutoria: TutoresxTipoTutoria
-  }
+    tutoresxTipoTutoria: TutoresxTipoTutoria,
+  },
 };
 </script>
 <style>

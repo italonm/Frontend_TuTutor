@@ -80,20 +80,20 @@ export default {
         { text: "Nombre", value: "t_fullname" },
         { text: "Email", value: "t_email" },
         { text: "Horario", value: "t_schedule" },
-        { text: "Reservar cita", value: "agendar", sortable: false }
+        { text: "Reservar cita", value: "agendar", sortable: false },
       ],
       form: {
         person_name: "",
         person_last_name: "",
         person_email: "",
         person_phone_number: "",
-        person_code: ""
+        person_code: "",
       },
       search: "",
       dialog: false,
       idtutoria: "",
       idtutor: "",
-      events: []
+      events: [],
     };
   },
 
@@ -105,14 +105,11 @@ export default {
     listar() {
       var Id_usuario = localStorage.getItem("Id_usuario");
       axios
-        .get(
-          "http://184.73.231.88:7002/api/student/show_tutoring_list/" +
-            Id_usuario
-        )
-        .then(res => {
+        .get("/student/show_tutoring_list/" + Id_usuario)
+        .then((res) => {
           this.tutorias = res.data.tutor;
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
 
     solicitar() {
@@ -126,10 +123,10 @@ export default {
       this.dialog = true;
       axios
         .get("/student/show_calendar/" + tutoria.t_code)
-        .then(res => {
+        .then((res) => {
           this.events = res.data.events;
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
 
     verTutoria(tutoria) {
@@ -141,16 +138,16 @@ export default {
 
     miFiltrado(tutorias) {
       var app = this;
-      return tutorias.filter(function(tutoria) {
+      return tutorias.filter(function (tutoria) {
         let regex = new RegExp("(" + app.search + ")", "i");
         return tutoria.t_email.match(regex) || tutoria.t_fullname.match(regex);
       });
-    }
+    },
   },
 
   components: {
-    sesionForm: SesionForm
-  }
+    sesionForm: SesionForm,
+  },
 };
 </script>
 <style lang="scss">

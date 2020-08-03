@@ -41,14 +41,19 @@
                         <v-flex>
                           <v-card :width="100" elevation="0">
                             <v-card-text>
-                              <v-btn class="ma-2" outlined color="indigo" @click="showSolicitudes()">Asignar</v-btn>
+                              <v-btn
+                                class="ma-2"
+                                outlined
+                                color="indigo"
+                                @click="showSolicitudes()"
+                              >Asignar</v-btn>
                             </v-card-text>
                           </v-card>
                         </v-flex>
                         <v-flex>
                           <v-card :width="180" elevation="0">
                             <apexchart
-                            ref="radarSolicitud"
+                              ref="radarSolicitud"
                               type="radialBar"
                               height="220px"
                               :options="chartOptions"
@@ -80,9 +85,7 @@
                           </v-list-item-avatar>
 
                           <v-list-item-content>
-                            <v-list-item-title
-                              style="font-size:40px"
-                            >{{datosRecibidos['students']}}</v-list-item-title>
+                            <v-list-item-title style="font-size:40px">{{datosRecibidos['students']}}</v-list-item-title>
                             <v-list-item-subtitle>ESTUDIANTES</v-list-item-subtitle>
                           </v-list-item-content>
                         </v-list-item>
@@ -100,9 +103,7 @@
                           </v-list-item-avatar>
 
                           <v-list-item-content>
-                            <v-list-item-title
-                              style="font-size:40px"
-                            >{{datosRecibidos['tutors']}}</v-list-item-title>
+                            <v-list-item-title style="font-size:40px">{{datosRecibidos['tutors']}}</v-list-item-title>
                             <v-list-item-subtitle>TUTORES</v-list-item-subtitle>
                           </v-list-item-content>
                         </v-list-item>
@@ -135,9 +136,7 @@
             </v-container>
           </v-card>
         </v-flex>
-        <v-flex>
-          
-        </v-flex>
+        <v-flex></v-flex>
       </v-layout>
     </v-container>
 
@@ -151,7 +150,7 @@
         </v-flex>
 
         <v-flex>
-            <reportesTTipos></reportesTTipos>
+          <reportesTTipos></reportesTTipos>
           <!---------------------------------->
         </v-flex>
       </v-layout>
@@ -159,15 +158,14 @@
   </div>
 </template>
 <script>
-import ReportesTTipos from "./ReporteTTutorias"
-import ReportesTTutores from "./ReporteTutores"
-import alumno from "../../../notificaciones/alumno.png"
-import tutor from "../../../notificaciones/tutor.png"
+import ReportesTTipos from "./ReporteTTutorias";
+import ReportesTTutores from "./ReporteTutores";
+import alumno from "../../../notificaciones/alumno.png";
+import tutor from "../../../notificaciones/tutor.png";
 import axios from "axios";
 export default {
   data() {
     return {
-
       ReporteFormalInformal: "",
       ReporteTipoTutoria: "",
       items: [
@@ -175,44 +173,44 @@ export default {
           avatar: tutor,
           title: "Tutor1Test1, Tutor1",
           subtitle:
-            "<span class='font-weight-bold'>Finalizó</span> &mdash; Sesión de Tutoría Trica"
+            "<span class='font-weight-bold'>Finalizó</span> &mdash; Sesión de Tutoría Trica",
         },
         {
           avatar: tutor,
-          title: 'Tutor2Test2, Tutor2',
+          title: "Tutor2Test2, Tutor2",
           subtitle:
-            "<span class='font-weight-bold'>Inició</span> &mdash; Sesión de Tutoría por Carta"
+            "<span class='font-weight-bold'>Inició</span> &mdash; Sesión de Tutoría por Carta",
         },
         {
           avatar: alumno,
           title: "Alumno1Alumno1, Alumno1",
           subtitle:
-            "<span class='font-weight-bold'>Egresó</span> &mdash; Tutorías Finalizadas"
-        }
+            "<span class='font-weight-bold'>Egresó</span> &mdash; Tutorías Finalizadas",
+        },
       ],
       nombre:
         JSON.parse(localStorage.getItem("Nombre")).split(" ", 1)[0] +
         " " +
         JSON.parse(localStorage.getItem("Apellidos")).split(" ", 1)[0],
-      datosRecibidos:'',
+      datosRecibidos: "",
       nombreFacultad: localStorage.getItem("Nombre_programa"),
 
       options: {
         chart: {
           width: 480,
-          type: "donut"
+          type: "donut",
         },
         labels: "",
         title: {
-          text: ""
-        }
+          text: "",
+        },
       },
       series: "",
       series2: [53],
       chartOptions: {
         chart: {
           type: "radialBar",
-          offsetY: -10
+          offsetY: -10,
         },
         plotOptions: {
           radialBar: {
@@ -222,18 +220,18 @@ export default {
               name: {
                 fontSize: "14px",
                 color: undefined,
-                offsetY: 100
+                offsetY: 100,
               },
               value: {
                 offsetY: 60,
                 fontSize: "22px",
                 color: undefined,
-                formatter: function(val) {
+                formatter: function (val) {
                   return val + "%";
-                }
-              }
-            }
-          }
+                },
+              },
+            },
+          },
         },
         fill: {
           type: "gradient",
@@ -243,38 +241,36 @@ export default {
             inverseColors: false,
             opacityFrom: 1,
             opacityTo: 1,
-            stops: [0, 50, 65, 91]
-          }
+            stops: [0, 50, 65, 91],
+          },
         },
         stroke: {
-          dashArray: 4
+          dashArray: 4,
         },
-        labels: ["Tutorias Atendidas"]
+        labels: ["Tutorias Atendidas"],
       },
-
     };
   },
   methods: {
     /*ENVIAR FECHA DE INICIO Y FIN DE TUTOR */
 
-    generarReporteTutores(){
-      this.enviarDatosReporteTutor['id_program']=localStorage.getItem("Id_facultad");
-      this.enviarDatosReporteTutor['start_date']=this.startTutor;
-      this.enviarDatosReporteTutor['end_date']=this.endTutor;
-      console.log(this.enviarDatosReporteTutor)
-       axios
-        .post("/coordinator/show_general_information/", this.enviarDatosReporteTutor)
-        .then(res => {
-          this.dataTableTutores=res.data.tutors;
-          console.log(this.dataTableTutores);
-          //this.$message({ message: "Registro exitoso.", type: "success" });
+    generarReporteTutores() {
+      this.enviarDatosReporteTutor["id_program"] = localStorage.getItem(
+        "Id_facultad"
+      );
+      this.enviarDatosReporteTutor["start_date"] = this.startTutor;
+      this.enviarDatosReporteTutor["end_date"] = this.endTutor;
+      axios
+        .post(
+          "/coordinator/show_general_information/",
+          this.enviarDatosReporteTutor
+        )
+        .then((res) => {
+          this.dataTableTutores = res.data.tutors;
         })
-        .catch(error => console.log(error));
-      
-    }, 
+        .catch((error) => console.log(error));
+    },
 
-
-    /////////////////////////////////////////////////////////   
     showStudents() {
       var that = this;
       that.$router.push("/Coordinador/Miembros/Alumnos");
@@ -283,44 +279,35 @@ export default {
       var that = this;
       that.$router.push("/Coordinador/Tipos de Tutoría");
     },
-    showSolicitudes(){
+    showSolicitudes() {
       var that = this;
       that.$router.push("/Coordinador/Solicitudes");
-      
     },
     showTutors() {
       var that = this;
       that.$router.push("/Coordinador/Miembros/Tutores");
     },
-      
-      
-    DatosReporteGeneral(){
 
-    
+    DatosReporteGeneral() {
       localStorage.getItem("Id_facultad");
-     axios
-        .get("/coordinator/show_general_program_report/"+ localStorage.getItem("Id_facultad"))
-        .then(res => {
-         
-          console.log(res.data);
-          this.datosRecibidos=res.data;
-   console.log("imfornmacion de los DATOS REPORTE FENERAL");
-            console.log(this.series2)
-        
-          this.series2[0]=this.datosRecibidos['pcj_requests']*100;
+      axios
+        .get(
+          "/coordinator/show_general_program_report/" +
+            localStorage.getItem("Id_facultad")
+        )
+        .then((res) => {
+          this.datosRecibidos = res.data;
+
+          this.series2[0] = this.datosRecibidos["pcj_requests"] * 100;
           this.$refs.radarSolicitud.updateOptions({
-            colors: ["#814AD6"]
+            colors: ["#814AD6"],
           });
-          console.log(this.series2)
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
+    },
 
-  },
-
-
-    filterTutor: function(tutores) {
-      console.log(localStorage.getItem("Id_facultad"));
-      return tutores.filter(tutor => {
+    filterTutor: function (tutores) {
+      return tutores.filter((tutor) => {
         return (
           tutor.person_full_name
             .toLowerCase()
@@ -331,21 +318,16 @@ export default {
     },
   },
   created() {
-    //ejecuta por defecto las tutorias Generales en ambos
-
-    ////////////////////////////////////
     this.DatosReporteGeneral();
     this.ReporteGeneralTipoTutoria();
-    
     this.completarDonus();
     this.listarTutores();
     this.listarTipoTutoria();
   },
   components: {
-  reportesTTutores:ReportesTTutores,
-  reportesTTipos:ReportesTTipos,
-
-  }
+    reportesTTutores: ReportesTTutores,
+    reportesTTipos: ReportesTTipos,
+  },
 };
 </script>
 <style>

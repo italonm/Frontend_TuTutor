@@ -79,31 +79,34 @@ export default {
         { text: "¿Tutor Fijo?", value: "tt_permanent" },
         { text: "Fecha Fin de la tutoría", value: "tt_end_date" },
         { text: "¿Tutoria Obligatoria?", value: "tt_isrequired" },
-        { text: "Periodicidad de recordatorios (dias) ", value: "tt_periodicity" },
+        {
+          text: "Periodicidad de recordatorios (dias) ",
+          value: "tt_periodicity",
+        },
         { text: "¿Tutor Asignado?", value: "tt_assigned" },
         { text: "Editar", value: "editar", sortable: false },
-        { text: "Eliminar", value: "eliminar", sortable: false }
+        { text: "Eliminar", value: "eliminar", sortable: false },
       ],
       tipotutorias: [],
       signtipo: {
         tt_name: "",
         tt_description: "",
         tt_isrequired: "",
-        tt_end_date:"",
-        tt_quantity:0,
-        tt_periodicity:0,
+        tt_end_date: "",
+        tt_quantity: 0,
+        tt_periodicity: 0,
         tt_assigned: "",
         tt_permanent: "",
-        program_id:JSON.parse(localStorage.getItem("Id_facultad"))
+        program_id: JSON.parse(localStorage.getItem("Id_facultad")),
       },
-      switches:{
-        obligado:false,
-        asignado:false,
-        fijado:false,
+      switches: {
+        obligado: false,
+        asignado: false,
+        fijado: false,
       },
       search: "",
       dialog: false,
-      action: ""
+      action: "",
     };
   },
 
@@ -114,11 +117,14 @@ export default {
   methods: {
     listar() {
       axios
-        .get("http://184.73.231.88:7002/api/coordinator/show_tutoring_types/" + localStorage.getItem("Id_facultad"))
-        .then(res => {
+        .get(
+          "/coordinator/show_tutoring_types/" +
+            localStorage.getItem("Id_facultad")
+        )
+        .then((res) => {
           this.tipotutorias = res.data.tutoriaData;
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
 
     insertar() {
@@ -129,9 +135,9 @@ export default {
     editar(item) {
       this.action = "Editar tipo de tutoría";
       this.signtipo = Object.assign({}, item);
-      this.switches.obligado=this.signtipo.tt_isrequired=='Si';
-      this.switches.asignado=this.signtipo.tt_assigned=='Si';
-      this.switches.fijado=this.signtipo.tt_permanent=='Si';
+      this.switches.obligado = this.signtipo.tt_isrequired == "Si";
+      this.switches.asignado = this.signtipo.tt_assigned == "Si";
+      this.switches.fijado = this.signtipo.tt_permanent == "Si";
       this.dialog = true;
     },
 
@@ -142,32 +148,32 @@ export default {
         {
           confirmButtonText: "Confirmar",
           cancelButtonText: "Cancelar",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           axios
             .post("/coordinator/delete_tutoring_types/", item)
-            .then(res => {
+            .then((res) => {
               console.log(res);
               this.$message({
                 type: "success",
-                message: "Tipo de tutoría eliminado"
+                message: "Tipo de tutoría eliminado",
               });
               this.newDialog = false;
               this.$emit("resetDialog", this.newDialog);
               this.listar();
             })
-            .catch(error => console.log(error));
+            .catch((error) => console.log(error));
         })
         .catch(() => {
           this.$message({ type: "info", message: "Eliminación cancelada" });
         });
-    }
+    },
   },
 
   components: {
-    tipotutoriaForm: TipoTutoriaForm
-  }
+    tipotutoriaForm: TipoTutoriaForm,
+  },
 };
 </script>

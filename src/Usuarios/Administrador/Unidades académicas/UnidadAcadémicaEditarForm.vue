@@ -44,30 +44,26 @@ export default {
       coordinadores: [],
       formFaculty: {
         faculty_name: "",
-        faculty_id: ""
-      }
+        faculty_id: "",
+      },
     };
   },
 
   methods: {
     editar() {
-      console.log(this.unidad);
       this.$refs.form.validate();
       if (this.valid) {
         axios
-          .post(
-            "http://184.73.231.88:7002/api/admin/edit_faculty/",
-            this.unidad
-          )
-          .then(res => {
+          .post("/admin/edit_faculty/", this.unidad)
+          .then((res) => {
             console.log(res);
             this.$message({
               message: "Modificación exitosa.",
-              type: "success"
+              type: "success",
             });
             this.cancelar();
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
             this.$message.error("Datos duplicados");
           });
@@ -81,7 +77,7 @@ export default {
       this.reset();
       this.$emit("resetList");
       this.$emit("resetDialog");
-    }
-  }
+    },
+  },
 };
 </script>

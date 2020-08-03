@@ -99,7 +99,6 @@ export default {
     return {
       start: diaActual,
       freeOptions: "",
-      //weekdays: [1, 2, 3, 4, 5, 6],
       valid: true,
       lazy: false,
       cita: {
@@ -144,10 +143,7 @@ export default {
 
     citarServicio() {
       axios
-        .post(
-          "http://184.73.231.88:7002/api/student/register_appointment/",
-          this.cita
-        )
+        .post("/student/register_appointment/", this.cita)
         .then((res) => {
           console.log(res);
           this.cita.s_date = "";

@@ -40,35 +40,33 @@ export default {
       tutoria: {
         s_id_student: "",
         s_code_tutor: "",
-        s_tt: ""
+        s_tt: "",
       },
       dialog: false,
-      dialogSolicitudes: false
+      dialogSolicitudes: false,
     };
   },
   methods: {
     showProcesoTutoria() {
-      console.log("mostrar infomr procesos");
       this.dialog = true;
     },
     showSolicitudes() {
       var that = this;
       that.$router.push("/Alumno/Mis Solicitudes");
-    }
+    },
   },
   computed: {
-    filterTutor: function() {
-      console.log(localStorage.getItem("Id_facultad"));
-      return this.tutores.filter(tutor => {
+    filterTutor: function () {
+      return this.tutores.filter((tutor) => {
         return tutor.t_fullname.toLowerCase().match(this.search.toLowerCase());
       });
-    }
+    },
   },
   created() {},
   components: {
     tipoTutorias: TipoTutorias,
-    informacionProceso: InformacionProceso
-  }
+    informacionProceso: InformacionProceso,
+  },
 };
 </script>
 <style>

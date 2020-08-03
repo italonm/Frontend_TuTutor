@@ -33,12 +33,7 @@
 </template>
 
 <script>
-//AQUÍ DE ALGUNA FORMA ES EL LOGIN PERSONALIZADO :C
-
-import navAdministrador from "./nav/_administrador"
-
-/* const nav = () => import ("./_nav") */
-
+import navAdministrador from "./nav/_administrador";
 export default {
   name: "TheSidebar",
   nav: navAdministrador,
@@ -48,7 +43,7 @@ export default {
     },
     minimize() {
       return this.$store.state.sidebarMinimize;
-    }
-  }
+    },
+  },
 };
 </script>

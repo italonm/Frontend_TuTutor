@@ -48,47 +48,47 @@ import ResetPass from "../../pages/Login/ResetPass.vue"
 import LandingPage from "../../pages/LandingPage/LadingPage.vue"
 
 export const routes = [
-    { path: "", redirect: "LandingPage", name:'main', meta:{requiresAuth: false}},
-    { path: "/Login", component: Login, name:"login", meta:{requiresAuth: false}},
-    { path: "/LandingPage", component: LandingPage, name:"landingPage", meta:{requiresAuth: false}},
-    { path: "/PassSet", component: PassSet, name:'passSet', meta:{requiresAuth: false}},
-    { path: "/RegPass", component: RegPass, name:'regPass', meta:{requiresAuth: false}},    
-    { path: "/Reestablecer", component: Reestablecer, name:'reestablecer', meta:{requiresAuth: false}}, 
-    { path: "/Registrar", component: Registrar, name:'registrar', meta:{requiresAuth: false}},      
-    { path: "/ResetPass", component: ResetPass, name:'reiniciar', meta:{requiresAuth: false}},        
+    { path: "", redirect: "LandingPage", name: 'main', meta: { requiresAuth: false } },
+    { path: "/Login", component: Login, name: "login", meta: { requiresAuth: false } },
+    { path: "/LandingPage", component: LandingPage, name: "landingPage", meta: { requiresAuth: false } },
+    { path: "/PassSet", component: PassSet, name: 'passSet', meta: { requiresAuth: false } },
+    { path: "/RegPass", component: RegPass, name: 'regPass', meta: { requiresAuth: false } },
+    { path: "/Reestablecer", component: Reestablecer, name: 'reestablecer', meta: { requiresAuth: false } },
+    { path: "/Registrar", component: Registrar, name: 'registrar', meta: { requiresAuth: false } },
+    { path: "/ResetPass", component: ResetPass, name: 'reiniciar', meta: { requiresAuth: false } },
     {
         path: "/Administrador",
         component: MainAdmin,
         name: "administrador",
-        meta:{requiresAuth: true, isAdmin: true},
+        meta: { requiresAuth: true, isAdmin: true },
         children: [
             //Administrador
-            { path: "Bienvenido", component: Configuración , name:"bienvenido" }, //Luiggi
-            { path: "Configuración", component: Configuración, name:"configuración" }, //Luiggi
-            { path: "Unidades académicas", component: Académicas, name:"unidades" }, //italo
-            { path: "Coordinadores", component: Coordinadores, name: "coordinadores" }, //italo
-            { path: "Usuarios", component: Usuarios, name:"usuarios"}, //italo
-            { path: "Unidades de Apoyo", component: Apoyo, name:"apoyo" },
-            { path: "Errores", component: Errores, name:"errores" },            
+            { path: "Bienvenido", component: Configuración, name: "bienvenido" },
+            { path: "Configuración", component: Configuración, name: "configuración" },
+            { path: "Unidades académicas", component: Académicas, name: "unidades" },
+            { path: "Coordinadores", component: Coordinadores, name: "coordinadores" },
+            { path: "Usuarios", component: Usuarios, name: "usuarios" },
+            { path: "Unidades de Apoyo", component: Apoyo, name: "apoyo" },
+            { path: "Errores", component: Errores, name: "errores" },
         ],
     },
     {
         path: "/Coordinador",
         component: MainCoordi,
         name: "coordinador",
-        meta:{requiresAuth: true, isCoordi: true},
+        meta: { requiresAuth: true, isCoordi: true },
         children: [
             //Coordinador
-            { path: "Bienvenido", component: WelcomeCoord }, //Luiggi
-            { path: "/Coordinador/Miembros/Tutores", component: Tutores }, //herbert
-            { path: "/Coordinador/Miembros/Alumnos", component: Alumnos }, //herbert
+            { path: "Bienvenido", component: WelcomeCoord },
+            { path: "/Coordinador/Miembros/Tutores", component: Tutores },
+            { path: "/Coordinador/Miembros/Alumnos", component: Alumnos },
             { path: "Tutorías activas", component: Welcome },
-            { path: "Tipos de tutoría", component: TipoTutoria }, //luiggi
+            { path: "Tipos de tutoría", component: TipoTutoria },
             { path: "Reportes", component: Reportes },
-            { path: "Solicitudes", component: Solicitudes }, //valeria
-            { path: "ReporteEncuestas", component: ReporteEncuesta }, //valeria
-            { path: "/Coordinador/Miembros/Unidades de apoyo", component: Apoyo }, //valeria
-            { path: "/Coordinador/Miembros/Soporte", component: Soporte }, //herbert
+            { path: "Solicitudes", component: Solicitudes },
+            { path: "ReporteEncuestas", component: ReporteEncuesta },
+            { path: "/Coordinador/Miembros/Unidades de apoyo", component: Apoyo },
+            { path: "/Coordinador/Miembros/Soporte", component: Soporte },
 
         ],
     },
@@ -96,92 +96,76 @@ export const routes = [
         path: "/Alumno",
         component: MainAlumno,
         name: "alumno",
-        meta:{requiresAuth: true, isStudent: true},
+        meta: { requiresAuth: true, isStudent: true },
         children: [
             //Alumno
-            { path: "Bienvenido", component: Welcome }, //italo / Herbert
-            { path: "Agenda", component: Agenda }, //italo / Herbert
-            { path: "Mis Tutorías", component: Tutor }, //italo / Herbert
-            { path: "Solicitar Tutor", component: SolicitarTutor }, //italo / Herbert
-            { path: "Mis Solicitudes", component: SolicitudesAlumno }, //italo / Herbert
-            { path: "Mis Reportes", component: ReportesAlumno }, //italo / Herbert
-            { path: "Sesiones", component: SesionesAlumno }, //italo / Herbert
+            { path: "Bienvenido", component: Welcome },
+            { path: "Agenda", component: Agenda },
+            { path: "Mis Tutorías", component: Tutor },
+            { path: "Solicitar Tutor", component: SolicitarTutor },
+            { path: "Mis Solicitudes", component: SolicitudesAlumno },
+            { path: "Mis Reportes", component: ReportesAlumno },
+            { path: "Sesiones", component: SesionesAlumno },
         ],
     },
     {
         path: "/Tutor",
         component: MainTutor,
         name: "tutor",
-        meta:{requiresAuth: true, isTutor: true},
+        meta: { requiresAuth: true, isTutor: true },
         children: [
             //Alumno
-            { path: "Bienvenido", component: WelcomeTutor }, //luiggi / valeria / melvin
-            { path: "Asignaciones", component: Asignaciones }, //luiggi / valeria / melvin
-            { path: "Citas", component: Citas }, //luiggi / valeria / melvin
-            { path: "Sesiones", component: Sesiones }, //luiggi / valeria / melvin
-            { path: "Solicitudes", component: SolicitudesTutor }, //luiggi / valeria / melvin
-            { path: "Alumnos", component: AlumnosTutor }, //luiggi / valeria / melvin
-        ],        
+            { path: "Bienvenido", component: WelcomeTutor },
+            { path: "Asignaciones", component: Asignaciones },
+            { path: "Citas", component: Citas },
+            { path: "Sesiones", component: Sesiones },
+            { path: "Solicitudes", component: SolicitudesTutor },
+            { path: "Alumnos", component: AlumnosTutor },
+        ],
     },
 ];
 
 
 Vue.use(Router);
-const router =  new Router({
-    mode: "history", // https://router.vuejs.org/api/#mode
+const router = new Router({
+    mode: "history",
     routes: routes,
-}); 
+});
 
-router.beforeEach((to ,from, next)=>{    
-    if(to.matched.some((record)=>record.meta.requiresAuth)){        
-        if (localStorage.getItem("Token") !== null){        
-            if(to.matched.some((record)=>record.meta.isTutor)){                
-                if(localStorage.getItem("EsTutor") === "true"){                                 
+router.beforeEach((to, from, next) => {
+    if (to.matched.some((record) => record.meta.requiresAuth)) {
+        if (localStorage.getItem("Token") !== null) {
+            if (to.matched.some((record) => record.meta.isTutor)) {
+                if (localStorage.getItem("EsTutor") === "true") {
                     next()
                     return
-                }                
-                else{
-                    next("/Login")
-                }
-                
-            }
-            else if(to.matched.some((record)=>record.meta.isAdmin)){                
-                if(localStorage.getItem("EsAdministrador") === "true"){                    
+                } else next("/Login");
+
+
+            } else if (to.matched.some((record) => record.meta.isAdmin)) {
+                if (localStorage.getItem("EsAdministrador") === "true") {
                     next()
                     return
-                }                
-                else{
-                    next("/Login")
-                }
-                
-            }
-            else if(to.matched.some((record)=>record.meta.isCoordi)){
-                if(localStorage.getItem("EsCoordinador") === "true"){                    
+                } else next("/Login");
+
+
+            } else if (to.matched.some((record) => record.meta.isCoordi)) {
+                if (localStorage.getItem("EsCoordinador") === "true") {
                     next()
                     return
-                }                
-                else{
-                    next("/Login")
-                }
-                
-            }
-            else if(to.matched.some((record)=>record.meta.isStudent)){
-                if(localStorage.getItem("EsAlumno") === "true"){                    
+                } else next("/Login");
+
+            } else if (to.matched.some((record) => record.meta.isStudent)) {
+                if (localStorage.getItem("EsAlumno") === "true") {
                     next()
                     return
-                }                
-                else{
-                    next("/Login")
-                }
-                
-            }
-            else next("/Login")
-        }
-        else{
+                } else next("/Login");
+
+            } else next("/Login")
+        } else {
             next("/Login")
         }
-    }
-    else{
+    } else {
         next()
     }
 

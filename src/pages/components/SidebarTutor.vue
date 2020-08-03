@@ -33,9 +33,7 @@
 </template>
 
 <script>
-//AQUÍ DE ALGUNA FORMA ES EL LOGIN PERSONALIZADO :Cs
-import navCoordinador from "./nav/_tutor"
-
+import navCoordinador from "./nav/_tutor";
 export default {
   name: "TheSidebar",
   nav: navCoordinador,
@@ -45,7 +43,7 @@ export default {
     },
     minimize() {
       return this.$store.state.sidebarMinimize;
-    }
-  }
+    },
+  },
 };
 </script>

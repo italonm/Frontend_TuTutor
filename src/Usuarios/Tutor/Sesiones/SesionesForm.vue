@@ -5,138 +5,128 @@
         <h2 class="headline">{{action}}</h2>
       </v-card-title>
       <v-card-text>
-        <v-container>            
-            <v-form ref="form" v-model="valid" :lazy-validation="lazy">
-              <h5 v-if="option">Selecciona tu facultad</h5>               
+        <v-container>
+          <v-form ref="form" v-model="valid" :lazy-validation="lazy">
+            <h5 v-if="option">Selecciona tu facultad</h5>
 
-              <v-chip-group
-                column
-                active-class="primary--text"                                
-                v-if="option"                                
-              >     
-                <v-chip filter v-for="facultad in facultades" :key="facultad.program_name" :value="facultad.program_name"                                                              
-                  class="ma-2"
-                  color="primary"
-                  outlined    
-                  @click="cargarAlumnos(facultad.program_id)"
-                >
-                  <v-avatar left>
-                    <v-icon>mdi-account-circle</v-icon>
-                  </v-avatar>
-                  {{facultad.program_name}}
-                </v-chip>
-              </v-chip-group> 
-            
-              <v-select     
-                v-if = "option"    
-                v-model="participante"                         
-                :items="alumnos"     
-                :disabled="show"              
-                :rules="[v => !!v || 'Seleccione un participante']"
-                required         
-                hide-selected      
-                item-text="person_full_name"
-                item-value="person_full_name"        
-                label="Seleccione un participante"              
-                small-chips
-                clearable
-                return-object              
-              >              
-              </v-select>
-
-              <v-menu
-                  v-if="option"
-                  ref="startMenu"
-                  v-model="startMenu"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  :return-value.sync="start"
-                  transition="scale-transition"
-                  min-width="290px"
-                  offset-y
+            <v-chip-group column active-class="primary--text" v-if="option">
+              <v-chip
+                filter
+                v-for="facultad in facultades"
+                :key="facultad.program_name"
+                :value="facultad.program_name"
+                class="ma-2"
+                color="primary"
+                outlined
+                @click="cargarAlumnos(facultad.program_id)"
               >
-                <template v-slot:activator="{ on }">
-                  <v-text-field
-                      v-model="start"
-                      label="Día de realización"
-                      readonly
-                      v-on="on"                    
-                      :rules="nameValidation" 
-                      required       
-                  ></v-text-field>                
-                </template>
-                <v-date-picker
+                <v-avatar left>
+                  <v-icon>mdi-account-circle</v-icon>
+                </v-avatar>
+                {{facultad.program_name}}
+              </v-chip>
+            </v-chip-group>
+
+            <v-select
+              v-if="option"
+              v-model="participante"
+              :items="alumnos"
+              :disabled="show"
+              :rules="[v => !!v || 'Seleccione un participante']"
+              required
+              hide-selected
+              item-text="person_full_name"
+              item-value="person_full_name"
+              label="Seleccione un participante"
+              small-chips
+              clearable
+              return-object
+            ></v-select>
+
+            <v-menu
+              v-if="option"
+              ref="startMenu"
+              v-model="startMenu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              :return-value.sync="start"
+              transition="scale-transition"
+              min-width="290px"
+              offset-y
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
                   v-model="start"
-                  no-title
-                  scrollable         
-                  :max= "actualidad"       
-                  >
-                  <v-spacer></v-spacer>
-                  <v-btn
-                      color="primary"
-                      @click="startMenu = false"
-                  >
-                      Cancel
-                  </v-btn>
-                  <v-btn
-                      color="primary"
-                      @click="$refs.startMenu.save(start)"
-                  >
-                      OK
-                  </v-btn>
-                </v-date-picker>
-              </v-menu> 
-              <el-time-select
-                v-if="option"
-                v-model="insert.start_hour"
-                :rules="[v => !!v || 'Seleccione una hora de inicio']"
-                required       
-                :picker-options="{
+                  label="Día de realización"
+                  readonly
+                  v-on="on"
+                  :rules="nameValidation"
+                  required
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="start" no-title scrollable :max="actualidad">
+                <v-spacer></v-spacer>
+                <v-btn color="primary" @click="startMenu = false">Cancel</v-btn>
+                <v-btn color="primary" @click="$refs.startMenu.save(start)">OK</v-btn>
+              </v-date-picker>
+            </v-menu>
+            <el-time-select
+              v-if="option"
+              v-model="insert.start_hour"
+              :rules="[v => !!v || 'Seleccione una hora de inicio']"
+              required
+              :picker-options="{
                   start:comienzo,
                   step:'00:15',
                   end:horaFin
                 }"
-                placeholder="Hora Inicio"
-                style="display: inline-block">
-              </el-time-select>
-              <el-time-select
-                v-if="option"
-                v-model="insert.end_hour"
-                :rules="[v => !!v || 'Seleccione una hora de fin']"
-                :picker-options="{
+              placeholder="Hora Inicio"
+              style="display: inline-block"
+            ></el-time-select>
+            <el-time-select
+              v-if="option"
+              v-model="insert.end_hour"
+              :rules="[v => !!v || 'Seleccione una hora de fin']"
+              :picker-options="{
                   start:comienzo,
                   step:'00:15',
                   end:horaFin
                 }"
-                placeholder="Hora Fin"
-                class="ml-5"
-                style="display: inline-block">
-              </el-time-select>            
-              <v-text-field v-if="option" v-model="insert.place" label="Lugar o medio utilizado (Links)" ></v-text-field>
-              <v-select
-                v-if="option"
-                v-model="motivos"
-                :items="items"   
-                :rules="[v => !!v || 'Seleccione al menos 1 motivo']"                                       
-                label="Motivo de la sesión (Máx. 2 motivos)"
-                multiple                
-                small-chips
-                clearable
-                return-object
-              >              
-              </v-select>
-              <br>            
-              <h5>Resultado de la sesión <small style="padding-left:26%;">Última modificación {{form.last_modified}}</small></h5>                      
-              <v-textarea
+              placeholder="Hora Fin"
+              class="ml-5"
+              style="display: inline-block"
+            ></el-time-select>
+            <v-text-field
+              v-if="option"
+              v-model="insert.place"
+              label="Lugar o medio utilizado (Links)"
+            ></v-text-field>
+            <v-select
+              v-if="option"
+              v-model="motivos"
+              :items="items"
+              :rules="[v => !!v || 'Seleccione al menos 1 motivo']"
+              label="Motivo de la sesión (Máx. 2 motivos)"
+              multiple
+              small-chips
+              clearable
+              return-object
+            ></v-select>
+            <br />
+            <h5>
+              Resultado de la sesión
+              <small style="padding-left:26%;">Última modificación {{form.last_modified}}</small>
+            </h5>
+            <v-textarea
               v-model="form.resultado"
               background-color="#E5F8F8"
               color="#6B9486"
               counter
               no-resize
               full-width
-              single-line                
+              single-line
               height="80px"
-              ></v-textarea>              
+            ></v-textarea>
           </v-form>
         </v-container>
       </v-card-text>
@@ -150,50 +140,56 @@
 </template>
 
 <script>
-
 import { nameRules, emailRules, codeRules, phoneRules } from "../../Validation";
 import axios from "axios";
 
-var now = new Date(); 
-var diaActual = now.getFullYear() + "-" + (((now.getMonth()+1) < 10)?"0":"") + (now.getMonth()+1) + "-" + ((now.getDate() < 10)?"0":"") + now.getDate();
+var now = new Date();
+var diaActual =
+  now.getFullYear() +
+  "-" +
+  (now.getMonth() + 1 < 10 ? "0" : "") +
+  (now.getMonth() + 1) +
+  "-" +
+  (now.getDate() < 10 ? "0" : "") +
+  now.getDate();
 
 export default {
-  props: ["facultades", "dialog", "action", "form", "option"],  
+  props: ["facultades", "dialog", "action", "form", "option"],
   data() {
     return {
-      show:true,
+      show: true,
       inicio: "",
-      fin:"",            
-      insert:{     
+      fin: "",
+      insert: {
         student_id: null,
         tutor_id: null,
-        reason1:"",
-        reason2:"",
-        place:"",
-        result:"", 
-        date:"",    
-        start_hour:"",
-        end_hour:""   
+        reason1: "",
+        reason2: "",
+        place: "",
+        result: "",
+        date: "",
+        start_hour: "",
+        end_hour: "",
       },
       motivos: [],
       participante: [],
-      alumnos:[],
-      id_alumnos:[],
-      items: [        
-        'Académico',
-        'Académico-administrativo',
-        'Vocacional',
-        'Personal', 
-        'Familiar', 
-        'Individual', 
-        'Ecónomico', 
-        'Psicológico', 
-      ],            
-      search: null,    
+      alumnos: [],
+      id_alumnos: [],
+      items: [
+        "Académico",
+        "Académico-administrativo",
+        "Vocacional",
+        "Personal",
+        "Familiar",
+        "Individual",
+        "Ecónomico",
+        "Psicológico",
+      ],
+      search: null,
       dark: false,
       startMenu: false,
-      startMenuTime:false,
-      endMenuTime:false,
+      startMenuTime: false,
+      endMenuTime: false,
       start: diaActual,
       actualidad: diaActual,
       startTime: "07:00",
@@ -202,111 +198,109 @@ export default {
       nowMenu: false,
       minWeeks: 1,
       now: null,
-      type: 'week',
+      type: "week",
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
       availableDates: [],
       maxDays: 7,
-      color: 'blue',
-      events:[],
-      schedule:{
-        tutor_id:97,
-        events: []
+      color: "blue",
+      events: [],
+      schedule: {
+        tutor_id: 97,
+        events: [],
       },
-      eventosAgregados:[],
-      borrarEvento:{
-        schedule_id:""
+      eventosAgregados: [],
+      borrarEvento: {
+        schedule_id: "",
       },
       valid: true,
       lazy: false,
       nameValidation: nameRules,
       emailValidation: emailRules,
       codeValidation: codeRules,
-      phoneValidation: phoneRules,      
+      phoneValidation: phoneRules,
     };
   },
-  computed:{
-    comienzo(){     
-      if (diaActual === this.start){
-        var naw = new Date(); 
-        if (naw.getHours() < 8 && naw.getMinutes < 15) return ""      
-        else{                    
-          return "08:00"
-        }        
-      } 
-      return "08:00"
-      
-    },
-    horaFin(){
-      if (diaActual === this.start){
-        var naw = new Date(); 
-        if (naw.getHours() < 8 && naw.getMinutes < 15) return ""      
-        else{          
-          return naw.getHours() + ":" + Math.trunc(naw.getMinutes()/15)*15
-        }        
-      } 
-      return "23:00"
-    }
-  },  
-  watch: {
-    motivos (val) {
-      if (val.length > 2) {
-        this.$nextTick(() => this.motivos.pop())
+  computed: {
+    comienzo() {
+      if (diaActual === this.start) {
+        var naw = new Date();
+        if (naw.getHours() < 8 && naw.getMinutes < 15) return "";
+        else {
+          return "08:00";
+        }
       }
-    }
+      return "08:00";
+    },
+    horaFin() {
+      if (diaActual === this.start) {
+        var naw = new Date();
+        if (naw.getHours() < 8 && naw.getMinutes < 15) return "";
+        else {
+          return naw.getHours() + ":" + Math.trunc(naw.getMinutes() / 15) * 15;
+        }
+      }
+      return "23:00";
+    },
+  },
+  watch: {
+    motivos(val) {
+      if (val.length > 2) {
+        this.$nextTick(() => this.motivos.pop());
+      }
+    },
   },
 
-  methods: { 
-    cargarAlumnos(item){         
-      this.show=false    
-      this.participante=[]
+  methods: {
+    cargarAlumnos(item) {
+      this.show = false;
+      this.participante = [];
       axios
-        .get("/coordinator/show_students/" + item)      
-        .then(res =>{                            
-          this.alumnos = res.data.users;          
+        .get("/coordinator/show_students/" + item)
+        .then((res) => {
+          this.alumnos = res.data.users;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.$message.error("No hay alumnos en este programa");
-        });    
-    }, 
+        });
+    },
 
     guardar() {
       if (this.action == "Registrar nueva sesión") this.insertar();
       else if (this.action == "Detalles de la sesión") this.editar();
     },
 
-    insertar() {  
+    insertar() {
       this.$refs.form.validate();
-      if (this.valid) {                  
-        this.insert.tutor_id = localStorage.getItem("Id_usuario");            
-        this.insert.student_id = this.participante.person_id
-        this.insert.date = this.start            
+      if (this.valid) {
+        this.insert.tutor_id = localStorage.getItem("Id_usuario");
+        this.insert.student_id = this.participante.person_id;
+        this.insert.date = this.start;
         this.insert.reason1 = this.motivos[0];
-        if (this.insert.reason1 === undefined) this.insert.reason1 = ""        
-        this.insert.reason2 = this.motivos[1]; 
-        if (this.insert.reason2 === undefined) this.insert.reason2 = ""
-        this.insert.result = this.form.resultado                      
-        if (this.insert.result === undefined) this.insert.result = ""        
-        if (this.insert.place === undefined) this.insert.place = ""                
-        axios        
-        .post("/tutor/register_informal_session/", this.insert)
-        .then(() => {                  
-          this.resetFields();          
-          this.$emit("resetList");
-          this.$message({ message: "Registro exitoso.", type: "success" });
-          this.$emit("resetDialog");
-          this.$refs.form.reset();
-        })
-        .catch(error => {
-          console.log(error);
-          this.$message.error("Datos incompletos");
-        });  
-      }
-      else this.$message.error("Datos incorrectos");
+        if (this.insert.reason1 === undefined) this.insert.reason1 = "";
+        this.insert.reason2 = this.motivos[1];
+        if (this.insert.reason2 === undefined) this.insert.reason2 = "";
+        this.insert.result = this.form.resultado;
+        if (this.insert.result === undefined) this.insert.result = "";
+        if (this.insert.place === undefined) this.insert.place = "";
+        axios
+          .post("/tutor/register_informal_session/", this.insert)
+          .then(() => {
+            this.resetFields();
+            this.$emit("resetList");
+            this.$message({ message: "Registro exitoso.", type: "success" });
+            this.$emit("resetDialog");
+            this.$refs.form.reset();
+          })
+          .catch((error) => {
+            console.log(error);
+            this.$message.error("Datos incompletos");
+          });
+      } else this.$message.error("Datos incorrectos");
     },
-    resetFields(){
+    resetFields() {
       this.insert.student_id = null;
       this.insert.tutor_id = null;
       this.insert.reason1 = "";
@@ -315,33 +309,32 @@ export default {
       this.insert.result = "";
       this.insert.date = "";
       this.insert.start_hour = "";
-      this.insert.end_hour = "";            
+      this.insert.end_hour = "";
     },
 
-    editar(){
+    editar() {
       var edit = {
-        idsesion:this.form.id,
-        resultado:this.form.resultado
-      }      
+        idsesion: this.form.id,
+        resultado: this.form.resultado,
+      };
       axios
-      .post("http://184.73.231.88:7002/api/tutor/edit_result/",edit)
-      .then(res=>{
-        if(res!==null)
-          this.$message.success("Resultado actualizado")        
-        this.$emit("resetList")
-      })
-      .catch(error=>{
-        console.log(error)
-        this.$message.error("No se pudo actualizar el resultado")
-      })      
-      this.$emit("resetDialog")
-      },
+        .post("/tutor/edit_result/", edit)
+        .then((res) => {
+          if (res !== null) this.$message.success("Resultado actualizado");
+          this.$emit("resetList");
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$message.error("No se pudo actualizar el resultado");
+        });
+      this.$emit("resetDialog");
+    },
 
-    cancelar() {                  
-      this.resetFields();          
+    cancelar() {
+      this.resetFields();
       this.$refs.form.reset();
       this.$emit("resetDialog");
-    }
-  }
+    },
+  },
 };
 </script>

@@ -115,7 +115,12 @@
                 <el-button type="info" icon="el-icon-edit" circle @click="editarPrograma(item)"></el-button>
               </template>
               <template v-slot:item.delete="{ item }">
-                <el-button type="danger" icon="fas fa-trash" circle @click="eliminarProgramas(item)"></el-button>
+                <el-button
+                  type="danger"
+                  icon="fas fa-trash"
+                  circle
+                  @click="eliminarProgramas(item)"
+                ></el-button>
               </template>
             </v-data-table>
           </el-col>
@@ -174,17 +179,17 @@ export default {
         {
           text: "Tutoría fija",
           value: "faculty_required_tutorship",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Unidad única",
           value: "faculty_unique_faculty",
-          sortable: false
+          sortable: false,
         },
         { text: "Programas", value: "watch", sortable: false },
         { text: "Agregar", value: "add", sortable: false },
         { text: "Editar", value: "edit", sortable: false },
-        { text: "Eliminar", value: "delete", sortable: false}
+        { text: "Eliminar", value: "delete", sortable: false },
       ],
 
       //Programas
@@ -193,8 +198,8 @@ export default {
         { text: "Nombre", value: "program_name" },
         { text: "Coordinador", value: "coordinator_full_name" },
         { text: "Contacto", value: "coordinator_email" },
-        { text: "Editar", value: "edit", sortable: false },  
-        { text: "Eliminar", value: "delete", sortable: false}      
+        { text: "Editar", value: "edit", sortable: false },
+        { text: "Eliminar", value: "delete", sortable: false },
       ],
 
       searchUnidad: "",
@@ -208,17 +213,17 @@ export default {
       coordinadores: [],
       unidad: {
         idfaculty: "",
-        namefaculty: ""
+        namefaculty: "",
       },
       programa: {
         idprogram: "",
-        nameprogram: ""
+        nameprogram: "",
       },
       footerProps: {
         "items-per-page-options": [5, 10, 15, -1],
         "items-per-page-text": "Registros por página:",
-        "items-per-page-all-text": "Listar todos"
-      }
+        "items-per-page-all-text": "Listar todos",
+      },
     };
   },
 
@@ -228,63 +233,75 @@ export default {
   },
 
   methods: {
-    eliminarUnidades(item){      
+    eliminarUnidades(item) {
       this.$confirm(
-        "Está seguro de eliminar la unidad académica: " + item.faculty_name + "?",//MODIFICACION ERROR PROFE 
+        "Está seguro de eliminar la unidad académica: " +
+          item.faculty_name +
+          "?",
         "Advertencia",
         {
           confirmButtonText: "Confirmar",
           cancelButtonText: "Cancelar",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
-          console.log(item.faculty_id)
+          console.log(item.faculty_id);
           axios
             .post("/admin/delete_faculty/", { faculty_id: item.faculty_id })
-            .then(()=>{
+            .then(() => {
               this.listarUnidades();
               this.$message({ type: "success", message: "Registro eliminado" });
             })
-            .catch(() => this.$message({ type: "danger", message: "No se pudo eliminar la unidad, revise si hay usuarios activos" }));
-          
+            .catch(() =>
+              this.$message({
+                type: "danger",
+                message:
+                  "No se pudo eliminar la unidad, revise si hay usuarios activos",
+              })
+            );
         })
         .catch(() => {
           this.$message({ type: "info", message: "Eliminación cancelada" });
-        });    
+        });
     },
-    eliminarProgramas(item){
+    eliminarProgramas(item) {
       this.$confirm(
-        "Está seguro de eliminar el programa: " + item.program_name + "?",//MODIFICACION ERROR PROFE 
+        "Está seguro de eliminar el programa: " + item.program_name + "?",
         "Advertencia",
         {
           confirmButtonText: "Confirmar",
           cancelButtonText: "Cancelar",
-          type: "warning"
+          type: "warning",
         }
       )
         .then(() => {
           axios
             .post("/admin/delete_program/", { program_id: item.program_id })
-            .then(()=>{
+            .then(() => {
               this.listarProgramas();
               this.$message({ type: "success", message: "Registro eliminado" });
             })
-            .catch(() => this.$message({ type: "danger", message: "No se pudo eliminar el programa, revise si hay usuarios activos" }));
-          
+            .catch(() =>
+              this.$message({
+                type: "danger",
+                message:
+                  "No se pudo eliminar el programa, revise si hay usuarios activos",
+              })
+            );
         })
         .catch(() => {
           this.$message({ type: "info", message: "Eliminación cancelada" });
-        });    
-    }, 
+        });
+    },
     listarUnidades() {
       var Id_institución = localStorage.getItem("Id_institución");
       axios
         .get("/admin/show_faculties/" + Id_institución)
-        .then(res => {          
+        .then((res) => {
           this.unidades = res.data.faculties;
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
 
     listarProgramaAux(item) {
@@ -296,20 +313,20 @@ export default {
     listarProgramas() {
       axios
         .get("/admin/show_programs/" + this.faculty_id)
-        .then(res => {
-          this.programas = res.data.programs;          
+        .then((res) => {
+          this.programas = res.data.programs;
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
 
     listarCoordinadores() {
       var Id_institución = localStorage.getItem("Id_institución");
       axios
         .get("/admin/show_coordinators_available/" + Id_institución)
-        .then(res => {
+        .then((res) => {
           this.coordinadores = res.data.users;
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
 
     insertarPrograma(item) {
@@ -327,14 +344,14 @@ export default {
       this.programa.idprogram = item.program_id;
       this.programa.nameprogram = item.program_name;
       this.dialogProgramaEditar = true;
-    }
+    },
   },
 
   components: {
     unidadForm: UnidadForm,
     programaForm: ProgramaForm,
     unidadEditarForm: UnidadEditarForm,
-    programaEditarForm: ProgramaEditarForm
-  }
+    programaEditarForm: ProgramaEditarForm,
+  },
 };
 </script>

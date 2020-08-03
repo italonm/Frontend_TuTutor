@@ -22,8 +22,7 @@
         </div>
       </el-col>
       <el-col :span="8">
-        <div class="grid-content">
-        </div>
+        <div class="grid-content"></div>
       </el-col>
     </el-row>
 
@@ -32,7 +31,6 @@
       :footer-props="{'items-per-page-options': [5, 10, 15, -1],
                       'items-per-page-text': 'Registros por página:',
                       'items-per-page-all-text': 'Listar todos'}"
-
       :headers="headers"
       :items="errores"
       :search="search"
@@ -43,9 +41,7 @@
       loading-text="Cargando.."
       height="288px"
       fixed-header
-    > 
-    </v-data-table>
-    
+    ></v-data-table>
   </el-container>
 </template>
 
@@ -60,7 +56,7 @@ export default {
         { text: "Fecha", value: "date" },
         { text: "Error", value: "reason" },
       ],
-      search: "",  
+      search: "",
     };
   },
 
@@ -70,33 +66,26 @@ export default {
 
   methods: {
     listar() {
-       //console.log(localStorage.getItem("Id_institución"));
-       axios
-      .get("http://184.73.231.88:5000/api/admin/show_error_log/" + localStorage.getItem("Id_institución"))
-      .then(res => {
-        //console.log(res.data);
-        this.errores = res.data.errors;
-      })
-      .catch(error => console.log(error));
+      axios
+        .get("/admin/show_error_log/" + localStorage.getItem("Id_institución"))
+        .then((res) => {
+          this.errores = res.data.errors;
+        })
+        .catch((error) => console.log(error));
     },
 
     descargar() {
       axios
-        .get("http://184.73.231.88:5000/api/admin/download_error_log/", {responseType: "blob"})
-        .then(res => {
+        .get("/admin/download_error_log/", { responseType: "blob" })
+        .then((res) => {
           var fileLink = document.createElement("a");
           fileLink.href = window.URL.createObjectURL(new Blob([res.data]));
-          fileLink.setAttribute(
-            "download",
-            "errores.txt"
-          );
+          fileLink.setAttribute("download", "errores.txt");
           document.body.appendChild(fileLink);
           fileLink.click();
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     },
-
   },
-
 };
 </script>
