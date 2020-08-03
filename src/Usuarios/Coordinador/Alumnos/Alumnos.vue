@@ -213,9 +213,13 @@ export default {
         .then(() => {
           axios
             .post("/user/delete_person/", { person_id: item.person_id })
-            .catch((error) => console.log(error));
-          this.listar();
-          this.$message({ type: "success", message: "Registro eliminado" });
+            .then(()=>{
+              this.listar();
+              this.$message({ type: "success", message: "Registro eliminado" });
+            })
+            .catch(() => {
+              this.$message({ type: "error", message: "No se pudo eliminar el alumno, revise si tiene asignaciones vigentes" });
+            });          
         })
         .catch(() => {
           this.$message({ type: "info", message: "Eliminación cancelada" });

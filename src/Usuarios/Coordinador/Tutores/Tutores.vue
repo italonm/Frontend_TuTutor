@@ -169,12 +169,14 @@ export default {
         .then(() => {
           axios
             .post("/user/delete_person/", { person_id: item.person_id })
-            .then((res) => {
-              console.log(res);
+            .then(() => {              
               this.listar();
+              this.$message({ type: "success", message: "Registro eliminado" });
             })
-            .catch((error) => console.log(error));
-          this.$message({ type: "success", message: "Registro eliminado" });
+            .catch(() => {
+              this.$message({ type: "error", message: "No se pudo eliminar el tutor, revise si tiene asignaciones vigentes" });
+            });
+          
         })
         .catch(() => {
           this.$message({ type: "info", message: "Eliminación cancelada" });

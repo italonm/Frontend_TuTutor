@@ -56,8 +56,7 @@ export default {
       if (this.valid) {
         axios
           .post("/coordinator/add_graduated_student_excel/", formData)
-          .then((res) => {
-            console.log(res);
+          .then(() => {            
             this.$message({
               message: "Registro de alumnos graduados exitoso",
               type: "success",

@@ -285,6 +285,7 @@ export default {
         this.insert.result = this.form.resultado;
         if (this.insert.result === undefined) this.insert.result = "";
         if (this.insert.place === undefined) this.insert.place = "";
+        console.log(this.insert)
         axios
           .post("/tutor/register_informal_session/", this.insert)
           .then(() => {

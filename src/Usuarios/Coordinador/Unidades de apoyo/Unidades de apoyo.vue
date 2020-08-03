@@ -128,8 +128,7 @@ export default {
           console.log(item);
           axios
             .post("/coordinator/delete_support_unit/", item)
-            .then((res) => {
-              console.log(res);
+            .then(() => {              
               this.listar();
             })
             .catch((error) => console.log(error));

@@ -298,7 +298,7 @@ export default {
         .then((res) => {
           this.datosRecibidos = res.data;
 
-          this.series2[0] = this.datosRecibidos["pcj_requests"] * 100;
+          this.series2[0] = this.datosRecibidos["pcj_requests"];
           this.$refs.radarSolicitud.updateOptions({
             colors: ["#814AD6"],
           });

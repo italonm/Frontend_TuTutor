@@ -761,13 +761,15 @@ export default {
       ] = localStorage.getItem("Id_facultad");
       this.enviarDatosReporteHorasInstruidas["start_date"] = this.startTutor;
       this.enviarDatosReporteHorasInstruidas["end_date"] = this.endTutor;
-      this.enviarDatosReporteHorasInstruidas["id_tutor"] = TutorOGeneral;
+      this.enviarDatosReporteHorasInstruidas["id_tutor"] = TutorOGeneral;      
       axios
         .post(
           "coordinator/show_report_hours/",
           this.enviarDatosReporteHorasInstruidas
         )
-        .then((res) => {
+        .then((res) => {   
+          console.log("auxilio")       
+          console.log(res)
           this.SerieBarraTutor[0]["data"] = res.data["horasTotales"];
           this.SerieBarraTutor[1]["data"] = res.data["horasInstruidas"];
           this.$refs.demoChartBarra.updateOptions({
