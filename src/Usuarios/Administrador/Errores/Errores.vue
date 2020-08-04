@@ -76,7 +76,9 @@ export default {
 
     descargar() {
       axios
-        .get("/admin/download_error_log/", { responseType: "blob" })
+        .get("http://184.73.231.88:5000/api/admin/download_error_log/", {
+          responseType: "blob",
+        })
         .then((res) => {
           var fileLink = document.createElement("a");
           fileLink.href = window.URL.createObjectURL(new Blob([res.data]));
