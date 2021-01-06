@@ -16,7 +16,7 @@
         "@fortawesome/fontawesome-free": "^5.13.0",
         "@typeform/embed": "^0.22.0",
         "apexcharts": "^3.19.3",
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "chart.js": "^2.9.3",
         "core-js": "^3.6.4",
         "element-ui": "^2.13.2",
