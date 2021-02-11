@@ -15,7 +15,7 @@
         "@coreui/vue": "^3.0.10",
         "@fortawesome/fontawesome-free": "^5.13.0",
         "@typeform/embed": "^0.22.0",
-        "apexcharts": "^3.19.3",
+        "apexcharts": "^3.24.0",
         "axios": "^0.19.2",
         "chart.js": "^2.9.3",
         "core-js": "^3.6.4",
